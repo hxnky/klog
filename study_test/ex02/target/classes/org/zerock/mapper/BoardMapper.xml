@@ -6,7 +6,7 @@
 <mapper namespace="org.zerock.mapper.BoardMapper">
 
 	<select id="getList" resultType="org.zerock.domain.BoardVO">
-	<![CDATA[select * from tbl_board where bno > 0]]></select>
+	<![CDATA[select * from tbl_board where bno > 0 order by bno]]></select>
 
 	<insert id="insert">
 		insert into tbl_board (bno, title, content, writer)

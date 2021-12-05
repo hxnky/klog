@@ -25,6 +25,12 @@ public class BoardController {
 	public void list(Model model) {
 		log.info("list");
 		model.addAttribute("list", service.getList());
+		log.info(model);
+	}
+	
+	@GetMapping("/register")
+	public void register() {
+		
 	}
 
 	@PostMapping("/register")
@@ -34,7 +40,7 @@ public class BoardController {
 
 		service.register(board);
 
-		rttr.addFlashAttribute("result", board.getBno());
+		rttr.addFlashAttribute("result", board.getBno()); // 일회성으로 데이터 전달 --> 보관된 데이터는 단 한번만 사용될 수 있도록 보관됨
 
 		// 등록 작업이 끝나고 다시 목록으로 돌아감
 		// redirect 이용시 MVC에서 내부적으로 response.sendRedirect()를 처리함
@@ -42,9 +48,9 @@ public class BoardController {
 
 	}
 
-	@GetMapping("/get")
+	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("bno") Long bno, Model model) {
-		log.info("/get");
+		log.info("/get or /modify");
 		model.addAttribute("board", service.get(bno));
 	}
 
