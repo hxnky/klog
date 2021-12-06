@@ -77,8 +77,16 @@ public class BoardControllerTests {
 
 		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/remove").param("bno", "15")).andReturn()
 				.getModelAndView().getViewName();
-		
+
 		log.info(resultPage);
 
+	}
+
+	@Test
+	public void testListPaging() throws Exception {
+
+		log.info("페이지처리");
+		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/list").param("pageNum", "2").param("amount", "50"))
+				.andReturn().getModelAndView().getModelMap());
 	}
 }

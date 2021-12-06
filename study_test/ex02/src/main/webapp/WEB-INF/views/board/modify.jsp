@@ -32,6 +32,9 @@
 					<div class="card-body">
 						<div class="dataTable-container">
 							<form role="form" action="/board/modify" method="post">
+							<!-- 페이지 처리를 위한 파라미터 값 추가 -->
+							<input type="hidden" name="pageNum" value="<c:out value='${cri.pageNum }'/>">
+							<input type="hidden" name="amount" value="<c:out value='${cri.amount }'/>">
 								<div class="form-group">
 									<label>책 번호</label> <input class="form-control" name="bno"
 										value="<c:out value="${board.bno }" />" readonly="readonly">
@@ -69,8 +72,8 @@
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			
 			var formObj = $("form");
-
 			$("button").on("click", function(e) {
 				e.preventDefault();
 
@@ -83,7 +86,15 @@
 				} else if (operation === "list") {
 					// 리스트.jsp 로 이동
 					formObj.attr("action", "/board/list").attr("method", "get");
+					// 사용자가 List 버튼 클릭 시 form 태그에서 필요한 부분만 clone하여 보관하고
+					var pageNumTag = $("input[name='pageNum']").clone();
+					var amountTag = $("input[name='amount']").clone();
+					
+					// form 태그 내의 모든 내용은 지운다(empty)
+					// 이후에 다시 필요한 태그들만 추가하여 "/board/list 를 호출한다
 					formObj.empty();
+					formObj.append(pageNumTag);
+					formObj.append(amountTag);
 				}
 
 				formObj.submit();

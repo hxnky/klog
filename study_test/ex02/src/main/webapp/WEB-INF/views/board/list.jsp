@@ -46,9 +46,9 @@
 								<tr>
 
 									<td><c:out value="${board.bno }" /></td>
-									<td><a href="/board/get?bno=<c:out value='${board.bno }' />"><c:out
-												value="${board.title }" /></a></td>
-
+									<td><a class="move" href="<c:out value='${board.bno }'/>">
+											<c:out value="${board.title }" />
+									</a>
 									<td><c:out value="${board.writer }" /></td>
 
 									<td><fmt:formatDate pattern="yyyy-MM-dd"
@@ -61,12 +61,39 @@
 							</c:forEach>
 
 						</table>
+						<!-- 페이지 처리 -->
+						<nav class="dataTable-pagination">
+							<ul class="dataTable-pagination-list">
+								<c:if test="${pageMaker.prev }">
+									<li class="pager"><a
+										href="${pageMaker.startPage-1 }">Previous</a></li>
+								</c:if>
 
-					</div>
+								<c:forEach var="num" begin="${pageMaker.startPage }"
+									end="${pageMaker.endPage }">
+									<li class="active ${pageMaker.cri.pageNum == num ? "active" : "" }">
+										<a href="${num} ">${num }</a>
+									</li>
+								</c:forEach>
+
+								<c:if test="${pageMaker.next }">
+									<li class="pager"><a
+										href="${pageMaker.endPage + 1 }">Next</a></li>
+								</c:if>
+							</ul>
+						</nav>
+
+					<form id="actionForm" action="/board/list" method="get">
+						<input type="hidden" name="pageNum"
+							value="${pageMaker.cri.pageNum }"> <input type="hidden"
+							name="amount" value="${pageMaker.cri.amount }">
+					</form>
+
 				</div>
 			</div>
-		</main>
-		<%@include file="../include/footer.jsp"%>
+	</div>
+	</main>
+	<%@include file="../include/footer.jsp"%>
 	</div>
 
 	<!-- Modal -->
@@ -108,31 +135,79 @@
 
 	<!-- Modal 창 띄우기 -->
 	<script type="text/javascript">
-		$(document).ready(
-				function() {
-					var result = '<c:out value="${result}"/>'
+		$(document)
+				.ready(
+						function() {
 
-					checkModal(result);
-					
-					/* 이미 한번 모달창이 나온경우 모달이 뜨지 않게 한다. */
-					history.replaceState({}, null, null);
+							var result = '<c:out value="${result}"/>'
 
-					function checkModal(result) {
-						if (result == '' || history.state) {
-							return;
-						}
+							checkModal(result);
 
-						if (parseInt(result) > 0) {
+							/* 이미 한번 모달창이 나온경우 모달이 뜨지 않게 한다. */
+							history.replaceState({}, null, null);
 
-							console.log("함수 진입");
+							function checkModal(result) {
+								if (result == '' || history.state) {
+									return;
+								}
 
-							$(".modal-body").html(
-									"게시글 " + parseInt(result) + "번이 등록되었습니다.");
-						}
-						$("#myModal").modal("show");
-					}
+								if (parseInt(result) > 0) {
 
-				});
+									console.log("함수 진입");
+
+									$(".modal-body").html(
+											"게시글 " + parseInt(result)
+													+ "번이 등록되었습니다.");
+								}
+								$("#myModal").modal("show");
+							}
+
+							// 페이징 처리 
+							var actionForm = $("#actionForm");
+
+							$(".active a").on(
+									"click",
+									function(e) {
+										e.preventDefault();
+
+										console.log("click");
+
+										actionForm
+												.find("input[name='pageNum']")
+												.val($(this).attr("href"));
+										actionForm.submit();
+									});
+							
+							$(".pager a").on(
+									"click",
+									function(e) {
+										e.preventDefault();
+
+										console.log("click");
+
+										actionForm
+												.find("input[name='pageNum']")
+												.val($(this).attr("href"));
+										actionForm.submit();
+									});
+
+							// pageNum과 amount 파라미터를 추가로 전달
+							$(".move")
+									.on(
+											"click",
+											function(e) {
+												e.preventDefault();
+												actionForm
+														.append("<input type='hidden' name='bno' value='"
+																+ $(this).attr(
+																		"href")
+																+ "'>");
+												actionForm.attr("action",
+														"/board/get");
+												actionForm.submit();
+											})
+
+						});
 	</script>
 
 	<!-- 등록 버튼 클릭 시 등록 페이지로 이동 -->
@@ -141,5 +216,15 @@
 			self.location = "/board/register";
 		});
 	</script>
+
+
+
+
+	</script>
+
+
+
+
+
 </body>
 </html>
