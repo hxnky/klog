@@ -27,6 +27,13 @@ public class BoardController {
 		log.info("리스트 불러오기");
 
 		model.addAttribute("list", service.getList());
+		
+		
+	}
+	
+	@GetMapping("/register")
+	public void register() {
+		
 	}
 
 	@PostMapping("/register")
@@ -36,7 +43,7 @@ public class BoardController {
 
 		service.register(board);
 
-		rttr.addFlashAttribute("등록 결과", board.getBno());
+		rttr.addFlashAttribute("result", board.getBno());
 
 		return "redirect:/board/list"; // 등록 후 다시 리스트 페이지로 돌아간다
 
@@ -57,7 +64,7 @@ public class BoardController {
 		log.info("수정 컨트롤러 작동 ~!!!!" + board);
 
 		if (service.modify(board)) {
-			rttr.addFlashAttribute("수정 결과", "success");
+			rttr.addFlashAttribute("modify", "success");
 		}
 		return "redirect:/board/list";
 	}
@@ -68,7 +75,7 @@ public class BoardController {
 		log.info("삭제 컨트롤러 진입 ::" + bno);
 		
 		if(service.remove(bno)) {
-			rttr.addFlashAttribute("삭제 결과", "success");
+			rttr.addFlashAttribute("remove", "success");
 		}
 		return "redirect:/board/list";
 	}

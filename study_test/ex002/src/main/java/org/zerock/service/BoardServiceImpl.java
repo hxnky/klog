@@ -32,6 +32,8 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public BoardVO get(Long bno) {
 		log.info("get 메서드 작동");
+		
+		
 
 		return mapper.read(bno);
 	}
@@ -61,6 +63,8 @@ public class BoardServiceImpl implements BoardService {
 
 		log.info("getList 메서드 작동");
 
+		log.info(mapper.getList());
+		
 		return mapper.getList();
 	}
 
