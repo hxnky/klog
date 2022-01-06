@@ -3,6 +3,7 @@ package org.zerock.mapper;
 import java.util.List;
 
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 public interface BoardMapper {
 
@@ -19,4 +20,9 @@ public interface BoardMapper {
 	public int delete(Long bno);
 	// 해당 책 번호의 정보 수정
 	public int update(BoardVO board);
+	// 페이징 리스트
+	public List<BoardVO> getListWithPaging(Criteria cri);
+	//총 데이터 수 구하기 --> 어노테이션으로 구해도 상관 x
+	public int getTotalCount(Criteria cri);
+	
 }

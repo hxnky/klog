@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 import org.zerock.mapper.BoardMapper;
 
 import lombok.AllArgsConstructor;
@@ -58,14 +59,30 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	// 현재 테이블에 저장된 모등 데이터를 가져온다
+//	@Override
+//	public List<BoardVO> getList() {
+//
+//		log.info("getList 메서드 작동");
+//
+//		log.info(mapper.getList());
+//		
+//		return mapper.getList();
+//	}
+
 	@Override
-	public List<BoardVO> getList() {
-
-		log.info("getList 메서드 작동");
-
-		log.info(mapper.getList());
+	public List<BoardVO> getList(Criteria cri){
 		
-		return mapper.getList();
+		log.info("페이징 서비스 시작 : " + cri);
+		
+		return mapper.getListWithPaging(cri);
 	}
-
+	
+	@Override
+	public int getTotal(Criteria cri) {
+		
+		log.info(cri);
+		
+		return mapper.getTotalCount(cri);
+	}
+	
 }

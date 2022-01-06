@@ -29,7 +29,7 @@
 						<label>작가명</label> <input class="form-control" name="writer">
 					</div>
 					<button type="submit" class="btn btn-default">등록</button>
-					<button type="reset" class="btn btn-default">돌아가기</button>
+					<button type="reset" id="resetBtn" class="btn btn-default">돌아가기</button>
 				</form>
 			
 			</div>
@@ -37,4 +37,14 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(
+		function() {
+			// 돌아가기 버튼을 클릭하여도 아무 이벤트도 일어나지 않아 스크립트 별도 추가
+			$("#resetBtn").on("click", function() {
+				self.location = "/board/list";
+			});
+		});
+</script>
 <%@include file="../include/footer.jsp"%>

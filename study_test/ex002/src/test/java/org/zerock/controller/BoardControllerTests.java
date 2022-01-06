@@ -79,8 +79,17 @@ public class BoardControllerTests {
 		// 삭제 전 데이터 베이스에 해당 책 번호의 정보가 있는지 확인해야 한다
 		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/remove").param("bno", "573484"))
 				.andReturn().getModelAndView().getViewName();
-		
+
 		log.info(resultPage);
+
+	}
+
+	@Test
+	public void testListPaging() throws Exception {
+
+		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/list").param("pageNum", "2").param("amount", "50"))
+				.andReturn().getModelAndView().getModelMap());
+		
 
 	}
 
