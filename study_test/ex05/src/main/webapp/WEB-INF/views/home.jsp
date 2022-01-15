@@ -14,5 +14,6 @@
 <P>  The time on the server is ${serverTime}. </P>
 <a href="/uploadForm">파일 업로드</a>
 <a href="/uploadAjax">Ajax 파일 업로드</a>
+<a href="/board/list">메인 프로젝트</a>
 </body>
 </html>
