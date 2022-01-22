@@ -37,9 +37,7 @@ public class MemberController {
 	@PostMapping("/user/reg")
 	@ResponseBody
 	public int reg(RegVO vo) {
-		// public String reg(@RequestParam("email") String email, String name, String
-		// id, String pw, RegVO vo, Model model) {
-
+		
 		log.info("회원가입 진행");
 		log.info("입력된 정보 : " + vo);
 

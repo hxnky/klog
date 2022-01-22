@@ -1,0 +1,97 @@
+body {
+    background-color: #FAFEFF;
+}
+
+.content_box {
+    margin: 30px 0 0 170px;
+    border: 0.2px solid lightgray;
+    width: 370px;
+    background-color: white;
+}
+
+#text_logo {
+    width: 180px;
+    display: block;
+    margin: auto;
+}
+
+#reg_text {
+    width: 300px;
+    display: block;
+    margin: auto;
+    text-align: center;
+    color: darkgrey;
+    font-weight: bold;
+    font-size: 19px;
+}
+
+#social_login {
+    border: 1px solid;
+    width: 300px;
+    display: block;
+    margin: auto;
+    font-size: 15px;
+}
+
+#text_or {
+    display: flex;
+    flex-basis: 100%;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.35);
+    font-size: 15px;
+    margin: 8px 0px;
+}
+
+#text_or::before,
+#text_or::after {
+    content: "";
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.35);
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 16px;
+}
+
+#regForm{
+    margin-left: 50px;
+}
+
+#form_div input{
+    width : 80%;
+    height: 40px;
+    margin-bottom: 8px;
+    background-color : #FAFEFF;
+    border: solid 0.1px gray;
+    border-radius: 5px;
+           
+}
+
+#regBtn{
+    width: 80%;
+    height: 30px;
+    margin-bottom: 40px;
+    background-color: dodgerblue;
+    font-weight: bold;
+    color: white;
+    border : none;
+    border-radius: 5px;
+}
+
+.login_box{
+    margin: 30px 0 0 170px;
+    width: 370px;
+    background-color: white;
+}
+
+#login_account{
+    float: left;
+    margin-left: 80px;
+    font-size: 15px;
+}
+
+#login_link{
+    float: left;
+    margin-left: 10px;
+    font-size: 15px;
+}

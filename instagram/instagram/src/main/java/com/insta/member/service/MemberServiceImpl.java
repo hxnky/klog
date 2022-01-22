@@ -23,22 +23,24 @@ public class MemberServiceImpl implements MemberService {
 
 		log.info("회원가입 서비스 시작");
 		log.info("회원가입 정보 : " + vo);
-		mapper.register(vo);
-		int result = mapper.CheckUser(vo.getEmail());
-		System.out.println(mapper.CheckUser(vo.getEmail()));
+		int result = 0;
 
 		// 회원정보 중복 확인
-		if (result == 1) {
+		// 이메일 중복과 아이디 중복을 구분해야함
+		if (mapper.CheckEmail(vo.getEmail()) == 1) {
 
-			log.info("이미 있는 회원입니다.");
+			System.out.println("이메일 중복");
 			result = 1;
+		} else if (mapper.CheckID(vo.getId()) == 1) {
+			System.out.println("아이디 중복");
+			result = 2;
 		} else {
 			mapper.register(vo);
-			result = 0;
 		}
 
 		log.info("실행 결과 : " + result);
 		System.out.println("회원가입 서비스 마지막 ");
+		System.out.println(result);
 
 		return result;
 	}

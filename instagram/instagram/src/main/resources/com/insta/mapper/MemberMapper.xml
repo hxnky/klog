@@ -7,7 +7,11 @@
 		insert into member (id, pw, email, name) values (#{id}, #{pw}, #{email}, #{name})
 	</insert>
 	
-	<select id="CheckUser" resultType="int">
+	<select id="CheckEmail" resultType="int">
 		select count(*) from member where email = #{email}
+	</select>
+	
+	<select id="CheckID" resultType="int">
+		select count(*) from member where id = #{id}
 	</select>
 </mapper>
