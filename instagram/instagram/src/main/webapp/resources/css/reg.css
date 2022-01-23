@@ -9,6 +9,13 @@ body {
     background-color: white;
 }
 
+.content_box_pw{
+    margin: 150px 0 0 170px;
+    border: 0.2px solid lightgray;
+    width: 370px;
+    background-color: white;
+}
+
 #text_logo {
     width: 180px;
     display: block;
@@ -53,45 +60,115 @@ body {
     margin: 0px 16px;
 }
 
-#regForm{
+#regForm {
     margin-left: 50px;
 }
 
-#form_div input{
-    width : 80%;
-    height: 40px;
-    margin-bottom: 8px;
-    background-color : #FAFEFF;
-    border: solid 0.1px gray;
-    border-radius: 5px;
-           
+#findForm{
+    margin-left: 50px;
 }
 
-#regBtn{
+#form_div input {
+    width: 80%;
+    height: 40px;
+    margin-bottom: 8px;
+    background-color: #FAFEFF;
+    border: solid 0.1px gray;
+    border-radius: 5px;
+
+}
+
+#regBtn {
     width: 80%;
     height: 30px;
     margin-bottom: 40px;
     background-color: dodgerblue;
     font-weight: bold;
     color: white;
-    border : none;
+    border: none;
     border-radius: 5px;
 }
 
-.login_box{
+.login_box {
     margin: 30px 0 0 170px;
     width: 370px;
     background-color: white;
 }
 
-#login_account{
+#login_account {
     float: left;
     margin-left: 80px;
     font-size: 15px;
 }
 
-#login_link{
+#login_link {
     float: left;
     margin-left: 10px;
     font-size: 15px;
+}
+
+#find_login {
+    font-size: 15px;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#lock_logo {
+    width: 80px;
+    margin-left: 32%;
+    margin-bottom: 20px;
+}
+
+#findPw_qe{
+    width: 90%;
+    font-size: 20px;
+    display: block;
+    text-align: center;
+}
+
+#findPw_notice{
+    font-size: 15px;
+    color: darkgray;
+    text-align: center;
+}
+
+#findPw_box{
+    width: 280px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#findBtn{
+    width: 100%;
+    height: 30px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: dodgerblue;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#find_div input{
+    width: 100%;
+    height: 40px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    background-color: #FAFEFF;
+    border: solid 0.1px gray;
+    border-radius: 5px;
+}
+
+#profile_pic{
+    width: 100px;
+    margin-left: 93px;
+    margin-top: 10px;
+} 
+
+#findPw {
+    margin-left: 50px;
+    margin-top: 100px;
 }
