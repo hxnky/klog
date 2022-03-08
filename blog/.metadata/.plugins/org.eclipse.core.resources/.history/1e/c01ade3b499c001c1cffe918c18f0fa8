@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean class="com.zaxxer.hikari.HikariConfig" id="hikariConfig">
+		s
+		<property value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"
+			name="driverClassName" />
+		<property
+			value="jdbc:log4jdbc:mysql://localhost:3306/insta?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;serverTimezone=UTC"
+			name="jdbcUrl" />
+		<property value="insta" name="username" />
+		<property value="insta" name="password" />
+	</bean>
+
+	<!-- HikariCP Configuration -->
+	<bean class="com.zaxxer.hikari.HikariDataSource" id="dataSource"
+		destroy-method="close">
+		<constructor-arg ref="hikariConfig" />
+	</bean>
+
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean"
+		id="sqlSessionFactory">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<mybatis-spring:scan
+		base-package="com.insta.mapper" />
+</beans>

@@ -1,0 +1,10 @@
+package com.klog.mapper;
+
+public interface MemberMapper {
+
+	// 2022.03.08
+	// 회원가입
+	public void register();
+	
+	
+}

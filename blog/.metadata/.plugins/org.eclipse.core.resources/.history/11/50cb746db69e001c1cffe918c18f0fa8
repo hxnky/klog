@@ -1,0 +1,5 @@
+package com.klog.mapper;
+
+public interface MemberMapper {
+
+}

@@ -1,0 +1,30 @@
+package com.klog.serviceImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.klog.domain.MemberVO;
+import com.klog.mapper.MemberMapper;
+import com.klog.service.MemberService;
+
+@Service
+public class MemberServiceImpl implements MemberService {
+	
+	@Autowired
+	private MemberMapper member;
+
+	@Override
+	public int memberReg(MemberVO member) {
+		
+		
+		
+		return 0;
+	}
+	
+	
+	
+	
+	
+	
+	
+}

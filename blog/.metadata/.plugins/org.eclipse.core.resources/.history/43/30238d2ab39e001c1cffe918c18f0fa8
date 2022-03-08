@@ -1,0 +1,107 @@
+body {
+    background-color: floralwhite;
+    
+}
+
+/*2022.03.05 로그인 화면 배경색을 위해 추가*/
+.login_box {
+    background-color: #bd5d38;
+    height: 400px;
+    width: 500px;
+}
+
+/*2022.03.06 div 화면 중앙으로 배치*/
+.inner_box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.logo_st {
+    height: 80px;
+    width: 400px;
+    margin-left: 50px;
+    margin-bottom: 10px;
+}
+
+.login_inner {
+    padding-top: 20px;
+}
+
+.sel_login {
+    height: 100px;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.new_reg {
+    height: 70px;
+    text-align: center;
+    padding-top: 20px;
+    font-family: 'Jua', sans-serif;
+    font-size: 20px;
+}
+
+.sel_inner {
+    border: solid 0.1px darkgrey;
+    border-radius: 10px;
+    width: 400px;
+    height: 80px;
+    display: inline-block;
+    background-color: floralwhite;
+}
+
+.sel_img {
+    display: inline-block;
+    line-height: 70px;
+}
+
+.sel_btn {
+    display: inline-block;
+}
+
+.sel_img img {
+    width: 70px;
+    height: 60px;
+    vertical-align: middle;
+}
+
+.sel_btn button {
+    width: 300px;
+    height: 70px;
+    border: none;
+    background-color: floralwhite;
+    font-family: 'Jua', sans-serif;
+    font-size: 20px;
+}
+
+.back_img {
+    background-color: #bd5d38;
+    border: none;
+    cursor: pointer;
+}
+
+.back_img img {
+    width: 30px;
+    margin-left: 10px;
+}
+
+.new_ip {
+    width: 300px;
+    margin-left: 50px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+.mem_reg{
+    width: 300px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Jua', sans-serif;
+    font-size: 20px;
+    background-color: floralwhite;
+    margin-top: 30px;
+    cursor: pointer;
+}

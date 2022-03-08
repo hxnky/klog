@@ -1,0 +1,7 @@
+package com.klog.service;
+
+public interface MemberService {
+
+	
+	
+}

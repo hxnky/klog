@@ -1,0 +1,140 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klog</title>
+<link href="resources/css/login.css" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
+	rel="stylesheet">
+</head>
+
+<body>
+	<div class="main_box">
+		<div class="inner_box">
+			<div class="logo_img">
+				<img class="logo_st" src="resources/assets/img/logo.png">
+			</div>
+			<div class="login_box">
+				<div class="login_inner">
+					<div class="sel_login">
+						<div class="sel_inner">
+							<div class="sel_img">
+								<img src="resources/assets/img/email_logo.png">
+							</div>
+							<div class="sel_btn" id="e_login">
+								<button>이메일로 로그인하기</button>
+							</div>
+						</div>
+					</div>
+					<div class="sel_login">
+						<div class="sel_inner">
+							<div class="sel_img">
+								<img src="resources/assets/img/reg_email.png">
+							</div>
+							<div class="sel_btn" id="e_reg">
+								<button>이메일로 회원가입하기</button>
+							</div>	
+						</div>
+					</div>
+					<div class="sel_login">
+						<div class="sel_inner">
+							<div class="sel_img">
+								<img src="resources/assets/img/google_logo.png">
+							</div>
+							<div class="sel_btn" id="s_login">
+								<button>소셜로그인하기</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script type="text/javascript">
+        // 회원가입 버튼 눌렀을 때
+        function click_regbtn() {
+            // 원래 있던 버튼 숨기기
+            $(".sel_inner").hide();
+            // 회원가입 관련 창 보여주기
+            $(".login_inner").prepend("<button type='button' class='back_img' onclick='show_btn();'><img src='/resources/assets/img/left.png'></button><div class='new_reg'><form id='regForm'>이메일 <input type='email' class='new_ip' id='m_email'></div><div class='new_reg'>비밀번호 <input type='password' class='new_ip' id='m_pw'></div><div class='new_reg'>닉네임 <input type='text' class='new_ip' id='m_name'> <button type='button' class='mem_reg'>가입하기</button></form></div>");
+        }
+
+     	// 원래 있던 버튼 다시 보여주기
+        function show_btn() {            
+            $("div").remove(".new_reg");
+            $("button").remove(".back_img");
+            $(".sel_inner").show();
+        }
+
+
+        $(document).ready(function() {
+            $("#e_reg").on("click", function(e) {
+                click_regbtn();
+            });
+
+            $("#back").on("click", function(e) {
+                
+               show_btn(); 
+            });
+            
+
+			// 회원가입 AJAX
+            $(".mem_reg").on("click", function(e) {
+				console.log("가입버튼 클릭");
+
+				var params = $('#regForm').serialize();
+				console.log(params);
+
+				$.ajax({
+					url : '/user/reg',
+					data : params,
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+
+						console.log(result);
+						alert(result);
+						console.log(JSON.stringify(result));
+						var data = JSON.stringify(result);
+						// 가입 실패시 현재 페이지 아니면 로그인화면?
+						if (result == 1) {
+							console.log("이미 가입된 이메일입니다.");
+							alert("이미 가입된 이메일입니다.");
+							// 로그인화면으로 이동
+							self.location = "/";
+						} else if (result == 2) {
+							console.log("아이디가 중복됩니다.");
+							alert("아이디가 중복됩니다.");
+							// 화면 그대로
+						} else {
+							console.log("회원가입 성공");
+							alert("회원가입 성공");
+						}
+
+					},
+					error : function(e) {
+						// 전송 후 에러 발생 시 실행 코드
+						console.log("ERROR : ", e);
+					}
+				}); // end ajax  
+			});
+
+
+
+        });
+    </script>
+
+</body>
+
+
+
+
+</html>

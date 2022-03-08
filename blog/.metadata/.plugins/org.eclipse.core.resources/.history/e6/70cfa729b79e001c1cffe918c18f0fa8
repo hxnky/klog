@@ -1,0 +1,5 @@
+package com.insta.controller;
+
+public class RestController {
+
+}

@@ -1,0 +1,10 @@
+package com.klog.serviceImpl;
+
+import org.springframework.stereotype.Service;
+
+import com.klog.service.MemberService;
+
+@Service
+public class MemberServiceImpl implements MemberService {
+	
+}

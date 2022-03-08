@@ -1,0 +1,36 @@
+package com.klog.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.klog.domain.MemberVO;
+import com.klog.serviceImpl.MemberServiceImpl;
+
+import lombok.extern.log4j.Log4j;
+
+@Controller
+@Log4j
+public class MainController {
+	
+	@Autowired
+	private MemberServiceImpl service;
+	
+	@GetMapping("/")
+	public String loginPage() {
+		
+		log.info("블로그 로그인 화면");
+		
+		return "member/login";
+	}
+	
+	@PostMapping("/user/reg")
+	@ResponseBody
+	public int memberReg(MemberVO member) {
+		
+		return service.memberReg(member);
+	}
+
+}
