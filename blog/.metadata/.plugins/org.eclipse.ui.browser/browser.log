@@ -76,3 +76,8 @@
 3월 09, 2022 13:07:02.394 [24312:20196:0309/130702.394:ERROR:CONSOLE(1)] "Request Overlay.highlightNode failed. {"code":-32600,"message":"The node's document is not active"}", source: devtools://devtools/bundled/devtools-frontend/front_end/core/protocol_client/protocol_client.js (1)
 3월 09, 2022 13:07:02.557 [24312:20196:0309/130702.557:ERROR:CONSOLE(1)] "Request Overlay.highlightNode failed. {"code":-32600,"message":"The node's document is not active"}", source: devtools://devtools/bundled/devtools-frontend/front_end/core/protocol_client/protocol_client.js (1)
 3월 09, 2022 15:30:41.780 [24312:20196:0309/153041.771:ERROR:interface_endpoint_client.cc(659)] Message 1 rejected by interface blink.mojom.WidgetHost
+3월 09, 2022 20:38:01.65 [24312:20592:0309/203801.049:ERROR:get_updates_processor.cc(260)] PostClientToServerMessage() failed during GetUpdates with error 2
+3월 09, 2022 20:38:03.409 [24312:16300:0309/203802.927:ERROR:connection_factory_impl.cc(425)] Failed to connect to MCS endpoint with error -106
+3월 09, 2022 20:49:40.560 [24312:20196:0309/204940.560:ERROR:device_event_log_impl.cc(214)] [20:49:40.559] USB: usb_service_win.cc:260 Failed to get device driver name: 요소가 없습니다. (0x490)
+3월 09, 2022 22:11:51.506 [24312:20196:0309/221151.502:ERROR:interface_endpoint_client.cc(659)] Message 0 rejected by interface blink.mojom.WidgetHost
+3월 09, 2022 22:16:58.195 [24312:20196:0309/221658.195:ERROR:interface_endpoint_client.cc(659)] Message 0 rejected by interface blink.mojom.WidgetHost

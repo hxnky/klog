@@ -24,6 +24,6 @@ public interface MemberMapper {
 	// 회원 인증 확인
 	public String CheckVerify(String email);
 	// 비밀번호 변경
-	public void userPassword(String email, String password);
+	public void userPassword(@Param("email") String email, @Param("password") String password);
 
 }

@@ -83,8 +83,12 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public int UserPassword(String email, String password) {
+		
+		int result = 0;
+		
+		mapper.userPassword(email, password);
 
-		return 0;
+		return result;
 	}
 
 }
