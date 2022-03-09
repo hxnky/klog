@@ -1,0 +1,112 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>KLOG • 비밀번호 변경</title>
+<style>
+.pw_chk{
+	color : red;
+	display : none;
+}
+</style>
+</head>
+<body>
+
+
+	<div class="pw_main">
+		<div class="pw_inner">
+			<div>
+				새 비밀번호 <input type="password" id="password" name="password"
+					class="pwchange">
+			</div>
+			<div>
+				비밀번호 확인 <input type="password" id="password_chk" name="password"
+					class="pwchange" required oninput = 'checkPw()'> <span class="pw_chk">비밀번호가 일치하지 않습니다.</span>
+			</div>
+			<button id="pw_submit">비밀번호 변경</button>
+		</div>
+
+
+	</div>
+
+
+
+
+
+
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script type="text/javascript">
+		//url의 이메일 가져오기
+		function getParameterByName(name) {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex
+					.exec(location.search);
+			return results == null ? "" : decodeURIComponent(results[1]
+					.replace(/\+/g, " "));
+		}
+		
+		// 이름 중복체크 함수
+     	function checkPw(){
+			
+     		var password = $("#password").val();
+			var pw_chk = $("#password_chk").val();
+			
+			if(password != pw_chk){
+				$('.pw_chk').css("display","inline-block"); 
+			} else{
+				$('.pw_chk').css("display","none");
+			}
+            
+            if(result != 1){
+                $('.name_ok').css("display","inline-block"); 
+                $('.name_already').css("display", "none");
+            } else if(result == 1) {
+                $('.name_already').css("display","inline-block");
+                $('.name_ok').css("display", "none");
+            }
+        };
+
+		$(document).ready(function() {
+
+			var email = getParameterByName('email');
+
+			$("#pw_submit").on("click", function(e) {
+				
+				console.log(email);
+				console.log(password);
+				console.log(pw_chk);
+				// 비밀번호 변경
+				/*$.ajax({
+					url : "/user/password",
+					data : {
+						"password" : password,
+						"email" : email
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+
+						console.log(result);
+
+						if (result == 1) {
+							console.log("인증됨");
+						} else {
+							console.log("이미 인증됨");
+						}
+
+					},
+						error : function(e) {
+							// 전송 후 에러 발생 시 실행 코드
+							console.log("ERROR : ", e);
+					}
+				}); // end ajax */
+
+			});
+
+		});
+	</script>
+</body>
+</html>
