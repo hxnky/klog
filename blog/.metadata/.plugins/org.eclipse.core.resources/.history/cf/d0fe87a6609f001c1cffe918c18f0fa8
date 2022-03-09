@@ -1,0 +1,183 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klog</title>
+<link href="resources/css/login.css" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
+	rel="stylesheet">
+</head>
+
+<body>
+	<div class="main_box">
+		<div class="inner_box">
+			<div class="logo_img">
+				<img class="logo_st" src="resources/assets/img/logo.png">
+			</div>
+			<div class="login_box">
+				<div class="login_inner">
+					<div class="sel_login">
+						<div class="sel_inner">
+							<div class="sel_img">
+								<img src="resources/assets/img/email_logo.png">
+							</div>
+							<div class="sel_btn" id="e_login">
+								<button>이메일로 로그인하기</button>
+							</div>
+						</div>
+					</div>
+					<div class="sel_login">
+						<div class="sel_inner">
+							<div class="sel_img">
+								<img src="resources/assets/img/reg_email.png">
+							</div>
+							<div class="sel_btn" id="e_reg">
+								<button>이메일로 회원가입하기</button>
+							</div>	
+						</div>
+					</div>
+					<div class="sel_login">
+						<div class="sel_inner">
+							<div class="sel_img">
+								<img src="resources/assets/img/google_logo.png">
+							</div>
+							<div class="sel_btn" id="s_login">
+								<button>소셜로그인하기</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script type="text/javascript">
+        // 회원가입 버튼 눌렀을 때
+        function click_regbtn() {
+            // 원래 있던 버튼 숨기기
+            $(".sel_inner").hide();
+            // 회원가입 관련 창 보여
+            $(".login_inner").prepend("<button type='button' class='back_img' onclick='show_btn();'><img src='/resources/assets/img/left.png'></button><form id='regForm'><div class='new_reg'>이메일 <input type='email' name='email' class='new_ip' id='email' required oninput = 'checkEmail()'><span class='email_ok'>사용 가능한 이메일입니다.</span>"
+            +"<span class='email_already'>이미 가입된 이메일입니다.</span></div><div class='new_reg'>비밀번호 <input type='password' name='password' class='new_ip' id='password'></div><div class='new_reg'>닉네임 <input type='text' name='m_name' class='new_ip' id='m_name' required oninput = 'checkName()'><span class='name_ok'>사용 가능한 닉네임 입니다.</span><span class='name_already'>이미 있는 닉네임입니다.</span></div><button type='button' class='mem_reg' onclick='memberReg();'>가입하기</button></form>");
+        }
+
+     	// 원래 있던 버튼 다시 보여주기
+        function show_btn() {            
+            $("form").remove("#regForm");
+            $("button").remove(".back_img");
+            $(".sel_inner").show();
+        }
+     	
+     	// 회원가입 함수
+     	function memberReg(){
+     		console.log("가입버튼 클릭");
+
+			var params = $('#regForm').serialize();
+			console.log(params);
+
+			$.ajax({
+				url : '/user/reg',
+				data : params,
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					var data = JSON.stringify(result);
+						console.log(result);
+						console.log("회원가입 성공");
+						// 메인화면으로
+
+				},
+				error : function(e) {
+					// 전송 후 에러 발생 시 실행 코드
+					console.log("ERROR : ", e);
+				}
+			}); // end ajax  
+     	}
+     	
+     	// 이메일 중복체크 함수
+     	function checkEmail(){
+            var email = $('#email').val();
+            
+            // 유효성 검사
+            var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i; // 검증에 사용할 정규식 변수 regExp에 저장 
+            
+            if (email.match(regExp) != null) { 
+            	console.log("이메일형식입니다.");
+            	// 중복 검사
+                $.ajax({
+                    url:'/user/EmailCheck', //Controller에서 인식할 주소
+                    type:'post', //POST 방식으로 전달
+                    dataType : "json",
+                    data:{email:email},
+                    success:function(result){
+                    	console.log(result);
+                    	if(result != 1){ //cnt가 1이 아니면(=0일 경우) -> 사용 가능한 아이디 
+                            $('.email_ok').css("display","inline-block"); 
+                            $('.email_already').css("display", "none");
+                        } else if(result == 1) { // cnt가 1일 경우 -> 이미 존재하는 아이디 // 비밀번호찾기도 추가하기
+                            $('.email_already').css("display","inline-block");
+                            $('.email_ok').css("display", "none");
+                        }
+                    },
+                    error:function(){
+                        alert("에러입니다");
+                    }
+                });
+            } else { 
+            	console.log("이메일형식이 아닙니다.");
+            }
+
+            
+        };
+        
+     // 이름 중복체크 함수
+     	function checkName(){
+            var m_name = $('#m_name').val();
+            $.ajax({
+                url:'/user/NameCheck', //Controller에서 인식할 주소
+                type:'post', //POST 방식으로 전달
+                dataType : "json",
+                data:{m_name:m_name},
+                success:function(result){
+                	console.log(result);
+                	if(result != 1){ //cnt가 1이 아니면(=0일 경우) -> 사용 가능한 아이디 
+                        $('.name_ok').css("display","inline-block"); 
+                        $('.name_already').css("display", "none");
+                    } else if(result == 1) { // cnt가 1일 경우 -> 이미 존재하는 아이디
+                        $('.name_already').css("display","inline-block");
+                        $('.name_ok').css("display", "none");
+                    }
+                },
+                error:function(){
+                    alert("에러입니다");
+                }
+            });
+        };
+
+
+        $(document).ready(function() {
+            $("#e_reg").on("click", function(e) {
+                click_regbtn();
+            });
+
+            $("#back").on("click", function(e) {
+                
+               show_btn(); 
+            });
+            
+        });
+    </script>
+
+</body>
+
+
+
+
+</html>

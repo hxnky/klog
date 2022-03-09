@@ -16,5 +16,17 @@ public class MainController {
 		
 		return "member/login";
 	}
+	
+	@GetMapping("/user/verify")
+	public String UserVerify() {
+		
+		return "member/verify";
+	}
+	
+	@GetMapping("/user/password")
+	public String UserPassword() {
+		
+		return "member/Repw";
+	}
 
 }

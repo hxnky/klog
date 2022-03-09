@@ -1,0 +1,18 @@
+package com.klog.service;
+
+import com.klog.domain.MemberVO;
+
+public interface MemberService {
+
+	// 22.03.08 
+	//회원가입 서비스
+	public int memberReg(MemberVO member);
+	// 이메일 체크
+	public int EmailCheckSev(String email);
+	// 이름 체크
+	public int NameChekSev(String m_name);
+	//22.03.09
+	// 로그인
+	public int memberlogin(String email, String password);
+	
+}

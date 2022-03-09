@@ -57,65 +57,11 @@
 
 	</div>
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script type="text/javascript">
-        // 회원가입 버튼 눌렀을 때
-        function click_regbtn() {
-            // 원래 있던 버튼 숨기기
-            $(".sel_inner").hide();
-            // 회원가입 관련 창 보여주기
-            $(".login_inner").prepend("<button type='button' class='back_img' onclick='show_btn();'><img src='/resources/assets/img/left.png'></button><form id='regForm'><div class='new_reg'>이메일 <input type='email' name='email' class='new_ip' id='email'></div><div class='new_reg'>비밀번호 <input type='password' name='password' class='new_ip' id='password'></div><div class='new_reg'>닉네임 <input type='text' name='m_name' class='new_ip' id='m_name'></div><button type='button' class='mem_reg' onclick='memberReg();'>가입하기</button></form>");
-        }
+<script src="resources/js/login.js"></script>
 
-     	// 원래 있던 버튼 다시 보여주기
-        function show_btn() {            
-            $("form").remove("#regForm");
-            $("button").remove(".back_img");
-            $(".sel_inner").show();
-        }
-     	
-     	function memberReg(){
-     		console.log("가입버튼 클릭");
-
-			var params = $('#regForm').serialize();
-			console.log(params);
-
-			$.ajax({
-				url : '/user/reg',
-				data : params,
-				type : "POST",
-				dataType : "json",
-				async : false,
-				success : function(result) {
-
-					console.log(result);
-					alert(result);
-					console.log(JSON.stringify(result));
-					var data = JSON.stringify(result);
-					
-						console.log("회원가입 성공");
-						// 메인화면으로
-
-				},
-				error : function(e) {
-					// 전송 후 에러 발생 시 실행 코드
-					console.log("ERROR : ", e);
-				}
-			}); // end ajax  
-     	}
-
-
-        $(document).ready(function() {
-            $("#e_reg").on("click", function(e) {
-                click_regbtn();
-            });
-
-            $("#back").on("click", function(e) {
-                
-               show_btn(); 
-            });
-            
-        });
-    </script>
+<script type="text/javascript">
+	
+</script>
 
 </body>
 

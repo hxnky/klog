@@ -1,0 +1,23 @@
+package com.klog.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.klog.domain.MemberVO;
+import com.klog.service.MemberServiceImpl;
+
+@RestController
+public class MainRestController {
+	
+	@Autowired
+	private MemberServiceImpl service;
+	
+	@PostMapping("/user/reg")
+	public int memberReg(MemberVO member) {
+		
+		return service.memberReg(member);
+	}
+
+}

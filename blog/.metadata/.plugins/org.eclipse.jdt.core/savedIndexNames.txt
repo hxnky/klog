@@ -4,7 +4,6 @@ INDEX VERSION 1.131+C:\Users\hanky\Desktop\personal\blog\.metadata\.plugins\org.
 3426135627.index
 1801309866.index
 1275022286.index
-1024977823.index
 1781250373.index
 3460128229.index
 3514676211.index

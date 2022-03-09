@@ -1,0 +1,83 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>KLOG • 인증하기</title>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+	<script type="text/javascript">
+		//url의 이메일 가져오기
+		function getParameterByName(name) {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex
+					.exec(location.search);
+			return results == null ? "" : decodeURIComponent(results[1]
+					.replace(/\+/g, " "));
+		}
+
+		$(document).ready(function() {
+
+			var userEmail = getParameterByName('email');
+			console.log(userEmail);
+
+			$("#find_login").on("click", function(e) {
+				self.location = "/TimeLine?id=" + userid;
+			});
+
+			$("#findBtn").on("click", function(e) {
+				console.log("버튼 클릭");
+
+				var pw = $('#pw_new').val();
+				var pwSame = $("#pw_same").val();
+
+				if (pw != pwSame) {
+					alert("비밀번호가 일치하지 않습니다.");
+				}
+
+				// 비밀번호 변경
+				$.ajax({
+					url : '/user/RePw',
+					data : {
+						"id" : userid,
+						"pw" : pw
+					},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+
+						console.log(result);
+
+						if (result == 1) {
+							alert("비밀번호 변경 완료");
+							self.location = "/TimeLine";
+						} else {
+							alert("오류가 발생하였습니다. 잠시 후에 다시 시도해주세요");
+						}
+
+					},
+					error : function(e) {
+						// 전송 후 에러 발생 시 실행 코드
+						console.log("ERROR : ", e);
+					}
+				}); // end ajax 
+			});
+
+		});
+	</script>
+</body>
+</html>

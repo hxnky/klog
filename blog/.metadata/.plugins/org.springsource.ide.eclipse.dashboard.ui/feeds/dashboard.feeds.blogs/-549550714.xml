@@ -5,7 +5,32 @@
   <link rel="self" href="https://spring.io/blog.atom" />
   <id>http://spring.io/blog.atom</id>
   <icon>https://spring.io/favicon.ico</icon>
-  <updated>2022-03-07T23:51:00Z</updated>
+  <updated>2022-03-08T17:00:00Z</updated>
+  <entry>
+    <title>This Week in Spring - March 8th, 2022</title>
+    <link rel="alternate" href="https://spring.io/blog/2022/03/08/this-week-in-spring-march-8th-2022" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Josh Long</name>
+    </author>
+    <id>tag:spring.io,2022-03-08:4725</id>
+    <updated>2022-03-08T17:00:00Z</updated>
+    <content type="html">&lt;p&gt;Hi, Spring fans! Welcome to another installment of &lt;em&gt;This Week in Spring&lt;/em&gt;! How&amp;rsquo;re you doin&amp;rsquo;? &lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/03/03/a-bootiful-podcast-reactive-streams-cofounder-former-deputy-cto-at-lightbend-and-legend-viktor-klang"&gt;A Bootiful Podcast: Reactive Streams cofounder, former deputy CTO at Lightbend, and legend Viktor Klang&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/03/07/announcing-spring-cloud-stream-applications-2021-1-1-ga-release"&gt;Announcing Spring Cloud Stream Applications 2021.1.1 GA Release&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://medium.com/@dhakresumitra5/graphql-with-spring-boot-java-d2fa3ca1b12c"&gt;GraphQL with Spring Boot java&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://blogs.oracle.com/javamagazine/post/the-hidden-gems-in-java-16-and-java-17-from-streammapmulti-to-hexformat"&gt;Hidden gems in Java 16 and Java 17, from Stream.mapMulti to HexFormat&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://developer.okta.com/blog/2022/03/03/spring-native-jhipster"&gt;Introducing Spring Native for JHipster: Serverless Full-Stack Made Easy | Okta Developer&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://tanzu.vmware.com/content/webinars/mar-10-getting-started-with-spring-authorization-server"&gt;Mar 10 - Getting Started with Spring Authorization Server&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/03/04/spring-cloud-data-flow-2-10-0-m1-released"&gt;Spring Cloud Data Flow 2.10.0-M1 Released&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/03/01/spring-cloud-gateway-cve-reports-published"&gt;Spring Cloud Gateway CVE reports published&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/03/04/spring-cloud-square-0-4-1-has-been-released"&gt;Spring Cloud Square 0.4.1 has been released&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/03/02/spring-tips-reliable-database-migrations-with-liquibase-and-spring-boot"&gt;Spring Tips: Reliable Database Migrations with Liquibase and Spring Boot&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;I&amp;rsquo;m proud to stand with Ukraine, and it&amp;rsquo;s nice to know my company is too: &lt;a href="https://news.vmware.com/releases/vmware-statement-regarding-ukraine"&gt;VMware Statement Regarding Ukraine ? VMware News and Stories&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
+  </entry>
   <entry>
     <title>Announcing Spring Cloud Stream Applications 2021.1.1 GA Release</title>
     <link rel="alternate" href="https://spring.io/blog/2022/03/07/announcing-spring-cloud-stream-applications-2021-1-1-ga-release" />
@@ -576,23 +601,6 @@ So finding a solution with better usability while limiting the breakage caused b
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;We look forward to hearing your feedback.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;&lt;a href="http://projects.spring.io/spring-security/"&gt;Project Site&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-security/reference/"&gt;Reference&lt;/a&gt; | &lt;a href="http://stackoverflow.com/questions/tagged/spring-security"&gt;Help&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
-  </entry>
-  <entry>
-    <title>Spring Security 5.5.5 and 5.6.2 released</title>
-    <link rel="alternate" href="https://spring.io/blog/2022/02/21/spring-security-5-5-5-and-5-6-2-released" />
-    <category term="releases" label="Releases" />
-    <author>
-      <name>Eleftheria Stein-Kousathana</name>
-    </author>
-    <id>tag:spring.io,2022-02-21:4705</id>
-    <updated>2022-02-21T15:00:00Z</updated>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;On behalf of the community, I&amp;#8217;m pleased to announce the release of Spring Security 5.5.5 (&lt;a href="https://github.com/spring-projects/spring-security/releases/tag/5.5.5"&gt;release notes&lt;/a&gt;) and Spring Security 5.6.2 (&lt;a href="https://github.com/spring-projects/spring-security/releases/tag/5.6.2"&gt;release notes&lt;/a&gt;). These releases deliver bug fixes along with some minor improvements. Users are encouraged to update to the latest patch release.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;&lt;a href="http://projects.spring.io/spring-security/"&gt;Project Site&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-security/reference/"&gt;Reference&lt;/a&gt; | &lt;a href="http://stackoverflow.com/questions/tagged/spring-security"&gt;Help&lt;/a&gt;&lt;/p&gt;

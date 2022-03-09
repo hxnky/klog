@@ -1,0 +1,33 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>KLOG • 인증하기</title>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+	<script type="text/javascript">
+		//url의 이메일 가져오기
+		function getParameterByName(name) {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex
+					.exec(location.search);
+			return results == null ? "" : decodeURIComponent(results[1]
+					.replace(/\+/g, " "));
+		}
+	</script>
+</body>
+</html>

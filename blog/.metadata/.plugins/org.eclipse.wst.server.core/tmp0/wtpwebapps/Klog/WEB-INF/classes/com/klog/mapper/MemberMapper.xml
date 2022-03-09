@@ -10,7 +10,31 @@
 		(#{email}, #{password}, #{m_name})
 	</insert>
 
-
-
+	<select id="EmailCheck" resultType="int">
+		select count(*) from member
+		where email = #{email}
+	</select>
+	
+	<select id="NameCheck" resultType="int">
+		select count(*) from member
+		where m_name = #{m_name}
+	</select>
+	
+	<select id="Login" resultType="int">
+		select count(*) from member
+		where email = #{email} and password = #{password}
+	</select>
+	
+	<update id="userVerify">
+		update member set verify = 'Y' where email = #{email}
+	</update>
+	
+	<select id="CheckVerify" resultType="String">
+		select verify from member where email = #{email}
+	</select>
+	
+	<update id="userPassword">
+		update member set password = #{password} where email = #{email}
+	</update>
 
 </mapper>

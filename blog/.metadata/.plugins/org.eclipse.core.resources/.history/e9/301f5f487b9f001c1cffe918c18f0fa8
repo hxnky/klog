@@ -1,0 +1,69 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>KLOG • 비밀번호 변경</title>
+</head>
+<body>
+
+
+	<div class="">
+	
+	</div>
+<!-- 비밀번호, 비밀번호 확인, 비밀번호 변경 버튼 -->
+
+
+
+
+
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script type="text/javascript">
+		//url의 이메일 가져오기
+		function getParameterByName(name) {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex
+					.exec(location.search);
+			return results == null ? "" : decodeURIComponent(results[1]
+					.replace(/\+/g, " "));
+		}
+		
+		// 비밀번호 입력 값 같은지 비교하는 함수
+
+		$(document).ready(function() {
+
+					var email = getParameterByName('email');
+					var password = document.getElementById("password");
+					console.log(email);
+							// 비밀번호 변경
+							$.ajax({
+								url : "/user/password",
+								data : {
+									"password" : password,
+									"email" : email
+										},
+								type : "POST",
+								dataType : "json",
+								async : false,
+								success : function(result) {
+
+									console.log(result);
+
+									if (result == 1) {
+										console.log("인증됨");
+									} else {
+										console.log("이미 인증됨");
+									}
+
+								},
+									error : function(e) {
+										// 전송 후 에러 발생 시 실행 코드
+										console.log("ERROR : ", e);
+								}
+							}); // end ajax 
+
+						});
+	</script>
+</body>
+</html>

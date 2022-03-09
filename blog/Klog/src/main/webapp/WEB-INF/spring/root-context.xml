@@ -28,7 +28,25 @@
 		id="sqlSessionFactory">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-
+	
+	<!-- 메일 전송 빈 -->
+	<bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="peeps0309@gmail.com" />
+		<property name="password" value="vlqtm0309!" />
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+	
 	<mybatis-spring:scan base-package="com.klog.mapper" />
 	<context:component-scan
 		base-package="com.klog.service"></context:component-scan>
