@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RestController"/>
-<fullyQualifiedTypeName name="com.klog.domain.MemberVO"/>
 <fullyQualifiedTypeName name="oracle.jdbc.proxy.annotation.Post"/>
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.ResponseBody"/>
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestParam"/>
 <fullyQualifiedTypeName name="org.apache.ibatis.annotations.Param"/>
-<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
 <fullyQualifiedTypeName name="com.klog.service.MailSenderService"/>
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.PostMapping"/>
+<fullyQualifiedTypeName name="com.klog.domain.MemberVO"/>
+<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+<fullyQualifiedTypeName name="org.springframework.ui.Model"/>
+<fullyQualifiedTypeName name="com.klog.domain.SnsVO"/>
 </qualifiedTypeNameHistroy>

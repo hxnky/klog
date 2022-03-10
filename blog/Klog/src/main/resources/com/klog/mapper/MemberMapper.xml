@@ -4,6 +4,27 @@
 
 <mapper namespace="com.klog.mapper.MemberMapper">
 
+	<!-- 유저 전체 정보 -->
+	<resultMap id="memberResult" type="com.klog.domain.MemberVO">
+		<id column="m_idx" property="m_idx" />
+		<result column="email" property="email" />
+		<result column="m_name" property="m_name" />
+		<result column="password" property="password" />
+		<result column="verify" property="verify" />
+		<result column="m_pic" property="m_pic" />
+		<result column="title" property="title" />
+	</resultMap>
+	
+	<resultMap id="memberSNS" type="com.klog.domain.SnsVO">
+		<id column="m_idx" property="m_idx" />
+		<result column="insta" property="insta" />
+		<result column="git" property="git" />
+		<result column="twitter" property="twitter" />
+		<result column="facebook" property="facebook" />
+	</resultMap>
+
+
+
 	<!-- 2022.03.08 회원가입 -->
 	<insert id="register">
 		insert into member (email, password, m_name) values
@@ -14,27 +35,42 @@
 		select count(*) from member
 		where email = #{email}
 	</select>
-	
+
 	<select id="NameCheck" resultType="int">
 		select count(*) from member
 		where m_name = #{m_name}
 	</select>
-	
+
 	<select id="Login" resultType="int">
 		select count(*) from member
-		where email = #{email} and password = #{password}
+		where
+		email = #{email} and password = #{password}
 	</select>
-	
+
 	<update id="userVerify">
 		update member set verify = 'Y' where email = #{email}
 	</update>
-	
+
 	<select id="CheckVerify" resultType="String">
-		select verify from member where email = #{email}
+		select verify from member
+		where email = #{email}
+	</select>
+
+	<update id="userPassword">
+		update member set password = #{password} where email
+		= #{email}
+	</update>
+
+	<select id="userInfo" resultMap="memberResult">
+		select * from member where email = #{email}
 	</select>
 	
-	<update id="userPassword">
-		update member set password = #{password} where email = #{email}
-	</update>
+	<select id="userSNS" resultMap="memberSNS">
+		select * from usersocial where m_idx = #{m_idx}
+	</select>
+	
+	<insert id="regSns">
+		insert into usersocial (m_idx) value (#{m_idx});
+	</insert>
 
 </mapper>

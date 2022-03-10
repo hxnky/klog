@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.klog.domain.MemberVO;
+import com.klog.domain.SnsVO;
 import com.klog.mapper.MemberMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -27,7 +28,13 @@ public class MemberServiceImpl implements MemberService {
 		log.info("회원가입 서비스");
 		mapper.register(member);
 
+		// 인증 메일
 		mailService.memberVerify(member);
+		
+		// sns 정보 삽입
+		String email = member.getEmail();
+		member = mapper.userInfo(email);
+		mapper.regSns(member.getM_idx());
 
 		return result;
 	}
@@ -91,4 +98,27 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	}
 
+	@Override
+	public MemberVO UserInfo(String email) {
+		
+		MemberVO member = new MemberVO();
+		
+		member = mapper.userInfo(email);
+		System.out.println("서비스 멤버" + member);
+		
+		return member;
+	}
+
+	@Override
+	public SnsVO UserSNS(int m_idx) {
+		System.out.println(m_idx);
+		SnsVO sns = new SnsVO();
+		
+		sns = mapper.userSNS(m_idx);
+		System.out.println(sns);
+		
+		return sns;
+	}
+
+	
 }

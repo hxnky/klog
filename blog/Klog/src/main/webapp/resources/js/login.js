@@ -30,7 +30,7 @@
      		console.log("가입버튼 클릭");
 
 			var params = $('#regForm').serialize();
-			console.log(params);
+			var email = $("#email").val();
 
 			$.ajax({
 				url : '/user/reg',
@@ -42,6 +42,7 @@
 						console.log(result);
 						console.log("회원가입 성공");
 						// 메인화면으로
+						self.location = "/mainPage/"+email;
 
 				},
 				error : function(e) {
@@ -73,6 +74,7 @@
                     	if(result != 1){
                             $('.email_ok').css("display","inline-block"); 
                             $('.email_already').css("display", "none");
+                            $('.pw_ck').css("display","none");
                         } else {
                             $('.email_already').css("display","inline-block");
                             $('.pw_ck').css("display","inline-block");
@@ -149,7 +151,7 @@
      		console.log("로그인버튼 클릭");
 
 			var params = $('#LoginForm').serialize();
-			console.log(params);
+			var email = $("#email").val();
 
 			$.ajax({
 				url : '/user/login',
@@ -166,6 +168,7 @@
 							$('.pw_ck').css("display","inline-block");
 						} else{
 							// 메인화면으로
+							self.location = "/mainPage/"+email;
 							console.log("로그인 성공");
 						}
 						

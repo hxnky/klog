@@ -1,0 +1,5 @@
+package com.klog.domain;
+
+public class SnsVO {
+
+}

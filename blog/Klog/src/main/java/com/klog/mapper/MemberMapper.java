@@ -3,6 +3,7 @@ package com.klog.mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.klog.domain.MemberVO;
+import com.klog.domain.SnsVO;
 
 public interface MemberMapper {
 
@@ -25,5 +26,12 @@ public interface MemberMapper {
 	public String CheckVerify(String email);
 	// 비밀번호 변경
 	public void userPassword(@Param("email") String email, @Param("password") String password);
-
+	
+	//22.03.10
+	// 멤버 정보 출력
+	public MemberVO userInfo(String email);
+	// 유저 sns 정보 출력
+	public SnsVO userSNS(int m_idx);
+	// 회원가입 시 sns 정보도 같이 인서트
+	public void regSns(int m_idx);
 }

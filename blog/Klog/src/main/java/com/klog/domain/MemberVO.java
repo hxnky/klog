@@ -13,5 +13,6 @@ public class MemberVO {
 	private String m_pic;
 	private String bio;
 	private String loginType;
+	private String title;
 
 }
