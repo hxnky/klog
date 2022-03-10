@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+#social_in, #social_git, #social_twi, #social_fb{
+	display : none;
+}
+
+#nav_notice, #nav_setting, #nav_logout{
+	cursor: pointer;
+}
