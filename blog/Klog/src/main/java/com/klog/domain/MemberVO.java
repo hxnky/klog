@@ -14,5 +14,6 @@ public class MemberVO {
 	private String bio;
 	private String loginType;
 	private String title;
-
+	private String bgcolor;
+	
 }

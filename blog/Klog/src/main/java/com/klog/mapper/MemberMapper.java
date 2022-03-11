@@ -34,4 +34,8 @@ public interface MemberMapper {
 	public SnsVO userSNS(int m_idx);
 	// 회원가입 시 sns 정보도 같이 인서트
 	public void regSns(int m_idx);
+	
+	// 22.03.11
+	// 유저 정보 변경
+	public void UserInfoChange(MemberVO member);
 }

@@ -1,7 +1,13 @@
 package com.klog.service;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.klog.domain.MemberVO;
 import com.klog.domain.SnsVO;
@@ -30,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
 
 		// 인증 메일
 		mailService.memberVerify(member);
-		
+
 		// sns 정보 삽입
 		String email = member.getEmail();
 		member = mapper.userInfo(email);
@@ -90,9 +96,9 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public int UserPassword(String email, String password) {
-		
+
 		int result = 0;
-		
+
 		mapper.userPassword(email, password);
 
 		return result;
@@ -100,12 +106,12 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public MemberVO UserInfo(String email) {
-		
+
 		MemberVO member = new MemberVO();
-		
+
 		member = mapper.userInfo(email);
 		System.out.println("서비스 멤버" + member);
-		
+
 		return member;
 	}
 
@@ -113,12 +119,90 @@ public class MemberServiceImpl implements MemberService {
 	public SnsVO UserSNS(int m_idx) {
 		System.out.println(m_idx);
 		SnsVO sns = new SnsVO();
-		
+
 		sns = mapper.userSNS(m_idx);
 		System.out.println(sns);
-		
+
 		return sns;
 	}
 
+	@Override
+	public String getFolder() {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		Date date = new Date();
+
+		String str = sdf.format(date);
+
+		return str.replace("-", File.separator);
+	}
+
+	@Override
+	public String uploadImage(MultipartFile uploadFile) {
+
+		System.out.println(uploadFile);
+
+		log.info("update ajax post ............ ");
+		String uploadFolder = "C:\\UserImage";
+
+		//String uploadFolderPath = getFolder();
+		// make Filder
+		File uploadPath = new File(uploadFolder);
+		log.info("uploadPath : " + uploadPath);
+
+		// 해당 경로가 있는지 확인하고 없으면 생성
+		if (uploadPath.exists() == false) {
+			uploadPath.mkdirs();
+		}
+
+		// AttachFileDTO attachDTO = new AttachFileDTO();
+		// MemberVO member = new MemberVO();
+
+		log.info("==========================");
+		log.info("Upload File Name : " + uploadFile.getOriginalFilename());
+		log.info("Upload FIle Size : " + uploadFile.getSize());
+
+		String uploadFileName = uploadFile.getOriginalFilename();
+
+		// IE has file path
+		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+		log.info("only file name : " + uploadFileName);
+		// attachDTO.setFileName(uploadFileName);
+
+		// 중복 방지를 위한 UUID 적용
+		UUID uuid = UUID.randomUUID();
+		log.info("uuid : " + uuid);
+
+		// 생성된 UUID_원래 이름
+		uploadFileName = uuid.toString() + "_" + uploadFileName;
+		log.info("UUID 추가된 이름" + uploadFileName);
+
+		// File saveFile = new File(uploadFolder, uploadFileName);
+
+		try {
+			File saveFile = new File(uploadPath, uploadFileName);
+			uploadFile.transferTo(saveFile);
+
+			// attachDTO.setUuid(uuid.toString());
+			// attachDTO.setUploadPath(uploadFolderPath);
+
+			//log.info("member 사진 이름 : " + member.getM_pic());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return uploadFileName;
+	}
+
+	@Override
+	public int UserInfoChange(MemberVO member) {
+		
+		mapper.UserInfoChange(member);
+		
+		return 0;
+	}
 	
+	
+
 }

@@ -1,5 +1,7 @@
 package com.klog.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.klog.domain.MemberVO;
 import com.klog.domain.SnsVO;
 
@@ -26,4 +28,11 @@ public interface MemberService {
 	public MemberVO UserInfo(String email);
 	// 유저 소셜 정보 불러오기
 	public SnsVO UserSNS(int m_idx);
+	//22.03.11
+	// 오늘 날짜 경로 문자열로 생성
+	public String getFolder();
+	// 사진 DB에 업로드
+	public String uploadImage(MultipartFile uploadFile);
+	// 유저 정보 변경
+	public int UserInfoChange(MemberVO member);
 }

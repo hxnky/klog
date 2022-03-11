@@ -2,4 +2,5 @@
 <aop-reference-model>
 <aop-project name="instagram"/>
 <aop-project name="Klog"/>
+<aop-project name="ex05"/>
 </aop-reference-model>

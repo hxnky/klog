@@ -1,8 +1,9 @@
 package com.klog.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -40,7 +41,7 @@ public class MainController {
 	}
 	
 	@GetMapping("/mainPage/{email}")
-	public String MainPage(@PathVariable(name = "email") String email, Model model) {
+	public String MainPage(@PathVariable(name = "email") String email, HttpSession session) {
 		
 		String UserEmail = email + ".com";
 		MemberVO member = service.UserInfo(UserEmail);
@@ -48,8 +49,8 @@ public class MainController {
 		int m_idx = member.getM_idx();
 		SnsVO social = service.UserSNS(m_idx);
 		
-		model.addAttribute("userInfo", member);
-		model.addAttribute("social", social);
+		session.setAttribute("userInfo", member);
+		session.setAttribute("social", social);
 
 		
 		return "member/main";
