@@ -35,4 +35,8 @@ public interface MemberService {
 	public String uploadImage(MultipartFile uploadFile);
 	// 유저 정보 변경
 	public int UserInfoChange(MemberVO member);
+	
+	//22.03.12
+	// 유저 소셜 정보 변경
+	public int UserSocialChange(SnsVO sns);
 }

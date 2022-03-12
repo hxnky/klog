@@ -83,4 +83,9 @@
 		= #{m_idx}
 	</update>
 
+	<update id="UserSocialChange" parameterType="com.klog.domain.SnsVO">
+		update usersocial set insta = #{insta}, git=#{git},
+		twitter=#{twitter}, facebook=#{facebook} where m_idx = #{m_idx}
+	</update>
+
 </mapper>

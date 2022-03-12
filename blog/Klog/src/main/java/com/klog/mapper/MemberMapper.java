@@ -38,4 +38,8 @@ public interface MemberMapper {
 	// 22.03.11
 	// 유저 정보 변경
 	public void UserInfoChange(MemberVO member);
+	
+	//22.03.12
+	// 유저 소셜 정보 변경
+	public void UserSocialChange(SnsVO sns);
 }

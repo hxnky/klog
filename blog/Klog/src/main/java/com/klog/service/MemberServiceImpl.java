@@ -202,6 +202,16 @@ public class MemberServiceImpl implements MemberService {
 		
 		return 0;
 	}
+
+	@Override
+	public int UserSocialChange(SnsVO sns) {
+		
+		System.out.println(sns);
+		
+		mapper.UserSocialChange(sns);
+		
+		return 0;
+	}
 	
 	
 
