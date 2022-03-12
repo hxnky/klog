@@ -2,6 +2,7 @@ package com.klog.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,19 @@ public class MainController {
 		model.addAttribute("post", post);
 
 		return "member/main";
+	}
+	
+	@GetMapping("/user/logout")
+	public String Logout(HttpServletRequest request) {
+		
+		// session 변수 및 초기와
+		HttpSession session = request.getSession();
+		
+		// 세션 전체를 무효화
+		session.invalidate();
+		
+		return "redirect:/";
+		
 	}
 
 }

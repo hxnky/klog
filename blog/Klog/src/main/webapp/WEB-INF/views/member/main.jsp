@@ -72,7 +72,7 @@
 				<li class="nav-item"><a class="nav-link js-scroll-trigger"
 					id="nav_setting">Setting</a></li>
 				<li class="nav-item"><a class="nav-link js-scroll-trigger"
-					id="nav_logout">Logout</a></li>
+					id="nav_logout" href="/user/logout">Logout</a></li>
 			</ul>
 		</div>
 	</nav>
