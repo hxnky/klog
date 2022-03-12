@@ -104,6 +104,57 @@
 	width: 300px;
 }
 
-.filebox{
+.filebox {
 	visibility: hidden;
+}
+
+#PostHead {
+	float: left;
+}
+
+#CreatePost {
+	text-align: right;
+	height: 70px;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.PostHead {
+	margin-left: 20px;
+	margin-bottom: 20px;
+	margin-top: 10px;
+}
+
+.Postmodal_Head {
+	margin-left: 20px;
+	font-size: 18px;
+}
+
+.PostContent {
+	margin-left: 20px;
+}
+
+.content-toggler {
+	border: none;
+	background-color: white;
+}
+
+#postList {
+	height: 500px;
+	overflow: auto;
+}
+
+#postList::-webkit-scrollbar {
+	display: none;
+}
+
+#postListImg{
+	border : none;
+	background-color: white;
+}
+
+#postListImg img{
+	width: 80px;
+    margin-left: 400px
 }

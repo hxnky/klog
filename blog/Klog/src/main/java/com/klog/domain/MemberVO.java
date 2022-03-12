@@ -15,5 +15,6 @@ public class MemberVO {
 	private String loginType;
 	private String title;
 	private String bgcolor;
+	private String m_picOrigin;
 	
 }

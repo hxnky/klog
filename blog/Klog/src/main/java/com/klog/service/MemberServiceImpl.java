@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.klog.domain.MemberVO;
+import com.klog.domain.PostVO;
 import com.klog.domain.SnsVO;
 import com.klog.mapper.MemberMapper;
 
@@ -41,6 +42,8 @@ public class MemberServiceImpl implements MemberService {
 		String email = member.getEmail();
 		member = mapper.userInfo(email);
 		mapper.regSns(member.getM_idx());
+		
+		
 
 		return result;
 	}
@@ -139,7 +142,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public String uploadImage(MultipartFile uploadFile) {
+	public String uploadImage(MultipartFile uploadFile, String OriginFile) {
 
 		System.out.println(uploadFile);
 
@@ -179,6 +182,12 @@ public class MemberServiceImpl implements MemberService {
 		log.info("UUID 추가된 이름" + uploadFileName);
 
 		// File saveFile = new File(uploadFolder, uploadFileName);
+		
+		if(OriginFile != null) {
+			File deletefile = new File(uploadPath, OriginFile);
+			
+			deletefile.delete();
+		}
 
 		try {
 			File saveFile = new File(uploadPath, uploadFileName);
@@ -198,6 +207,8 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int UserInfoChange(MemberVO member) {
 		
+		System.out.println("멤버 내용 확인 :::" + member);
+		
 		mapper.UserInfoChange(member);
 		
 		return 0;
@@ -212,6 +223,11 @@ public class MemberServiceImpl implements MemberService {
 		
 		return 0;
 	}
+
+	
+	
+	
+	
 	
 	
 

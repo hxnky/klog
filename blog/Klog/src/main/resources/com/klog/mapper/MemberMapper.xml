@@ -23,7 +23,8 @@
 		<result column="twitter" property="twitter" />
 		<result column="facebook" property="facebook" />
 	</resultMap>
-
+	
+	
 
 
 	<!-- 2022.03.08 회원가입 -->
@@ -87,5 +88,7 @@
 		update usersocial set insta = #{insta}, git=#{git},
 		twitter=#{twitter}, facebook=#{facebook} where m_idx = #{m_idx}
 	</update>
+	
+
 
 </mapper>

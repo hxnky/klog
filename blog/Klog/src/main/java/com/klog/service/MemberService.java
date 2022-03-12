@@ -3,6 +3,7 @@ package com.klog.service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.klog.domain.MemberVO;
+import com.klog.domain.PostVO;
 import com.klog.domain.SnsVO;
 
 public interface MemberService {
@@ -32,11 +33,12 @@ public interface MemberService {
 	// 오늘 날짜 경로 문자열로 생성
 	public String getFolder();
 	// 사진 DB에 업로드
-	public String uploadImage(MultipartFile uploadFile);
+	public String uploadImage(MultipartFile uploadFile, String OriginFile);
 	// 유저 정보 변경
 	public int UserInfoChange(MemberVO member);
 	
 	//22.03.12
 	// 유저 소셜 정보 변경
 	public int UserSocialChange(SnsVO sns);
+	
 }

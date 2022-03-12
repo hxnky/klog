@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.klog.domain.MemberVO;
+import com.klog.domain.PostVO;
 import com.klog.domain.SnsVO;
 import com.klog.service.MemberServiceImpl;
+import com.klog.service.PostServiceImpl;
 
 import lombok.extern.log4j.Log4j;
 
@@ -19,6 +21,9 @@ public class MainRestController {
 
 	@Autowired
 	private MemberServiceImpl service;
+	
+	@Autowired
+	private PostServiceImpl postService;
 
 	@PostMapping("/user/reg")
 	public int memberReg(MemberVO member) {
@@ -65,7 +70,6 @@ public class MainRestController {
 	}
 
 
-	// 일단 사진만 먼저 확인
 	@PostMapping(value = "/user/InfoChange", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public int uploadAjaxPots(MultipartFile uploadFile, MemberVO member, SnsVO sns) {
 		
@@ -73,13 +77,21 @@ public class MainRestController {
 		
 		// 사진 저장
 		if(uploadFile != null) {
-			String m_pic =  service.uploadImage(uploadFile);
+			String m_pic =  service.uploadImage(uploadFile, member.getM_picOrigin());
 			member.setM_pic(m_pic);	
 		}
 		
 		service.UserSocialChange(sns);
 
 		return service.UserInfoChange(member);
+	}
+	
+	@PostMapping("/user/postCreate")
+	public int CreatePost(PostVO post) {
+		
+		System.out.println("글 내용 ::::" + post);
+		
+		return postService.PostCreate(post);
 	}
 
 }
