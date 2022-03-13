@@ -12,4 +12,9 @@ public interface PostService {
 	// 글 목록
 	public List<PostVO> postLoad(int m_idx);
 
+	// 22.03.13
+	// 글 수정
+	public int PostEdit(PostVO post);
+	// 글 삭제
+	public int PostDel(int p_idx);
 }

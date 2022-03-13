@@ -30,4 +30,29 @@ public class PostServiceImpl implements PostService {
 		
 		return mapper.LoadPost(m_idx);
 	}
+
+	@Override
+	public int PostEdit(PostVO post) {
+		
+		int result = 0;
+		
+		mapper.EditPost(post);
+		
+		return result;
+	}
+
+	@Override
+	public int PostDel(int p_idx) {
+		
+		int result = 0;
+		
+		mapper.DelPost(p_idx);
+		
+		
+		return result;
+	}
+	
+	
+	
+	
 }

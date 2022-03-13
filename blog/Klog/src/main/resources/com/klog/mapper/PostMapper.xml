@@ -23,5 +23,15 @@
 		select * from post where m_idx =
 		#{m_idx}
 	</select>
+	
+	<update id="EditPost">
+		update post set post_title = #{post_title}, post_content =
+		#{post_content}, post_updatetime = now() where p_idx = #{p_idx}
+	</update>
+	
+	<delete id="DelPost">
+		delete from post where p_idx = #{p_idx}
+	</delete>
+	
 
 </mapper>

@@ -120,7 +120,9 @@
 											data-bs-target="#collapse_${list.p_idx }"
 											aria-controls="collapse_${list.p_idx }" aria-expanded="false">
 											<h3 class="mb-0" data-toggle="collapse">
-												<c:out value="${list.post_title}" />
+												<input type='text' class='postText'
+													id='title_${list.p_idx }'
+													value='<c:out value="${list.post_title}" />'>
 											</h3>
 										</button>
 
@@ -128,13 +130,28 @@
 											<c:out value="${list.post_writer}" />
 										</div>
 										<p class="collapse" id="collapse_${list.p_idx }">
-											<c:out value="${list.post_content}" />
+											<input type='text' class='postText'
+												id='content_${list.p_idx }'
+												value='<c:out value="${list.post_content}" />'>
+
+
 										</p>
+
+
 									</div>
 									<div class="flex-shrink-0">
 										<span class="text-primary"><fmt:formatDate
 												value="${list.post_updatetime}" pattern="yyyy-MM-dd" /></span>
+										<c:if test="${'${usreInfo.m_idx }' != '${list.m_idx }'}">
+											<div id="postBtn">
+												<button type="button" id="PostEdit"
+													onclick="PostEdit(${list.p_idx });">수정</button>
+												<button type="button" id="PostDel" onclick="PostDel(${list.p_idx});">삭제</button>
+											</div>
+										</c:if>
+
 									</div>
+									<input type="hidden" id="post_m_idx" value="${list.m_idx }">
 								</div>
 							</c:forEach>
 						</div>
@@ -252,7 +269,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"
 								data-dismiss="modal" onclick="modalHide();">취소</button>
-							<button type="button" class="btn btn-primary"
+							<button type="button" class="btn btn-primary" id="postModalBtn"
 								onclick="PostmodalCheck();">확인</button>
 						</div>
 					</div>
@@ -599,32 +616,100 @@
 
 			$('#myModal').modal('hide');
 		}
+		
+		function PostEdit(p_idx){
+			
+			var title = $("#title_"+p_idx).val();
+			var content = $("#content_"+p_idx).val();
+			
+			console.log(title);
+			
+			$('#postModalBtn').attr("onclick", "PostmodalEdit();");
+			
+			$("#myPostModal").modal("show");
+			$(".PostEdit").remove();
+			$("#myPostModalLabel").text("글 수정");
+
+			$(".Postmodal-body")
+					.append(
+							'<form class="PostEdit"><input type="hidden" name="p_idx" id="p_idx" value="'+p_idx+'"><input type="hidden" name="m_idx" id="m_idx" value="${userInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" placeholder ="'+title+'"></div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content" placeholder="'+content+'"></textarea></div>');
+
+		}
+		
+		function PostmodalEdit() {
+
+			var params = $('.PostEdit').serialize();
+
+			if ($(".Postmodal_Head").val() == "") {
+				alert("제목을 입력하세요");
+			} else if ($("#post_content").val() == "") {
+				alert("내용을 입력하세요");
+			} else {
+				console.log("글 전송");
+				$.ajax({
+					url : '/user/postEdit',
+					data : params,
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						console.log(result);
+						location.reload();
+					}
+				});
+			}
+		}
+		
+		function PostDel(p_idx){
+			
+			if (confirm("글을 삭제하시겠습니까?") == true) {
+				$.ajax({
+					url : '/user/postDel',
+					data : {p_idx : p_idx},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						alert("삭제되었습니다.");
+						location.reload();
+					}
+				});
+			} else {
+				return false;
+			}
+			
+		}
 
 		$(document)
 				.ready(
 						function() {
-
-							new WOW().init();
 							
+							var Post_Midx = $("#post_m_idx").val();
+							
+							console.log(Post_Midx);
+
+// 							if(${userInfo.m_idx} == Post_Midx){
+// 								$("#postBtn").css("display", "inline-block");
+// 							}
+
 							//버튼 클릭 시 왼쪽으로 스크롤
-						      $(document).on("click", ".ScrollUp", function(){
-						         console.log("위쪽으로 이동");
-						           var _scrollY = $('#postList').scrollTop();
-						           console.log(_scrollY);
-						           $('#postList').scrollTop(_scrollY - 500);
+							$(document).on("click", ".ScrollUp", function() {
+								console.log("위쪽으로 이동");
+								var _scrollY = $('#postList').scrollTop();
+								console.log(_scrollY);
+								$('#postList').scrollTop(_scrollY - 500);
 
-						      });
+							});
 
-						      //버튼 클릭 시 오른으로 스크롤
-						      $(document).on("click", ".ScrollDown", function(){
-						         
-						         console.log("아래쪽으로 이동");
-						           var _scrollY = $('#postList').scrollTop();
-						           console.log(_scrollY);
-						           $('#postList').scrollTop(_scrollY + 500);
+							//버튼 클릭 시 오른으로 스크롤
+							$(document).on("click", ".ScrollDown", function() {
 
-						      });
-							
+								console.log("아래쪽으로 이동");
+								var _scrollY = $('#postList').scrollTop();
+								console.log(_scrollY);
+								$('#postList').scrollTop(_scrollY + 500);
+
+							});
 
 							$('#sideNav').css("background-color",
 									"${userInfo.bgcolor}");

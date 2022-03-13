@@ -11,4 +11,10 @@ public interface PostMapper {
 
 	// 글 목록 불러오기
 	public List<PostVO> LoadPost(int m_idx);
+	
+	// 22.03.13
+	// 글 수정
+	public void EditPost(PostVO post);
+	// 글 삭제
+	public boolean DelPost(int p_idx);
 }

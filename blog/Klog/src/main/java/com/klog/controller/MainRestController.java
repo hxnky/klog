@@ -93,5 +93,20 @@ public class MainRestController {
 		
 		return postService.PostCreate(post);
 	}
+	
+	@PostMapping("/user/postEdit")
+	public int EditPost(PostVO post) {
+		System.out.println("글 내용 수정 :::::" + post);
+		
+		return postService.PostEdit(post);
+	}
+	
+	@PostMapping("/user/postDel")
+	public int DelPost(int p_idx) {
+		
+		System.out.println("포스트 번호 ::::::::;;" + p_idx);
+		
+		return postService.PostDel(p_idx);
+	}
 
 }

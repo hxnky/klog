@@ -149,12 +149,43 @@
 	display: none;
 }
 
-#postListImg{
-	border : none;
+#postListImg {
+	border: none;
 	background-color: white;
 }
 
-#postListImg img{
+#postListImg img {
 	width: 80px;
-    margin-left: 400px
+	margin-left: 400px
+}
+
+#postBtn {
+	float: right;
+}
+
+#PostEdit {
+	border: none;
+	background-color: white;
+	color: blue;
+	font-weight: bold;
+}
+
+#PostDel {
+	border: none;
+	background-color: white;
+	color: red;
+	font-weight: bold;
+}
+
+.flex-shrink-0 {
+	width: 100px;
+}
+
+.postText {
+	border: none;
+	pointer-events: none;
+}
+
+.postText:focus {
+	pointer-events: none;
 }
