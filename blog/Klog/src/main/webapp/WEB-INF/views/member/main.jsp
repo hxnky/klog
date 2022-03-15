@@ -133,8 +133,19 @@
 											<input type='text' class='postText'
 												id='content_${list.p_idx }'
 												value='<c:out value="${list.post_content}" />'>
+										<div class="AttachImg">
+											<c:forEach items="${attach}" var="Att_img">
+												<c:set var="listPidx" value="${list.p_idx }" />
+												<c:set var="AttachPidx" value="${Att_img.p_idx }" />
+												<c:if test="${ listPidx eq AttachPidx }">
+
+													<img src="/PostImage/${Att_img.a_name }">
 
 
+												</c:if>
+
+											</c:forEach>
+										</div>
 										</p>
 
 
@@ -146,7 +157,8 @@
 											<div id="postBtn">
 												<button type="button" id="PostEdit"
 													onclick="PostEdit(${list.p_idx });">수정</button>
-												<button type="button" id="PostDel" onclick="PostDel(${list.p_idx});">삭제</button>
+												<button type="button" id="PostDel"
+													onclick="PostDel(${list.p_idx});">삭제</button>
 											</div>
 										</c:if>
 
@@ -299,6 +311,14 @@
 	<script type="text/javascript">
 		var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
 		var maxSize = 5242880; // 5MB
+		// 파일 현재 필드 숫자 totalCount랑 비교값
+		var fileCount = 0;
+		// 해당 숫자를 수정하여 전체 업로드 갯수를 정한다.
+		var totalCount = 10;
+		// 파일 고유넘버
+		var fileNum = 0;
+		// 첨부파일 배열
+		var content_files = new Array();
 
 		function checkExtension(fileName, fileSize) {
 
@@ -544,14 +564,25 @@
 
 			$(".Postmodal-body")
 					.append(
-							'<form id="PostCreate"><input type="hidden" name="post_writer" id="post_writer" value="${userInfo.m_name}"><input type="hidden" name="m_idx" id="m_idx" value="${userInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" placeholder ="글 제목"></div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content" placeholder="글 내용을 입력하세요"></textarea></div>');
+							'<form id="PostCreate"><input type="hidden" name="post_writer" id="post_writer" value="${userInfo.m_name}"><input type="hidden" name="m_idx" id="m_idx" value="${userInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" placeholder ="글 제목"><input type="file" name="file" multiple id="input_file" onchange="fileCheck(this)" style="width:100%;"><span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span><div class="data_file_txt" id="data_file_txt"><span>첨부 파일</span><div id="articlefileChange"></div></div></div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content" placeholder="글 내용을 입력하세요"></textarea></div>');
 
 		}
 
 		function PostmodalCheck() {
 
-			var params = $('#PostCreate').serialize();
+			//var params = $('').serialize();
+			var form = $("#PostCreate")[0];        
+		 	var formData = new FormData(form);
+			
+			for (var x = 0; x < content_files.length; x++) {
+				// 삭제 안한것만 담아 준다. 
+				if(!content_files[x].is_delete){
+					formData.append("article_file", content_files[x]);
+				}
+			}
 
+			
+			
 			if ($(".Postmodal_Head").val() == "") {
 				alert("제목을 입력하세요");
 			} else if ($("#post_content").val() == "") {
@@ -560,7 +591,9 @@
 				console.log("글 전송");
 				$.ajax({
 					url : '/user/postCreate',
-					data : params,
+					processData : false, // 이 둘은 무조건 false로 해야 전송이 된다.
+					contentType : false,
+					data : formData,
 					type : "POST",
 					dataType : "json",
 					async : false,
@@ -621,6 +654,7 @@
 			
 			var title = $("#title_"+p_idx).val();
 			var content = $("#content_"+p_idx).val();
+			var p_idx = p_idx;
 			
 			console.log(title);
 			
@@ -628,17 +662,51 @@
 			
 			$("#myPostModal").modal("show");
 			$(".PostEdit").remove();
+			$("#PostCreate").remove();
 			$("#myPostModalLabel").text("글 수정");
 
 			$(".Postmodal-body")
 					.append(
-							'<form class="PostEdit"><input type="hidden" name="p_idx" id="p_idx" value="'+p_idx+'"><input type="hidden" name="m_idx" id="m_idx" value="${userInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" placeholder ="'+title+'"></div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content" placeholder="'+content+'"></textarea></div>');
+							'<form class="PostEdit"><input type="hidden" name="p_idx" id="p_idx" value="'+p_idx+'"><input type="hidden" name="m_idx" id="m_idx" value="${userInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" placeholder ="'+title+'"><input type="file" name="file" multiple id="input_file" onchange="fileCheck(this)" style="width:100%;"><span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span>'
+							+'<div class="data_file_txt" id="data_file_txt"><span>첨부 파일</span><div id="articlefileChange">'
+							+'</div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content" placeholder="'+content+'"></textarea></div>');
 
+			
+			<c:forEach items="${attach}" var="Att_img">
+				if(p_idx == ${Att_img.p_idx}){
+					$('#articlefileChange').append(
+							'<div id="file' + ${Att_img.a_idx} + '" onclick="fileEdit(\'file' + ${Att_img.a_idx} + '\')">'
+		       				+ '<font style="font-size:12px">' + "${Att_img.a_Origin}" + '</font>'  
+		       				+ '<img src="${pageContext.request.contextPath}/resources/assets/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
+		       				+ '<div/>');
+				}
+			</c:forEach>
+			
+			
+			
+			$('#articlefileChange').append(
+       				'<div id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">'
+       				+ '<font style="font-size:12px">' + f.name + '</font>'  
+       				+ '<img src="${pageContext.request.contextPath}/resources/assets/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
+       				+ '<div/>'
+				);
+			
 		}
 		
 		function PostmodalEdit() {
 
-			var params = $('.PostEdit').serialize();
+			var form = $("#PostEdit")[0];        
+		 	var formData = new FormData(form);
+			
+			for (var x = 0; x < content_files.length; x++) {
+				// 삭제 안한것만 담아 준다. 
+				if(!content_files[x].is_delete){
+					formData.append("article_file", content_files[x]);
+				}
+			}
+			
+			console.log(formData);
+
 
 			if ($(".Postmodal_Head").val() == "") {
 				alert("제목을 입력하세요");
@@ -646,17 +714,19 @@
 				alert("내용을 입력하세요");
 			} else {
 				console.log("글 전송");
-				$.ajax({
-					url : '/user/postEdit',
-					data : params,
-					type : "POST",
-					dataType : "json",
-					async : false,
-					success : function(result) {
-						console.log(result);
-						location.reload();
-					}
-				});
+// 				$.ajax({
+// 					url : '/user/postEdit',
+// 					processData : false, // 이 둘은 무조건 false로 해야 전송이 된다.
+// 					contentType : false,
+// 					data : formData,
+// 					type : "POST",
+// 					dataType : "json",
+// 					async : false,
+// 					success : function(result) {
+// 						console.log(result);
+// 						location.reload();
+// 					}
+// 				});
 			}
 		}
 		
@@ -679,7 +749,66 @@
 			}
 			
 		}
-
+		
+		
+		
+		
+		// 글 다중 첨부파일
+		function fileCheck(input) {
+			
+    		var files = input.files;
+    
+    		// 파일 배열 담기
+    		var filesArr = Array.prototype.slice.call(files);
+    		console.log("파일체크함수");
+    		console.log(files);
+    
+   		 	// 파일 개수 확인 및 제한
+    		if (fileCount + filesArr.length > totalCount) {
+      			$.alert('파일은 최대 '+totalCount+'개까지 업로드 할 수 있습니다.');
+      			return;
+    		} else {
+    	 		fileCount = fileCount + filesArr.length;
+    		}
+    
+    		// 각각의 파일 배열담기 및 기타
+    		filesArr.forEach(function (f) {
+     		var reader = new FileReader();
+      		reader.onload = function (e) {
+        		content_files.push(f);
+        		$('#articlefileChange').append(
+       				'<div id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">'
+       				+ '<font style="font-size:12px">' + f.name + '</font>'  
+       				+ '<img src="${pageContext.request.contextPath}/resources/assets/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
+       				+ '<div/>'
+				);
+        		fileNum ++;
+      		};
+      		reader.readAsDataURL(f);
+    		});
+   		 console.log(content_files);
+    		//초기화 한다.
+    		$("#input_file").val("");
+  		}
+		
+		// 파일 부분 삭제 함수
+		function fileDelete(fileNum){
+		    var no = fileNum.replace(/[^0-9]/g, "");
+		    content_files[no].is_delete = true;
+			$('#' + fileNum).remove();
+			fileCount --;
+		    console.log(content_files);
+		    console.log(fileCount);
+		}
+		
+		function fileEdit(fileNum){
+			var no = fileNum.replace(/[^0-9]/g, "");
+			$('#' + fileNum).remove();
+			fileCount --;
+		    console.log(content_files);
+		    console.log(fileCount);
+		}
+		
 		$(document)
 				.ready(
 						function() {

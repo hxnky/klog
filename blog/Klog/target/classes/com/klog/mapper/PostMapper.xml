@@ -13,6 +13,14 @@
 		<result column="m_idx" property="m_idx" />
 	</resultMap>
 
+	<resultMap id="memberAttach" type="com.klog.domain.AttachVO">
+		<id column="a_idx" property="a_idx" />
+		<result column="p_idx" property="p_idx" />
+		<result column="a_name" property="a_name" />
+		<result column="a_regDate" property="a_regDate" />
+		<result column="a_size" property="a_size" />
+	</resultMap>
+
 	<insert id="CreatePost">
 		insert into post (post_title, post_content,
 		post_writer, m_idx) values (#{post_title}, #{post_content},
@@ -23,15 +31,40 @@
 		select * from post where m_idx =
 		#{m_idx}
 	</select>
-	
+
 	<update id="EditPost">
-		update post set post_title = #{post_title}, post_content =
-		#{post_content}, post_updatetime = now() where p_idx = #{p_idx}
+		update post set post_title = #{post_title},
+		post_content =
+		#{post_content}, post_updatetime = now() where p_idx =
+		#{p_idx}
 	</update>
-	
+
 	<delete id="DelPost">
 		delete from post where p_idx = #{p_idx}
 	</delete>
-	
+
+	<insert id="CreateAttach">
+		insert into attach (p_idx, a_name, a_size, a_Origin) values
+		(#{p_idx}, #{a_name}, #{a_size}, #{a_Origin});
+	</insert>
+
+	<select id="ListPostIdx" resultType="int">
+		SELECT p_idx FROM post ORDER
+		BY p_idx DESC LIMIT 1;
+	</select>
+
+	<select id="LoadAttach" resultMap="memberAttach">
+		SELECT * FROM attach where
+		p_idx = #{p_idx}
+	</select>
+
+	<delete id="DeleteAttach">
+		delete from post where a_name = #{a_name}
+	</delete>
+
+	<delete id="DeletePostAttach">
+		delete from post where p_idx = #{p_idx}
+	</delete>
+
 
 </mapper>

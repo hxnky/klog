@@ -1,5 +1,7 @@
 package com.klog.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,18 +89,19 @@ public class MainRestController {
 	}
 	
 	@PostMapping("/user/postCreate")
-	public int CreatePost(PostVO post) {
+	public int CreatePost(PostVO post, List<MultipartFile> article_file) {
 		
+		System.out.println("첨부파일 목록 :::: " + article_file);
 		System.out.println("글 내용 ::::" + post);
 		
-		return postService.PostCreate(post);
+		return postService.PostCreate(post, article_file);
 	}
 	
 	@PostMapping("/user/postEdit")
-	public int EditPost(PostVO post) {
+	public int EditPost(PostVO post, List<MultipartFile> article_file) {
 		System.out.println("글 내용 수정 :::::" + post);
 		
-		return postService.PostEdit(post);
+		return postService.PostEdit(post, article_file);
 	}
 	
 	@PostMapping("/user/postDel")

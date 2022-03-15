@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.klog.domain.AttachVO;
 import com.klog.domain.MemberVO;
 import com.klog.domain.PostVO;
 import com.klog.domain.SnsVO;
@@ -59,12 +60,14 @@ public class MainController {
 		SnsVO social = service.UserSNS(m_idx);
 
 		// 글 작성 목록 불러오기
-		List<PostVO> post = postService.postLoad(m_idx);
+		List<PostVO> post = postService.postLoad(m_idx);		
+		List<AttachVO> attach = postService.attachList(post);
 		System.out.println(post);
 
 		session.setAttribute("userInfo", member);
 		session.setAttribute("social", social);
 		model.addAttribute("post", post);
+		model.addAttribute("attach", attach);
 
 		return "member/main";
 	}
