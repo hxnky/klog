@@ -319,6 +319,8 @@
 		var fileNum = 0;
 		// 첨부파일 배열
 		var content_files = new Array();
+		// 기존 첨부파일 배열
+		var attach_files = new Array();
 
 		function checkExtension(fileName, fileSize) {
 
@@ -652,6 +654,8 @@
 		
 		function PostEdit(p_idx){
 			
+			
+
 			var title = $("#title_"+p_idx).val();
 			var content = $("#content_"+p_idx).val();
 			var p_idx = p_idx;
@@ -667,36 +671,37 @@
 
 			$(".Postmodal-body")
 					.append(
-							'<form class="PostEdit"><input type="hidden" name="p_idx" id="p_idx" value="'+p_idx+'"><input type="hidden" name="m_idx" id="m_idx" value="${userInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" placeholder ="'+title+'"><input type="file" name="file" multiple id="input_file" onchange="fileCheck(this)" style="width:100%;"><span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span>'
+							'<form class="PostEdit"><input type="hidden" name="p_idx" id="p_idx" value="'+p_idx+'"><input type="hidden" name="m_idx" id="m_idx" value="${userInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" value ="'+title+'"><input type="file" name="file" multiple id="input_file" onchange="fileCheck(this)" style="width:100%;"><span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span>'
 							+'<div class="data_file_txt" id="data_file_txt"><span>첨부 파일</span><div id="articlefileChange">'
-							+'</div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content" placeholder="'+content+'"></textarea></div>');
+							+'</div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content">'+content+'</textarea></div>');
 
-			
+			<!-- 첨부파일 목록 -->
 			<c:forEach items="${attach}" var="Att_img">
 				if(p_idx == ${Att_img.p_idx}){
+					attach_files.push("${Att_img.a_Origin}");
+					console.log(attach_files);
 					$('#articlefileChange').append(
-							'<div id="file' + ${Att_img.a_idx} + '" onclick="fileEdit(\'file' + ${Att_img.a_idx} + '\')">'
+							'<div id="file' + ${Att_img.a_idx} + '" " onclick="fileEdit(\'file' + ${Att_img.a_idx} + '\')">'
+							+ '<input type="hidden" id="Original_file'+${Att_img.a_idx}+'" value="${Att_img.a_Origin}">'
 		       				+ '<font style="font-size:12px">' + "${Att_img.a_Origin}" + '</font>'  
 		       				+ '<img src="${pageContext.request.contextPath}/resources/assets/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
 		       				+ '<div/>');
 				}
 			</c:forEach>
 			
-			
-			
-			$('#articlefileChange').append(
-       				'<div id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">'
-       				+ '<font style="font-size:12px">' + f.name + '</font>'  
-       				+ '<img src="${pageContext.request.contextPath}/resources/assets/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
-       				+ '<div/>'
-				);
-			
+			fileCount = $("#articlefileChange").children().length; 
+			console.log("원래 첨부파일 개수"+fileCount); //3
+
 		}
 		
 		function PostmodalEdit() {
 
-			var form = $("#PostEdit")[0];        
+			var form = $(".PostEdit")[0];        
 		 	var formData = new FormData(form);
+		 	
+		 	
+		 	
+		 	formData.append("AttachOrigin", attach_files);
 			
 			for (var x = 0; x < content_files.length; x++) {
 				// 삭제 안한것만 담아 준다. 
@@ -714,19 +719,19 @@
 				alert("내용을 입력하세요");
 			} else {
 				console.log("글 전송");
-// 				$.ajax({
-// 					url : '/user/postEdit',
-// 					processData : false, // 이 둘은 무조건 false로 해야 전송이 된다.
-// 					contentType : false,
-// 					data : formData,
-// 					type : "POST",
-// 					dataType : "json",
-// 					async : false,
-// 					success : function(result) {
-// 						console.log(result);
-// 						location.reload();
-// 					}
-// 				});
+				$.ajax({
+					url : '/user/postEdit',
+					processData : false, // 이 둘은 무조건 false로 해야 전송이 된다.
+					contentType : false,
+					data : formData,
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						console.log(result);
+						location.reload();
+					}
+				});
 			}
 		}
 		
@@ -802,11 +807,25 @@
 		}
 		
 		function fileEdit(fileNum){
+			
+			console.log(fileNum);
+			
+			var FileName = $("#Original_"+fileNum).val();
+			console.log(FileName);
+			
 			var no = fileNum.replace(/[^0-9]/g, "");
 			$('#' + fileNum).remove();
 			fileCount --;
-		    console.log(content_files);
-		    console.log(fileCount);
+
+			
+			for(var i=0; i<attach_files.length; i++){
+				if(attach_files[i] == FileName){
+					console.log("삭제된 파일 이름" + FileName);
+					attach_files.splice(i, 1);
+					i--;
+				}
+			}
+			console.log(attach_files);
 		}
 		
 		$(document)
@@ -823,19 +842,14 @@
 
 							//버튼 클릭 시 왼쪽으로 스크롤
 							$(document).on("click", ".ScrollUp", function() {
-								console.log("위쪽으로 이동");
 								var _scrollY = $('#postList').scrollTop();
-								console.log(_scrollY);
 								$('#postList').scrollTop(_scrollY - 500);
 
 							});
 
 							//버튼 클릭 시 오른으로 스크롤
 							$(document).on("click", ".ScrollDown", function() {
-
-								console.log("아래쪽으로 이동");
 								var _scrollY = $('#postList').scrollTop();
-								console.log(_scrollY);
 								$('#postList').scrollTop(_scrollY + 500);
 
 							});

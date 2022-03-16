@@ -15,5 +15,6 @@ public class PostVO {
 	private Date post_updatetime;
 	private String post_writer;
 	private int m_idx;
+	private List<String> AttachOrigin;
 
 }

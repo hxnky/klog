@@ -2,6 +2,7 @@ package com.klog.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,14 +45,14 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public List<AttachVO> attachList(List<PostVO> post) {
-		
+
 		List<AttachVO> attach = new ArrayList<AttachVO>();
-		
+
 		for (int i = 0; i < post.size(); i++) {
 
-			 attach.addAll(mapper.LoadAttach(post.get(i).getP_idx()));
+			attach.addAll(mapper.LoadAttach(post.get(i).getP_idx()));
 		}
-		
+
 		System.out.println("오류확인1 ::::" + attach);
 
 		return attach;
@@ -62,19 +63,37 @@ public class PostServiceImpl implements PostService {
 
 		int result = 0;
 
+		// 새로 추가한 이미지 저장
+		uploadImage(article_file, post.getP_idx());
+
 		List<AttachVO> attach = mapper.LoadAttach(post.getP_idx());
+		List<String> attachOrigin = post.getAttachOrigin();	// 수정 후
+		List<String> attachFile = new ArrayList<>();	// 수정 전
 
-		for (int i = 0; i < article_file.size(); i++) {
-			for (int j = 0; j < attach.size(); j++) {
-				String FileName = article_file.get(i).getOriginalFilename();
-				String OriginalFile = attach.get(j).getA_name();
+		for (int j = 0; j < attach.size(); j++) {
+			attachFile.add(attach.get(j).getA_Origin());
+		}
 
-				System.out.println("수정첨부" + FileName);
-				System.out.println("원래첨부 " + OriginalFile);
+		System.out.println("DB에 있는 파일 :::: " + attachFile);
+		System.out.println("수정 후 파일 ::::" + attachOrigin);
+
+		// 원래 첨부파일 비교
+		for (int i = 0; i < attachFile.size(); i++) {
+
+			for (int j = 0; j < attachOrigin.size(); j++) {
+
+				if(attachFile.get(i).equals(attachOrigin.get(j))) {
+					attachFile.remove(i);
+				}
 
 			}
 		}
-
+		System.out.println("삭제해야하는 파일 :::::" + attachFile);
+		
+		for(int i=0; i<attachFile.size(); i++) {
+			mapper.DeleteAttach(attachFile.get(i));
+		}
+		
 		mapper.EditPost(post);
 
 		return result;

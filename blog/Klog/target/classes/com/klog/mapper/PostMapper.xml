@@ -59,11 +59,11 @@
 	</select>
 
 	<delete id="DeleteAttach">
-		delete from post where a_name = #{a_name}
+		delete from attach where a_Origin = #{a_Origin}
 	</delete>
 
 	<delete id="DeletePostAttach">
-		delete from post where p_idx = #{p_idx}
+		delete from attach where p_idx = #{p_idx}
 	</delete>
 
 

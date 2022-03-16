@@ -100,6 +100,7 @@ public class MainRestController {
 	@PostMapping("/user/postEdit")
 	public int EditPost(PostVO post, List<MultipartFile> article_file) {
 		System.out.println("글 내용 수정 :::::" + post);
+		System.out.println("글 내용 첨부파일 :::::" + article_file);
 		
 		return postService.PostEdit(post, article_file);
 	}

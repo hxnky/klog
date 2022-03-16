@@ -27,7 +27,7 @@ public interface PostMapper {
 	// 첨부파일 리스트
 	public List<AttachVO> LoadAttach(int p_idx);
 	// 첨부파일 삭제
-	public void DeleteAttach(String a_name);
+	public void DeleteAttach(String a_Origin);
 	// 글 삭제 시 첨부파일 삭제
 	public void DeletePostAttach(int p_idx);
 }
