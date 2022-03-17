@@ -16,5 +16,7 @@ public class PostVO {
 	private String post_writer;
 	private int m_idx;
 	private List<String> AttachOrigin;
+	
+	private List<AttachVO> attach;
 
 }

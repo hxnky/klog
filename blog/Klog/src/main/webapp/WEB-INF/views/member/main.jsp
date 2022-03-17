@@ -50,6 +50,11 @@
 				class="img-fluid img-profile rounded-circle mx-auto mb-2"
 				src="/UserImage/${userInfo.m_pic}" alt="..." /></span>
 		</a>
+		<div id="SearchDiv">
+			<input type="text" id="Search" placeholder="내 글 검색"><img
+				src="${pageContext.request.contextPath}/resources/assets/img/Search.png"
+				onclick="SearchMy();">
+		</div>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 			data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
 			aria-expanded="false" aria-label="Toggle navigation">
@@ -79,6 +84,11 @@
 	<!-- Page Content-->
 	<div class="container-fluid p-0">
 		<div class="container_none">
+			<div id="SearchUser">
+				<input type="text" id="UserSearch" placeholder="유저검색"><img
+					src="${pageContext.request.contextPath}/resources/assets/img/Search.png"
+					onclick="SearchUser();">
+			</div>
 			<!-- About-->
 			<section class="resume-section" id="profile">
 				<div class="resume-section-content">
@@ -265,34 +275,30 @@
 				</div>
 			</div>
 
-			<!-- 글 작성 모달 -->
-			<div class="modal fade" id="myPostModal" tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"
-								aria-label="Close" onclick="modalHide();">
-								<span aria-hidden="true">&times;</span>
-							</button>
-							<h4 class="modal-title" id="myPostModalLabel">타이틀</h4>
-						</div>
-						<div class="Postmodal-body"></div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal" onclick="modalHide();">취소</button>
-							<button type="button" class="btn btn-primary" id="postModalBtn"
-								onclick="PostmodalCheck();">확인</button>
-						</div>
+			<hr class="m-0" />
+		</div>
+		<!-- 글 작성 모달 -->
+		<div class="modal fade" id="myPostModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" onclick="modalHide();">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="myPostModalLabel">타이틀</h4>
+					</div>
+					<div class="Postmodal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"
+							onclick="modalHide();">취소</button>
+						<button type="button" class="btn btn-primary" id="postModalBtn"
+							onclick="PostmodalCheck();">확인</button>
 					</div>
 				</div>
 			</div>
-
-
-
-			<hr class="m-0" />
 		</div>
-
 
 	</div>
 
@@ -654,8 +660,6 @@
 		
 		function PostEdit(p_idx){
 			
-			
-
 			var title = $("#title_"+p_idx).val();
 			var content = $("#content_"+p_idx).val();
 			var p_idx = p_idx;
@@ -828,17 +832,168 @@
 			console.log(attach_files);
 		}
 		
+		// 내 글 검색
+		function SearchMy(){
+			var m_idx = $("#post_m_idx").val();
+			var word = $("#Search").val();
+			if(word == ""){
+				alert("검색어를 입력해주세요");
+			} else{
+				$.ajax({
+					url : '/user/SearchMyPost',
+					data : {word : word,
+							m_idx : m_idx
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						
+						
+						
+						$(".container_none").hide();
+						$("#searchResult").remove();
+						$("#backImg").remove();
+						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div><section class='resume-section' id='searchResult'><div class='resume-section-content'><h2 class='mb-5'>검색결과</h2>"
+								+"<div id='SearchList'></div></div></section>");
+						
+						if(result.length == 0){
+							$("#SearchList").append("<div class='no_Search'>검색 결과가 없습니다.</div>");
+							}
+
+						for(var i=0; i<result.length; i++){
+							var attach = result[i].attach;
+							var updateTime = result[i].post_updatetime;
+							var realTime = new Date(updateTime);
+							var year = realTime.getFullYear();
+							var month = realTime.getMonth() + 1;
+							var day = realTime.getDate();
+							
+							$("#SearchList").append("<div class='d-flex flex-column flex-md-row justify-content-between mb-5'><div class='flex-grow-1'><button class='content-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#Searchcollapse_"+result[i].p_idx+"' aria-controls='Searchcollapse_"+result[i].p_idx+"' aria-expanded='false'>"                  
+			                        				+"<h3 class='mb-0' data-toggle='collapse'><input type='text' class='postText' id='title_"+result[i].p_idx+"' value='"+result[i].post_title+"'></h3></button><div class='subheading mb-3'>"+result[i].post_writer+"</div>"
+													+"<p class='collapse' id='Searchcollapse_"+result[i].p_idx+"'><input type='text' class='postText' id='content_"+result[i].p_idx+"' value='"+result[i].post_content+"'></p>"
+													+"<div class='AttachImg_"+result[i].p_idx+"' id='SearchImg'></div></div>"
+													+"<div class='flex-shrink-0'><span class='text-primary'>"+year+"-"+month+"-"+day+"</span>"
+													+"<div id='postBtn_"+result[i].p_idx+"'></div></div><input type='hidden' id='post_m_idx' value='"+result[i].m_idx+"'></div>"
+													);
+
+
+							if(m_idx == result[i].m_idx){
+								$("#postBtn_"+result[i].p_idx).append("<button type='button' id='PostEdit' onclick='PostEdit("+result[i].p_idx+");'>수정</button><button type='button' id='PostDel' onclick='PostDel("+result[i].p_idx+");'>삭제</button>");
+								}
+							
+		
+							for(var j=0; attach.length; j++){
+								console.log(result[i].p_idx);
+								console.log(attach[j].p_idx);
+							
+								if(result[i].p_idx == attach[j].p_idx){
+									$(".AttachImg_"+result[i].p_idx).append("<img src='/PostImage/"+attach[j].a_name+"'>");
+								}
+							}
+							
+						}
+					}
+				});
+			}
+		}
+		
+		// 유저, 유저 글 검색
+		function SearchUser(){
+			var word = $("#UserSearch").val();
+			if(word == ""){
+				alert("검색어를 입력해주세요");
+			} else{
+				$.ajax({
+					url : '/user/SearchUser',
+					data : {word : word
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						
+						var member = result.member;
+						var post = result.post;
+						
+						$(".container_none").hide();
+						$("#searchResult").remove();
+						$("#backImg").remove();
+						$("#SearchUser").remove();
+						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div>"
+								+"<section class='resume-section' id='searchResult'><div class='resume-section-content'><h4 class='mb-5'>유저 검색결과</h4>"
+								+"<div id='UserList'></div><hr><h4 class='mb-5'>글 검색결과</h4><div id='SearchList'></div></div></section>");
+						
+						if(post.length == 0){
+							$("#SearchList").append("<div class='no_Result'>검색 결과가 없습니다.</div>");
+						}else {
+							for(var i=0; i<post.length; i++){
+								
+								var m_idx = ${userInfo.m_idx};
+								var attach = post[i].attach;
+								var updateTime = post[i].post_updatetime;
+								var realTime = new Date(updateTime);
+								var year = realTime.getFullYear();
+								var month = realTime.getMonth() + 1;
+								var day = realTime.getDate();
+								
+								$("#SearchList").append("<div class='d-flex flex-column flex-md-row justify-content-between mb-5'><div class='flex-grow-1'><button class='content-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#Searchcollapse_"+post[i].p_idx+"' aria-controls='Searchcollapse_"+post[i].p_idx+"' aria-expanded='false'>"                  
+				                        				+"<h3 class='mb-0' data-toggle='collapse'><input type='text' class='postText' id='title_"+post[i].p_idx+"' value='"+post[i].post_title+"'></h3></button><div class='subheading mb-3'>"+post[i].post_writer+"</div>"
+														+"<p class='collapse' id='Searchcollapse_"+post[i].p_idx+"'><input type='text' class='postText' id='content_"+post[i].p_idx+"' value='"+post[i].post_content+"'></p>"
+														+"<div class='AttachImg_"+post[i].p_idx+"' id='SearchImg'></div></div>"
+														+"<div class='flex-shrink-0'><span class='text-primary'>"+year+"-"+month+"-"+day+"</span>"
+														+"<div id='postBtn_"+post[i].p_idx+"'></div></div><input type='hidden' id='post_m_idx' value='"+post[i].m_idx+"'></div>"
+														);
+
+
+								if(m_idx == post[i].m_idx){
+									$("#postBtn_"+post[i].p_idx).append("<button type='button' id='PostEdit' onclick='PostEdit("+post[i].p_idx+");'>수정</button><button type='button' id='PostDel' onclick='PostDel("+post[i].p_idx+");'>삭제</button>");
+									}
+							
+			
+								for(var j=0; attach.length; j++){
+									console.log(post[i].p_idx);
+									console.log(attach[j].p_idx);
+								
+									if(post[i].p_idx == attach[j].p_idx){
+										$(".AttachImg_"+post[i].p_idx).append("<img src='/PostImage/"+attach[j].a_name+"'>");
+									}
+								}
+								
+							}
+						}
+	
+						if(member.length == 0){
+							$("#UserList").append("<div class='no_Result'>검색 결과가 없습니다.</div>");
+						} else{
+							for(var i=0; i<member.length; i++){
+								$("#UserList").append("<div style='padding: 10px;'><h3 class='mb-0' id='custom_title'>"+member[i].title+"</h3>"
+														+"<div class='subheading'>"+member[i].m_name+"<a class='a_search' href='mailto:"+member[i].email+"'>"+member[i].email+"</a></div>"
+														+"<div class='SearchBio'></div></div>"
+								);
+								
+								if(member[i].bio != null){
+									$(".SearchBio").append("<p class='Searchlead mb-5'>"+member[i].bio+"</p>");
+								}
+								
+							}
+						}
+						
+						
+						
+						
+
+						
+					}
+				});
+			}
+		}
+		
 		$(document)
 				.ready(
 						function() {
 							
 							var Post_Midx = $("#post_m_idx").val();
-							
-							console.log(Post_Midx);
-
-// 							if(${userInfo.m_idx} == Post_Midx){
-// 								$("#postBtn").css("display", "inline-block");
-// 							}
 
 							//버튼 클릭 시 왼쪽으로 스크롤
 							$(document).on("click", ".ScrollUp", function() {
@@ -909,7 +1064,7 @@
 
 											});
 
-							$(".con_on").on("click", function(e) {
+						$(".con_on").on("click", function(e) {
 								$(".container-setting").remove();
 								$(".container_none").show();
 

@@ -190,7 +190,60 @@
 	pointer-events: none;
 }
 
-.AttachImg img{
+.AttachImg img {
 	width: 200px;
 	height: 200px;
+}
+
+#SearchDiv {
+	margin-left: 40px;
+}
+
+#Search {
+	width: 170px;
+}
+
+#SearchDiv img {
+	width: 30px;
+	cursor: pointer;
+}
+
+#backImg {
+	width: 50px;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.no_Search {
+	height: 500px;
+	font-size: 30px;
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+#SearchImg img {
+	width: 200px;
+	height: 200px;
+	width: 200px;
+	height: 200px;
+}
+
+#SearchUser {
+	padding: 10px;
+	float: right;
+}
+
+#SearchUser img {
+	width: 30px;
+}
+
+.no_Result{
+	height: 300px;
+	font-size: 30px;
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+.a_search{
+	margin-left: 10px
 }

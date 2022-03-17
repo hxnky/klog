@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.klog.mapper.SearchMapper">
+	<!-- 유저 전체 정보 -->
+	<resultMap id="memberResult" type="com.klog.domain.MemberVO">
+		<id column="m_idx" property="m_idx" />
+		<result column="email" property="email" />
+		<result column="m_name" property="m_name" />
+		<result column="password" property="password" />
+		<result column="verify" property="verify" />
+		<result column="m_pic" property="m_pic" />
+		<result column="title" property="title" />
+		<result column="bgcolor" property="bgcolor" />
+	</resultMap>
+	<resultMap id="memberPost" type="com.klog.domain.PostVO">
+		<id column="p_idx" property="p_idx" />
+		<result column="post_title" property="post_title" />
+		<result column="post_content" property="post_content" />
+		<result column="post_Regtime" property="post_Regtime" />
+		<result column="post_updatetime" property="post_updatetime" />
+		<result column="post_writer" property="post_writer" />
+		<result column="m_idx" property="m_idx" />
+	</resultMap>
+
+	<select id="Searchmypost" resultMap="memberPost">
+		select * from post where
+		m_idx = #{m_idx} and (post_title like CONCAT('%',#{word},'%') or
+		post_content like CONCAT('%',#{word},'%'))
+	</select>
+	
+	<select id="SearchMember" resultMap="memberResult">
+		select * from member where title like CONCAT('%',#{word},'%') or
+		m_name like CONCAT('%',#{word},'%')
+	</select>
+	
+	<select id="SearchPost" resultMap="memberPost">
+		select * from post where post_title like CONCAT('%',#{word},'%') or
+		post_content like CONCAT('%',#{word},'%')
+	</select>
+
+</mapper>

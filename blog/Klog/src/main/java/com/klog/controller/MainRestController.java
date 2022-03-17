@@ -11,9 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.klog.domain.MemberVO;
 import com.klog.domain.PostVO;
+import com.klog.domain.SearchVO;
 import com.klog.domain.SnsVO;
 import com.klog.service.MemberServiceImpl;
 import com.klog.service.PostServiceImpl;
+import com.klog.service.SearchServiceImpl;
 
 import lombok.extern.log4j.Log4j;
 
@@ -26,6 +28,9 @@ public class MainRestController {
 	
 	@Autowired
 	private PostServiceImpl postService;
+	
+	@Autowired
+	private SearchServiceImpl searchService;
 
 	@PostMapping("/user/reg")
 	public int memberReg(MemberVO member) {
@@ -111,6 +116,21 @@ public class MainRestController {
 		System.out.println("포스트 번호 ::::::::;;" + p_idx);
 		
 		return postService.PostDel(p_idx);
+	}
+	
+	@PostMapping("/user/SearchMyPost")
+	public List<PostVO> SearchPost(String word, int m_idx){
+		
+		System.out.println(word);
+		System.out.println(m_idx);
+		
+		return searchService.SearchMyPost(word, m_idx);
+	}
+	
+	@PostMapping("/user/SearchUser")
+	public SearchVO SearchUser(String word){
+		
+		return searchService.Searchuser(word);
 	}
 
 }
