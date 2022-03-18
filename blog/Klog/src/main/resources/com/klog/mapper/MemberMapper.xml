@@ -23,9 +23,8 @@
 		<result column="twitter" property="twitter" />
 		<result column="facebook" property="facebook" />
 	</resultMap>
-	
-	
 
+	
 
 	<!-- 2022.03.08 회원가입 -->
 	<insert id="register">
@@ -67,6 +66,11 @@
 		select * from member where email
 		= #{email}
 	</select>
+	
+	<select id="userInfoByIdx" resultMap="memberResult">
+		select * from member where m_idx
+		= #{m_idx}
+	</select>
 
 	<select id="userSNS" resultMap="memberSNS">
 		select * from usersocial where
@@ -84,11 +88,11 @@
 		= #{m_idx}
 	</update>
 
-	<update id="UserSocialChange" parameterType="com.klog.domain.SnsVO">
+	<update id="UserSocialChange"
+		parameterType="com.klog.domain.SnsVO">
 		update usersocial set insta = #{insta}, git=#{git},
 		twitter=#{twitter}, facebook=#{facebook} where m_idx = #{m_idx}
 	</update>
-	
 
 
 </mapper>

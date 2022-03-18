@@ -1,8 +1,11 @@
 package com.klog.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.klog.domain.MemberVO;
+import com.klog.domain.NeighborVO;
 import com.klog.domain.PostVO;
 import com.klog.domain.SnsVO;
 
@@ -40,5 +43,6 @@ public interface MemberService {
 	//22.03.12
 	// 유저 소셜 정보 변경
 	public int UserSocialChange(SnsVO sns);
+	
 	
 }

@@ -206,49 +206,65 @@
 							<span class="text-primary">August 2006 - May 2010</span>
 						</div>
 					</div>
-					<div class="d-flex flex-column flex-md-row justify-content-between">
-						<div class="flex-grow-1">
-							<h3 class="mb-0">James Buchanan High School</h3>
-							<div class="subheading mb-3">Technology Magnet Program</div>
-							<p>GPA: 3.56</p>
-						</div>
-						<div class="flex-shrink-0">
-							<span class="text-primary">August 2002 - May 2006</span>
-						</div>
-					</div>
+
+
 				</div>
 			</section>
 			<hr class="m-0" />
 			<!-- Skills-->
 			<section class="resume-section" id="neighbor">
 				<div class="resume-section-content">
-					<h2 class="mb-5">Skills</h2>
-					<div class="subheading mb-3">Programming Languages & Tools</div>
-					<ul class="list-inline dev-icons">
-						<li class="list-inline-item"><i class="fab fa-html5"></i></li>
-						<li class="list-inline-item"><i class="fab fa-css3-alt"></i></li>
-						<li class="list-inline-item"><i class="fab fa-js-square"></i></li>
-						<li class="list-inline-item"><i class="fab fa-angular"></i></li>
-						<li class="list-inline-item"><i class="fab fa-react"></i></li>
-						<li class="list-inline-item"><i class="fab fa-node-js"></i></li>
-						<li class="list-inline-item"><i class="fab fa-sass"></i></li>
-						<li class="list-inline-item"><i class="fab fa-less"></i></li>
-						<li class="list-inline-item"><i class="fab fa-wordpress"></i></li>
-						<li class="list-inline-item"><i class="fab fa-gulp"></i></li>
-						<li class="list-inline-item"><i class="fab fa-grunt"></i></li>
-						<li class="list-inline-item"><i class="fab fa-npm"></i></li>
-					</ul>
-					<div class="subheading mb-3">Workflow</div>
-					<ul class="fa-ul mb-0">
-						<li><span class="fa-li"><i class="fas fa-check"></i></span>
-							Mobile-First, Responsive Design</li>
-						<li><span class="fa-li"><i class="fas fa-check"></i></span>
-							Cross Browser Testing & Debugging</li>
-						<li><span class="fa-li"><i class="fas fa-check"></i></span>
-							Cross Functional Teams</li>
-						<li><span class="fa-li"><i class="fas fa-check"></i></span>
-							Agile Development & Scrum</li>
-					</ul>
+					<h2 class="mb-5">NEIGHBOR</h2>
+					<div class="subheading mb-3">이웃 신청 목록</div>
+					<div
+						class="d-flex flex-column flex-md-row justify-content-between mb-5"
+						id="followChkList">
+						<c:forEach items="${followList}" var="follow">
+							<c:set var="member" value="${follow.member}" />
+
+							<div class="flex-grow-1">
+								<h3 class="mb-0">${member.title}</h3>
+								<div class="subheading mb-3">${member.m_name}</div>
+								<input type="hidden" id="y_idx" value="${follow.y_idx}">
+								<div>${follow.ment}</div>
+							</div>
+							<div class="flex-shrink-0">
+								<input type="hidden" id="FollowDate_${follow.n_idx }" value="${follow.n_date }">
+								<span class="text-primary">${follow.n_date }</span>
+							</div>
+
+						</c:forEach>
+					</div>
+					<div class="subheading mb-3" id="followListSort">
+						이웃 목록<select name="SelectEach" id="SelectEach">
+							<option value="none">----</option>
+							<option value="Each">서로 이웃</option>
+							<option value="noEach">이웃</option>
+						</select>
+					</div>
+
+					<div
+						class="d-flex flex-column flex-md-row justify-content-between mb-5"
+						id="followList">
+
+						<c:forEach items="${neighbor}" var="nei">
+							<c:set var="mem" value="${nei.member}" />
+							<div class="flex-grow-1">
+								<h3 class="mb-0">${mem.title}</h3>
+								<div class="subheading mb-3">${mem.m_name}</div>
+								<div>${mem.bio}</div>
+							</div>
+							<div class="flex-shrink-0">
+								<c:if test="${nei.eachother eq 'N' }">
+									<span class="text-primary" id="FollowDate">이웃</span>
+								</c:if>
+								<c:if test="${nei.eachother eq 'Y' }">
+									<span class="text-primary" id="FollowDate">서로이웃</span>
+								</c:if>
+							</div>
+
+						</c:forEach>
+					</div>
 				</div>
 			</section>
 
@@ -989,11 +1005,10 @@
 			}
 		}
 		
+		
 		$(document)
 				.ready(
 						function() {
-							
-							var Post_Midx = $("#post_m_idx").val();
 
 							//버튼 클릭 시 왼쪽으로 스크롤
 							$(document).on("click", ".ScrollUp", function() {
@@ -1069,6 +1084,14 @@
 								$(".container_none").show();
 
 							});
+						
+							if(follow == ""){
+								$("#followChkList").append("<div class='noFollowChk'>이웃 신청 목록이 없습니다.</div>");
+							}
+							
+							if("${neighbor}"== ""){
+								$("#followList").append("<div class='noFollowChk'>이웃 목록이 없습니다.</div>");
+							}
 
 						});
 	</script>

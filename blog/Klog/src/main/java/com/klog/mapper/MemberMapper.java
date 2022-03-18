@@ -1,9 +1,11 @@
 package com.klog.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.klog.domain.MemberVO;
-import com.klog.domain.PostVO;
+import com.klog.domain.NeighborVO;
 import com.klog.domain.SnsVO;
 
 public interface MemberMapper {
@@ -31,6 +33,8 @@ public interface MemberMapper {
 	//22.03.10
 	// 멤버 정보 출력
 	public MemberVO userInfo(String email);
+	// 멤버 정보 출력(idx)
+	public MemberVO userInfoByIdx(int m_idx);
 	// 유저 sns 정보 출력
 	public SnsVO userSNS(int m_idx);
 	// 회원가입 시 sns 정보도 같이 인서트
@@ -43,5 +47,8 @@ public interface MemberMapper {
 	//22.03.12
 	// 유저 소셜 정보 변경
 	public void UserSocialChange(SnsVO sns);
+	
+	
+	
 	
 }

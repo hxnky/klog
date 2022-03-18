@@ -237,13 +237,19 @@
 	width: 30px;
 }
 
-.no_Result{
+.no_Result {
 	height: 300px;
 	font-size: 30px;
 	font-weight: bold;
 	margin-left: 5px;
 }
 
-.a_search{
+.a_search {
 	margin-left: 10px
+}
+
+#SelectEach {
+	font-size: 15px;
+	float: right;
+	width: 150px;
 }
