@@ -253,3 +253,50 @@
 	float: right;
 	width: 150px;
 }
+
+.FollowOk {
+	border: none;
+	background-color: white;
+	color: blue;
+	font-weight: bold;
+}
+
+.FollowNo {
+	border: none;
+	background-color: white;
+	color: red;
+	font-weight: bold;
+}
+
+#neiList {
+	width: 100%;
+}
+
+#neiInfo {
+	float: left;
+}
+
+#neiType {
+	float: right;
+	width: 150px;
+	text-align: right;
+}
+
+.FollowBtn {
+	border: none;
+	background-color: white;
+}
+
+.FollowBtn img {
+	width: 40px;
+	height: 40px;
+}
+
+.FollowRadio {
+	font-size: 20px;
+	margin: 10px;
+}
+
+.FollowMent {
+	margin: 10px;
+}

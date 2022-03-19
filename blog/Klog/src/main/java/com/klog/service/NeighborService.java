@@ -23,5 +23,7 @@ public interface NeighborService {
 		public int followDel(int u_idx, int y_idx);
 		// 서로 이웃 삭제
 		public int followEachDel(int u_idx, int y_idx);
+		// 서로이웃 + 이웃 모두 삭제
+		public int followAllDel(int u_idx, int y_idx);
 
 }

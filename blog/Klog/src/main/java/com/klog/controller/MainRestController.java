@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.klog.domain.MemberVO;
+import com.klog.domain.NeighborVO;
 import com.klog.domain.PostVO;
 import com.klog.domain.SearchVO;
 import com.klog.domain.SnsVO;
 import com.klog.service.MemberServiceImpl;
+import com.klog.service.NeighborServiceImpl;
 import com.klog.service.PostServiceImpl;
 import com.klog.service.SearchServiceImpl;
 
@@ -25,12 +27,15 @@ public class MainRestController {
 
 	@Autowired
 	private MemberServiceImpl service;
-	
+
 	@Autowired
 	private PostServiceImpl postService;
-	
+
 	@Autowired
 	private SearchServiceImpl searchService;
+
+	@Autowired
+	private NeighborServiceImpl followService;
 
 	@PostMapping("/user/reg")
 	public int memberReg(MemberVO member) {
@@ -76,61 +81,139 @@ public class MainRestController {
 		return service.UserPassword(email, password);
 	}
 
-
 	@PostMapping(value = "/user/InfoChange", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public int uploadAjaxPots(MultipartFile uploadFile, MemberVO member, SnsVO sns) {
-		
+
 		System.out.println("컨트롤러에서 받은 내용 ::::" + sns);
-		
+
 		// 사진 저장
-		if(uploadFile != null) {
-			String m_pic =  service.uploadImage(uploadFile, member.getM_picOrigin());
-			member.setM_pic(m_pic);	
+		if (uploadFile != null) {
+			String m_pic = service.uploadImage(uploadFile, member.getM_picOrigin());
+			member.setM_pic(m_pic);
 		}
-		
+
 		service.UserSocialChange(sns);
 
 		return service.UserInfoChange(member);
 	}
-	
+
 	@PostMapping("/user/postCreate")
 	public int CreatePost(PostVO post, List<MultipartFile> article_file) {
-		
+
 		System.out.println("첨부파일 목록 :::: " + article_file);
 		System.out.println("글 내용 ::::" + post);
-		
+
 		return postService.PostCreate(post, article_file);
 	}
-	
+
 	@PostMapping("/user/postEdit")
 	public int EditPost(PostVO post, List<MultipartFile> article_file) {
 		System.out.println("글 내용 수정 :::::" + post);
 		System.out.println("글 내용 첨부파일 :::::" + article_file);
-		
+
 		return postService.PostEdit(post, article_file);
 	}
-	
+
 	@PostMapping("/user/postDel")
 	public int DelPost(int p_idx) {
-		
+
 		System.out.println("포스트 번호 ::::::::;;" + p_idx);
-		
+
 		return postService.PostDel(p_idx);
 	}
-	
+
 	@PostMapping("/user/SearchMyPost")
-	public List<PostVO> SearchPost(String word, int m_idx){
-		
+	public List<PostVO> SearchPost(String word, int m_idx) {
+
 		System.out.println(word);
 		System.out.println(m_idx);
-		
+
 		return searchService.SearchMyPost(word, m_idx);
 	}
-	
+
 	@PostMapping("/user/SearchUser")
-	public SearchVO SearchUser(String word){
-		
+	public SearchVO SearchUser(String word) {
+
 		return searchService.Searchuser(word);
 	}
 
+	@PostMapping("/user/FollowOk")
+	public int FollowOk(int u_idx, int y_idx) {
+
+		System.out.println("u_idx" + u_idx);
+		System.out.println("y_idx" + y_idx);
+
+		return followService.followChk(u_idx, y_idx);
+	}
+
+	@PostMapping("/user/FollowNo")
+	public int FollowNo(int u_idx, int y_idx) {
+
+		System.out.println("u_idx" + u_idx);
+		System.out.println("y_idx" + y_idx);
+
+		return followService.followEachDel(u_idx, y_idx);
+	}
+
+	@PostMapping("/user/FollowEach")
+	public int FollowEach(int u_idx, int y_idx, String ment) {
+
+		NeighborVO follow = new NeighborVO();
+
+		follow.setU_idx(u_idx);
+		follow.setY_idx(y_idx);
+		follow.setMent(ment);
+
+		System.out.println("follow" + follow);
+
+		return followService.followChg(follow);
+	}
+
+	@PostMapping("/user/FollowDel")
+	public int FollowDel(int u_idx, int y_idx) {
+
+		System.out.println("u_idx" + u_idx);
+		System.out.println("y_idx" + y_idx);
+
+		return followService.followDel(u_idx, y_idx);
+	}
+
+	@PostMapping("/user/FollowChange")
+	public int FollowChange(int u_idx, int y_idx) {
+
+		System.out.println("u_idx" + u_idx);
+		System.out.println("y_idx" + y_idx);
+
+		return followService.followEachDel(u_idx, y_idx);
+	}
+
+	@PostMapping("/user/EachFollowDel")
+	public int EachFollowDel(int u_idx, int y_idx) {
+
+		System.out.println("u_idx" + u_idx);
+		System.out.println("y_idx" + y_idx);
+
+		return followService.followAllDel(u_idx, y_idx);
+	}
+
+	@PostMapping("/user/FollowStart")
+	public int FollowStart(int u_idx, int y_idx) {
+
+		System.out.println("u_idx" + u_idx);
+		System.out.println("y_idx" + y_idx);
+
+		return followService.follow(u_idx, y_idx);
+	}
+
+	@PostMapping("/user/EachFollowStart")
+	public int EachFollowStart(int u_idx, int y_idx, String ment) {
+
+		NeighborVO follow = new NeighborVO();
+
+		follow.setU_idx(u_idx);
+		follow.setY_idx(y_idx);
+		follow.setMent(ment);
+
+		return followService.followEach(follow);
+	}
 }

@@ -16,7 +16,7 @@
 	<!-- 이웃/서로이웃 -->
 	<select id="neighborList" resultMap="memberFollow">
 		select * from neighbor where
-		u_idx = #{u_idx} or (y_idx = #{u_idx} and eachother='Y')
+		u_idx = #{u_idx}
 	</select>
 
 	<select id="neighborCheck" resultMap="memberFollow">
@@ -26,16 +26,16 @@
 
 	<insert id="follow">
 		insert into neighbor (u_idx, y_idx) value (#{u_idx},
-		#{y_idx});
+		#{y_idx})
 	</insert>
 
 	<insert id="followEach">
 		insert into neighbor (u_idx, y_idx, ment, n_check)
-		value (#{u_idx}, #{y_idx}, #{ment}, 'N');
+		value (#{u_idx}, #{y_idx}, #{ment}, 'N')
 	</insert>
 
 	<update id="followChange">
-		update neighbor set n_check = 'N', ment='#{ment}'
+		update neighbor set n_check = 'N', ment=#{ment}
 		where u_idx =
 		#{u_idx} and y_idx=#{y_idx}
 	</update>
@@ -43,21 +43,34 @@
 	<update id="followChk">
 		update neighbor set n_check = 'Y', eachother = 'Y'
 		where u_idx =
+		#{u_idx} and y_idx=#{y_idx}
+	</update>
+
+	<update id="EachFollow">
+		update neighbor set eachother = 'Y'
+		where u_idx =
 		#{y_idx} and y_idx=#{u_idx}
 	</update>
 
+	<select id="EachFollowChk" resultType="int">
+		select count(*) from
+		neighbor where u_idx =
+		#{y_idx} and y_idx=#{u_idx}
+	</select>
+	
+	<insert id="NoEachFollow">
+		insert into neighbor (u_idx, y_idx, eachother)
+		value (#{u_idx}, #{y_idx}, 'Y')
+	</insert>
+
 	<delete id="followDel">
-		delete from neighbor where (u_idx = #{u_idx} and
-		y_idx = #{y_idx}) or (u_idx = #{y_idx} and y_idx = #{u_idx})
+		delete from neighbor where u_idx = #{u_idx} and y_idx = #{y_idx}
 	</delete>
 
 	<update id="followEachDel">
 		update neighbor set n_check = '', eachother = 'N',
 		ment=''
-		where (u_idx = #{u_idx} and
-		y_idx = #{y_idx}) or (u_idx =
-		#{y_idx} and
-		y_idx = #{u_idx})
+		where u_idx = #{u_idx} and y_idx = #{y_idx}
 	</update>
 
 

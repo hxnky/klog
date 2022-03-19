@@ -30,6 +30,15 @@ public interface NeighborMapper {
 	// 이웃 삭제
 	public void followDel(@Param("u_idx") int u_idx, @Param("y_idx") int y_idx);
 
-	// 서로이웃 삭제
+	// 서로이웃 삭제 + 이웃신청 거부
 	public void followEachDel(@Param("u_idx") int u_idx, @Param("y_idx") int y_idx);
+	
+	// 이웃 --> 서로이웃 상대방 있으면 바꿔야함
+	public void EachFollow(@Param("u_idx") int u_idx, @Param("y_idx") int y_idx);
+	
+	// idx 바꿔서 존재하는지 확인
+	public int EachFollowChk(@Param("u_idx") int u_idx, @Param("y_idx") int y_idx);
+	
+	// idx 없으면 새로 insert
+	public void NoEachFollow(@Param("u_idx") int u_idx, @Param("y_idx") int y_idx);
 }

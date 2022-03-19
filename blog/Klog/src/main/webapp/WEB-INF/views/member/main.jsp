@@ -225,12 +225,19 @@
 							<div class="flex-grow-1">
 								<h3 class="mb-0">${member.title}</h3>
 								<div class="subheading mb-3">${member.m_name}</div>
+								<input type="hidden" id="followList_${follow.u_idx }" value="${follow.u_idx }">
 								<input type="hidden" id="y_idx" value="${follow.y_idx}">
 								<div>${follow.ment}</div>
 							</div>
 							<div class="flex-shrink-0">
-								<input type="hidden" id="FollowDate_${follow.n_idx }" value="${follow.n_date }">
-								<span class="text-primary">${follow.n_date }</span>
+								<span class="text-primary"><fmt:formatDate
+										pattern="yyy-MM-dd" value="${follow.n_date }" /></span>
+								<div>
+									<button type="button" class="FollowOk"
+										onclick="FollowOK(${follow.u_idx}, ${follow.y_idx});">확인</button>
+									<button type="button" class="FollowNo"
+										onclick="FollowNO(${follow.u_idx}, ${follow.y_idx});">삭제</button>
+								</div>
 							</div>
 
 						</c:forEach>
@@ -244,25 +251,34 @@
 					</div>
 
 					<div
-						class="d-flex flex-column flex-md-row justify-content-between mb-5"
+						class="d-flex flex-column justify-content-between mb-5"
 						id="followList">
 
 						<c:forEach items="${neighbor}" var="nei">
 							<c:set var="mem" value="${nei.member}" />
-							<div class="flex-grow-1">
-								<h3 class="mb-0">${mem.title}</h3>
-								<div class="subheading mb-3">${mem.m_name}</div>
-								<div>${mem.bio}</div>
+							<div class="${nei.eachother}" id="neiList_${mem.m_idx }">
+								<div class="flex-grow-1" id="neiInfo">
+									<h3 class="mb-0">${mem.title}</h3>
+									<div class="subheading mb-3">${mem.m_name}</div>
+									<input type="hidden" class="n_chk${mem.m_idx }" value="${nei.n_check}">
+								</div>
+								<div class="flex-shrink-0" id="neiType">
+									<c:if test="${nei.eachother eq 'N' }">
+										<span class="text-primary" id="FollowType">이웃</span>
+										<button type="button" class="FollowBtn" onclick="noEachfollow(${nei.u_idx}, ${nei.y_idx});">
+											<img
+												src="${pageContext.request.contextPath}/resources/assets/img/follow.png">
+										</button>
+									</c:if>
+									<c:if test="${nei.eachother eq 'Y' }">
+										<span class="text-primary" id="FollowType">서로이웃</span>
+										<button type="button" class="FollowBtn" onclick="Eachfollow(${nei.u_idx}, ${nei.y_idx});">
+											<img
+												src="${pageContext.request.contextPath}/resources/assets/img/follow.png">
+										</button>
+									</c:if>
+								</div>
 							</div>
-							<div class="flex-shrink-0">
-								<c:if test="${nei.eachother eq 'N' }">
-									<span class="text-primary" id="FollowDate">이웃</span>
-								</c:if>
-								<c:if test="${nei.eachother eq 'Y' }">
-									<span class="text-primary" id="FollowDate">서로이웃</span>
-								</c:if>
-							</div>
-
 						</c:forEach>
 					</div>
 				</div>
@@ -316,6 +332,29 @@
 			</div>
 		</div>
 
+
+		<!-- 이웃 신청 모달 -->
+		<div class="modal fade" id="myFollowModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" onclick="modalHide();">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="myPostModalLabel">이웃 신청</h4>
+					</div>
+					<div class="Followmodal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"
+							onclick="modalHide();">취소</button>
+						<button type="button" class="btn btn-primary" id="FollowModalBtn"
+							onclick="FollowmodalCheck();">확인</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 
@@ -632,6 +671,7 @@
 		function modalHide() {
 			$('#myModal').modal('hide');
 			$("#myPostModal").modal("hide");
+			$("#myFollowModal").modal("hide");
 		}
 
 		function modalCheck() {
@@ -983,13 +1023,20 @@
 							$("#UserList").append("<div class='no_Result'>검색 결과가 없습니다.</div>");
 						} else{
 							for(var i=0; i<member.length; i++){
-								$("#UserList").append("<div style='padding: 10px;'><h3 class='mb-0' id='custom_title'>"+member[i].title+"</h3>"
+								$("#UserList").append("<div class='d-flex justify-content-between mb-5'><div><h3 class='mb-0' id='custom_title'>"+member[i].title+"</h3>"
 														+"<div class='subheading'>"+member[i].m_name+"<a class='a_search' href='mailto:"+member[i].email+"'>"+member[i].email+"</a></div>"
-														+"<div class='SearchBio'></div></div>"
+														+"<div class='SearchBio'></div></div><div class='flex-shrink-0' id='neiListIdx_"+member[i].m_idx+"'></div></div>"
 								);
 								
 								if(member[i].bio != null){
 									$(".SearchBio").append("<p class='Searchlead mb-5'>"+member[i].bio+"</p>");
+								}
+								
+								var neiListIdx = $("#neiList_"+member[i].m_idx).val();
+								
+								if(neiListIdx == undefined){
+									$("#neiListIdx_"+member[i].m_idx).append("<button type=button' class='FollowBtn' onclick='followStart("+${userInfo.m_idx}+", "+member[i].m_idx+");'>"
+									+"<img src='${pageContext.request.contextPath}/resources/assets/img/follow.png'></button>");
 								}
 								
 							}
@@ -1003,6 +1050,214 @@
 					}
 				});
 			}
+		}
+		
+		function FollowOK(u_idx, y_idx){
+			$.ajax({
+				url : '/user/FollowOk',
+				data : {u_idx : u_idx,
+						y_idx : y_idx
+						},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					location.reload();
+				}
+			});
+		}
+		
+		function FollowNO(u_idx, y_idx){
+			$.ajax({
+				url : '/user/FollowNo',
+				data : {u_idx : u_idx,
+						y_idx : y_idx
+						},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					location.reload();
+				}
+			});
+		}
+		
+		function followStart(u_idx, y_idx){
+			$('#FollowModalBtn').attr("onclick", "FollowmodalStart("+u_idx+", "+y_idx+");");
+			
+			$("#myFollowModal").modal("show");
+			$(".FollowEdit").remove();
+			$(".FollowCreate").remove();
+
+			$(".Followmodal-body")
+					.append("<div class='FollowCreate'><div class='selectFollow'><div class='FollowRadio'><input type='radio' name='Follow' value='FollowStart'>이웃 신청하기 </div><div class='FollowRadio'><input type='radio' name='Follow' value='EachFollowStart'>서로이웃 신청하기</div></div></div>");
+		}
+		
+			function FollowmodalStart(u_idx, y_idx){
+			
+			var radioVal = $('input[name="Follow"]:checked').val();
+			console.log(radioVal);
+			console.log(u_idx);
+			console.log(y_idx);
+			
+			if(radioVal == "FollowStart"){
+				$.ajax({
+					url : '/user/FollowStart',
+					data : {u_idx : u_idx,
+						y_idx : y_idx
+					},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						location.reload();	// 이게 아니라 다시 검색창으로
+					}
+				});
+				
+			} else if(radioVal == "EachFollowStart"){
+				$('#FollowModalBtn').attr("onclick", "EachFollowStart("+u_idx+", "+y_idx+");");
+				
+				$(".FollowEdit").remove();
+				$(".Followmodal-body").append("<div class='FollowEdit'><form class='FollowSubmit'><div><textarea cols='30' rows='5' name='ment' class='FollowMent' >우리 서로이웃해요 ~</textarea></div></form></div>");
+				
+			}
+		}
+		
+		function noEachfollow(u_idx, y_idx){
+			$('#FollowModalBtn').attr("onclick", "FollowmodalEdit("+u_idx+", "+y_idx+");");
+			
+			$("#myFollowModal").modal("show");
+			$(".FollowEdit").remove();
+			$("#FollowCreate").remove();
+
+			$(".Followmodal-body")
+					.append("<div class='FollowEdit'><div class='selectFollow'><div class='FollowRadio'><input type='radio' name='Follow' value='EachFollow'>서로이웃 신청하기 </div><div class='FollowRadio'><input type='radio' name='Follow' value='FollowDel'>이웃 취소하기</div></div></div>");
+		}
+		
+		function Eachfollow(u_idx, y_idx){
+			$('#FollowModalBtn').attr("onclick", "FollowmodalEdit("+u_idx+", "+y_idx+");");
+			
+			$("#myFollowModal").modal("show");
+			$(".FollowEdit").remove();
+			$("#FollowCreate").remove();
+
+			$(".Followmodal-body")
+					.append("<div class='FollowEdit'><div class='selectFollow'><div class='FollowRadio'><input type='radio' name='Follow' value='EachFollowChange'>서로이웃을 이웃으로 변경 </div><div class='FollowRadio'><input type='radio' name='Follow' value='EachFollowDel'>서로이웃과 이웃 모두 취소</div></div></div>");
+		}
+		
+		function FollowmodalEdit(u_idx, y_idx){
+			
+			var radioVal = $('input[name="Follow"]:checked').val();
+			console.log(radioVal);
+			console.log(u_idx);
+			console.log(y_idx);
+			
+			if(radioVal == "EachFollow"){
+				
+				$('#FollowModalBtn').attr("onclick", "EachFollowEdit("+u_idx+", "+y_idx+");");
+				
+				$(".FollowEdit").remove();
+				$(".Followmodal-body").append("<div class='FollowEdit'><form class='FollowSubmit'><div><textarea cols='30' rows='5' name='ment' class='FollowMent' >우리 서로이웃해요 ~</textarea></div></form></div>");
+
+				
+			} else if(radioVal == "FollowDel"){
+				$.ajax({
+					url : '/user/FollowDel',
+					data : {u_idx : u_idx,
+						y_idx : y_idx
+					},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						location.reload();
+					}
+				});
+			} else if(radioVal == "EachFollowChange"){
+				$.ajax({
+					url : '/user/FollowChange',
+					data : {u_idx : u_idx,
+						y_idx : y_idx
+					},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						location.reload();
+					}
+				});
+			} else if(radioVal == "EachFollowDel"){
+				$.ajax({
+					url : '/user/EachFollowDel',
+					data : {u_idx : u_idx,
+						y_idx : y_idx
+					},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						location.reload();
+					}
+				});
+			}
+		}
+		
+		function EachFollowEdit(u_idx, y_idx){		 	
+			var ment = $(".FollowMent").val();
+			
+			var idxChk = $("#followList_" + y_idx).val();
+			var nChk = $(".n_chk"+y_idx).val();
+			console.log(idxChk);
+			console.log(nChk);
+			if(idxChk != undefined){
+				alert("서로 이웃이 이미 신청되었습니다.목록을 확인해주세요");
+			} else if(nChk == "N"){
+				alert("이미 신청을 보냈습니다.");
+			} else{
+				$.ajax({
+					url : '/user/FollowEach',
+					data : {u_idx : u_idx,
+						y_idx : y_idx,
+						ment :ment
+					},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						location.reload();
+					}
+				});
+			}
+			
+		}
+		
+		function EachFollowStart(u_idx, y_idx){		 	
+			var ment = $(".FollowMent").val();
+			
+			var idxChk = $("#followList_" + y_idx).val();
+			var nChk = $(".n_chk"+y_idx).val();
+			console.log(idxChk);
+			console.log(nChk);
+			if(idxChk != undefined){
+				alert("서로 이웃이 이미 신청되었습니다.목록을 확인해주세요");
+			} else if(nChk == "N"){
+				alert("이미 신청을 보냈습니다.");
+			} else{
+				$.ajax({
+					url : '/user/EachFollowStart',
+					data : {u_idx : u_idx,
+						y_idx : y_idx,
+						ment :ment
+					},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						location.reload();
+					}
+				});
+			}
+			
 		}
 		
 		

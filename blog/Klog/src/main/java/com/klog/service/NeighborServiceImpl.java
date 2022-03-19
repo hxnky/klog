@@ -25,13 +25,13 @@ public class NeighborServiceImpl implements NeighborService {
 	@Override
 	public List<NeighborVO> neighborList(int u_idx) {
 		
-		List<NeighborVO> followList = mapper.neighborCheck(u_idx);
+		List<NeighborVO> followList = mapper.neighborList(u_idx);
 		MemberVO member = new MemberVO();
 		
 		for(int i = 0; i<followList.size(); i++) {
-			int user_idx = followList.get(i).getU_idx();
+			int y_idx = followList.get(i).getY_idx();
 			
-			member = memberMapper.userInfoByIdx(user_idx);			
+			member = memberMapper.userInfoByIdx(y_idx);			
 			followList.get(i).setMember(member);
 		}
 
@@ -89,6 +89,16 @@ public class NeighborServiceImpl implements NeighborService {
 	@Override
 	public int followChk(int u_idx, int y_idx) {
 		int result = 0;
+		
+		int followChk = mapper.EachFollowChk(u_idx, y_idx);
+		if(followChk == 1) {
+			System.out.println("상대방도 날 이웃추가함");
+			mapper.EachFollow(u_idx, y_idx);
+		} else {
+			System.out.println("상대방은 날 이웃추가 안함");
+			mapper.NoEachFollow(u_idx, y_idx);
+		}
+
 		mapper.followChk(u_idx, y_idx);
 
 		return result;
@@ -105,7 +115,20 @@ public class NeighborServiceImpl implements NeighborService {
 	public int followEachDel(int u_idx, int y_idx) {
 		int result = 0;
 		mapper.followEachDel(u_idx, y_idx);
+		mapper.followEachDel(y_idx, u_idx);
 		return result;
 	}
+
+	@Override
+	public int followAllDel(int u_idx, int y_idx) {
+		int result = 0;
+		
+		mapper.followDel(u_idx, y_idx);
+		mapper.followEachDel(y_idx, u_idx);
+		
+		return result;
+	}
+	
+	
 
 }
