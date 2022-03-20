@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 
@@ -189,29 +190,90 @@
 				</div>
 			</section>
 			<hr class="m-0" />
-			<!-- Education-->
+			<!-- 안부글-->
 			<section class="resume-section" id="letter">
 				<div class="resume-section-content">
-					<h2 class="mb-5">Education</h2>
+					<h2 class="mb-5">Letter</h2>
+					<c:if test="${ fn:length(letterList) == 0}">
+						<div>안부글이 없습니다.</div>
+					</c:if>
+					<c:forEach items="${letterList}" var="letter">
+						<div
+							class="d-flex flex-column flex-md-row justify-content-between">
+							<c:set var="member" value="${letter.member}" />
 
-					<div
-						class="d-flex flex-column flex-md-row justify-content-between mb-5">
-						<div class="flex-grow-1">
-							<h3 class="mb-0">University of Colorado Boulder</h3>
-							<div class="subheading mb-3">Bachelor of Science</div>
-							<div>Computer Science - Web Development Track</div>
-							<p>GPA: 3.23</p>
-						</div>
-						<div class="flex-shrink-0">
-							<span class="text-primary">August 2006 - May 2010</span>
-						</div>
-					</div>
+							<div id="letter_img">
+								<img src="/UserImage/${member.m_pic }">
+							</div>
+							<div class="flex-grow-1">
+								<h3 class="mb-0" id="letterContent${letter.l_idx }">
+									<input type="text" class="l_content${letter.l_idx }"
+										id="LetterContent"
+										value="<c:out value='${letter.l_content }' />"
+										disabled="disabled"> <input type="hidden"
+										class="w_idx${letter.l_idx }"
+										value="<c:out value='${letter.w_idx }' />"> <input
+										type="hidden" class="o_idx${letter.l_idx }"
+										value="<c:out value='${letter.o_idx }' />">
+								</h3>
+								<p>
+									<c:out value="${member.m_name }" />
+								</p>
+								<p>
+									<button type="button" class="LetterReply">답글달기</button>
+								</p>
+							</div>
+							<div class="flex-shrink-0" id="letterEditBtn">
+								<span class="text-primary"><fmt:formatDate
+										pattern="yyy-MM-dd" value="${letter.l_time}" /></span>
+								<fmt:formatNumber value="${userInfo.m_idx}" type="number"
+									var="mIdx" />
+								<fmt:formatNumber value="${letter.w_idx }" type="number"
+									var="wIdx" />
+								<fmt:formatNumber value="${letter.o_idx }" type="number"
+									var="oIdx" />
+								<c:if test="${mIdx == wIdx or wIdx == oIdx}">
+									<button type="button" class="letterEdit${letter.l_idx }"
+										id="letterEdit" onclick="LetterUpdate(${letter.l_idx });">수정</button>
+									<button type="button" class="letterDel"
+										onclick="LetterDelete(${letter.l_idx });">삭제</button>
+								</c:if>
+								<c:if test="${mIdx == oIdx and wIdx != oIdx }">
+									<button type="button" class="letterDel"
+										onclick="LetterDelete(${letter.l_idx });">삭제</button>
+								</c:if>
+							</div>
 
+						</div>
+						<div class="d-flex justify-content-between">
+							<div class="flex-grow-1">
+								<!-- 답글자리	 -->
+								답글
+							</div>
+							<div class="flex-shrink-0">시간</div>
+						</div>
+					</c:forEach>
+					<form class="letterForm">
+						<div
+							class="d-flex flex-column flex-md-row justify-content-between mb-5">
+
+							<div class="flex-grow-1" id="letterBox">
+								<input type="text" name="l_content" id="l_content"
+									placeholder="안부글 작성하기">
+							</div>
+							<div class="flex-shrink-0">
+								<button type="button" class="letterBtn"
+									onclick="LetterInsert(${userInfo.m_idx},${pageInfo.m_idx});">확인</button>
+							</div>
+
+						</div>
+					</form>
 
 				</div>
+
 			</section>
 			<hr class="m-0" />
-			<!-- Skills-->
+			<!-- 이웃-->
 			<section class="resume-section" id="neighbor">
 				<div class="resume-section-content">
 					<h2 class="mb-5">NEIGHBOR</h2>
@@ -223,10 +285,13 @@
 							<c:set var="member" value="${follow.member}" />
 
 							<div class="flex-grow-1">
-								<h3 class="mb-0">${member.title}</h3>
+								<h3 class="mb-0">
+									<a href="/mainPage/${member.email}">${member.title}</a>
+								</h3>
 								<div class="subheading mb-3">${member.m_name}</div>
-								<input type="hidden" id="followList_${follow.u_idx }" value="${follow.u_idx }">
-								<input type="hidden" id="y_idx" value="${follow.y_idx}">
+								<input type="hidden" id="followList_${follow.u_idx }"
+									value="${follow.u_idx }"> <input type="hidden"
+									id="y_idx" value="${follow.y_idx}">
 								<div>${follow.ment}</div>
 							</div>
 							<div class="flex-shrink-0">
@@ -243,36 +308,41 @@
 						</c:forEach>
 					</div>
 					<div class="subheading mb-3" id="followListSort">
-						이웃 목록<select name="SelectEach" id="SelectEach">
+						이웃 목록<select name="SelectEach" id="SelectEach"
+							onchange="selectBox(this)">
 							<option value="none">----</option>
 							<option value="Each">서로 이웃</option>
 							<option value="noEach">이웃</option>
 						</select>
 					</div>
 
-					<div
-						class="d-flex flex-column justify-content-between mb-5"
+					<div class="d-flex flex-column justify-content-between mb-5"
 						id="followList">
 
 						<c:forEach items="${neighbor}" var="nei">
 							<c:set var="mem" value="${nei.member}" />
 							<div class="${nei.eachother}" id="neiList_${mem.m_idx }">
 								<div class="flex-grow-1" id="neiInfo">
-									<h3 class="mb-0">${mem.title}</h3>
+									<h3 class="mb-0">
+										<a href="/mainPage/${mem.email}">${mem.title}</a>
+									</h3>
 									<div class="subheading mb-3">${mem.m_name}</div>
-									<input type="hidden" class="n_chk${mem.m_idx }" value="${nei.n_check}">
+									<input type="hidden" class="n_chk${mem.m_idx }"
+										value="${nei.n_check}">
 								</div>
 								<div class="flex-shrink-0" id="neiType">
 									<c:if test="${nei.eachother eq 'N' }">
 										<span class="text-primary" id="FollowType">이웃</span>
-										<button type="button" class="FollowBtn" onclick="noEachfollow(${nei.u_idx}, ${nei.y_idx});">
+										<button type="button" class="FollowBtn"
+											onclick="noEachfollow(${nei.u_idx}, ${nei.y_idx});">
 											<img
 												src="${pageContext.request.contextPath}/resources/assets/img/follow.png">
 										</button>
 									</c:if>
 									<c:if test="${nei.eachother eq 'Y' }">
 										<span class="text-primary" id="FollowType">서로이웃</span>
-										<button type="button" class="FollowBtn" onclick="Eachfollow(${nei.u_idx}, ${nei.y_idx});">
+										<button type="button" class="FollowBtn"
+											onclick="Eachfollow(${nei.u_idx}, ${nei.y_idx});">
 											<img
 												src="${pageContext.request.contextPath}/resources/assets/img/follow.png">
 										</button>
@@ -1211,8 +1281,10 @@
 			console.log(nChk);
 			if(idxChk != undefined){
 				alert("서로 이웃이 이미 신청되었습니다.목록을 확인해주세요");
+				modalHide();
 			} else if(nChk == "N"){
 				alert("이미 신청을 보냈습니다.");
+				modalHide();
 			} else{
 				$.ajax({
 					url : '/user/FollowEach',
@@ -1240,8 +1312,10 @@
 			console.log(nChk);
 			if(idxChk != undefined){
 				alert("서로 이웃이 이미 신청되었습니다.목록을 확인해주세요");
+				modalHide();
 			} else if(nChk == "N"){
 				alert("이미 신청을 보냈습니다.");
+				modalHide();
 			} else{
 				$.ajax({
 					url : '/user/EachFollowStart',
@@ -1260,10 +1334,94 @@
 			
 		}
 		
+		function selectBox(e){
+			
+			if(e.value == "Each"){
+				$('.N').css("display", "none");
+				$('.Y').css("display", "inline-block");
+			} else if(e.value == "noEach"){
+				$('.Y').css("display", "none");
+				$('.N').css("display", "inline-block");
+			} else if(e.value="none"){
+				$('.Y').css("display", "inline-block");
+				$('.N').css("display", "inline-block");
+			}
+		}
+		
+		function LetterInsert(w_idx, o_idx){
+			
+			var l_content = $("#l_content").val();	
+			
+			$.ajax({
+				url : '/user/LetterInsert',
+				data : {w_idx : w_idx,
+						o_idx : o_idx,
+						l_content : l_content
+				},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					location.reload();
+				}
+			});
+		}
+		
+		function LetterUpdate(l_idx){
+			
+			var l_content = $(".l_content" + l_idx).val();
+			
+			$(".l_content" + l_idx).remove();
+			
+			$("#letterContent"+l_idx).append("<input type='text' class='l_content"+l_idx+"' id='LetterContentUpdate' value='"+l_content+"'>");
+			$('.letterEdit'+l_idx).attr("onclick", "LetterUpdateBtn("+l_idx+");");
+																																	
+		}
+		
+		function LetterUpdateBtn(l_idx){
+			var l_content = $(".l_content" + l_idx).val();
+			
+			$.ajax({
+				url : '/user/LetterUpdate',
+				data : {l_idx : l_idx,
+						l_content : l_content
+				},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					location.reload();
+				}
+			});
+		}
+		
+		function LetterDelete(l_idx){
+			if (confirm("정말 삭제하시겠습니까?") == true) {
+				$.ajax({
+					url : '/user/LetterDelete',
+					data : {l_idx : l_idx,
+					},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						alert("삭제되었습니다.");
+						location.reload();
+					}
+				});
+			} else {
+				return false;
+			}
+			
+			
+			
+		}
+		
 		
 		$(document)
 				.ready(
 						function() {
+							
 
 							//버튼 클릭 시 왼쪽으로 스크롤
 							$(document).on("click", ".ScrollUp", function() {

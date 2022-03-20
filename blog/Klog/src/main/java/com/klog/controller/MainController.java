@@ -1,5 +1,6 @@
 package com.klog.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.klog.domain.AttachVO;
+import com.klog.domain.LetterReplyVO;
+import com.klog.domain.LetterVO;
 import com.klog.domain.MemberVO;
 import com.klog.domain.NeighborVO;
 import com.klog.domain.PostVO;
 import com.klog.domain.SnsVO;
+import com.klog.service.LetterServiceImpl;
 import com.klog.service.MemberServiceImpl;
 import com.klog.service.NeighborServiceImpl;
 import com.klog.service.PostServiceImpl;
@@ -34,6 +38,9 @@ public class MainController {
 	
 	@Autowired
 	private NeighborServiceImpl followService;
+	
+	@Autowired
+	private LetterServiceImpl letterService;
 
 	@GetMapping("/")
 	public String loginPage() {
@@ -55,6 +62,7 @@ public class MainController {
 		return "member/Repw";
 	}
 
+	// 메인(본인)페이지
 	@GetMapping("/mainPage/{email}")
 	public String MainPage(@PathVariable(name = "email") String email, HttpSession session, Model model) {
 
@@ -73,15 +81,33 @@ public class MainController {
 		List<NeighborVO> neighbor = followService.neighborList(m_idx);
 		// 서로이웃 신청목록 불러오기
 		List<NeighborVO> followList = followService.neighborChk(m_idx);
+		
+		// 안부글 불러오기
+		List<LetterVO> letterList = letterService.LetterList(m_idx);
+		// 답글 불러오기
+		List<LetterReplyVO> letterReplyList = new ArrayList<>();
+		
+		for(int i=0; i<letterList.size(); i++) {
+			int l_idx = letterList.get(i).getL_idx();
+			
+			letterReplyList = letterService.replyList(l_idx);
+		}
+		
 		session.setAttribute("userInfo", member);
 		session.setAttribute("social", social);
+		model.addAttribute("pageInfo", member);
 		model.addAttribute("post", post);
 		model.addAttribute("attach", attach);
 		model.addAttribute("neighbor", neighbor);
 		model.addAttribute("followList", followList);
+		model.addAttribute("letterList", letterList);
+		model.addAttribute("letterReplyList", letterReplyList);
+
 
 		return "member/main";
 	}
+	
+	//유저(다른사람) 페이지
 	
 	@GetMapping("/user/logout")
 	public String Logout(HttpServletRequest request) {

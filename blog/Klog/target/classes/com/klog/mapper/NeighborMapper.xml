@@ -60,7 +60,7 @@
 	
 	<insert id="NoEachFollow">
 		insert into neighbor (u_idx, y_idx, eachother)
-		value (#{u_idx}, #{y_idx}, 'Y')
+		value (#{y_idx}, #{u_idx}, 'Y')
 	</insert>
 
 	<delete id="followDel">

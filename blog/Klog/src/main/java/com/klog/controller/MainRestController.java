@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.klog.domain.LetterVO;
 import com.klog.domain.MemberVO;
 import com.klog.domain.NeighborVO;
 import com.klog.domain.PostVO;
 import com.klog.domain.SearchVO;
 import com.klog.domain.SnsVO;
+import com.klog.service.LetterServiceImpl;
 import com.klog.service.MemberServiceImpl;
 import com.klog.service.NeighborServiceImpl;
 import com.klog.service.PostServiceImpl;
@@ -36,6 +38,9 @@ public class MainRestController {
 
 	@Autowired
 	private NeighborServiceImpl followService;
+
+	@Autowired
+	private LetterServiceImpl letterService;
 
 	@PostMapping("/user/reg")
 	public int memberReg(MemberVO member) {
@@ -215,5 +220,35 @@ public class MainRestController {
 		follow.setMent(ment);
 
 		return followService.followEach(follow);
+	}
+
+	@PostMapping("/user/LetterInsert")
+	public int LetterInsert(int w_idx, int o_idx, String l_content) {
+		
+		LetterVO letter = new LetterVO();
+		
+		letter.setL_content(l_content);
+		letter.setW_idx(w_idx);
+		letter.setO_idx(o_idx);
+
+		System.out.println(letter);
+
+		return letterService.LetterInsert(letter);
+	}
+	
+	@PostMapping("/user/LetterUpdate")
+	public int LetterUpdate(int l_idx, String l_content) {
+		
+		System.out.println("l_idx" + l_idx);
+		System.out.println("l_content" + l_content);
+
+		return letterService.LetterUpdate(l_idx, l_content);
+	}
+	
+	@PostMapping("/user/LetterDelete")
+	public int LetterDelete(int l_idx) {
+		
+
+		return letterService.LetterDel(l_idx);
 	}
 }

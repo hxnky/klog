@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.klog.mapper.LetterMapper">
+
+	<!-- 안부글 답글 정보 -->
+	<resultMap id="letterResult" type="com.klog.domain.LetterVO">
+		<id column="l_idx" property="l_idx" />
+		<result column="w_idx" property="w_idx" />
+		<result column="o_idx" property="o_idx" />
+		<result column="l_time" property="l_time" />
+		<result column="l_content" property="l_content" />
+	</resultMap>
+	
+		<!-- 안부글 정보 -->
+	<resultMap id="letterReplyResult" type="com.klog.domain.LetterVO">
+		<id column="lr_idx" property="lr_idx" />
+		<result column="rw_idx" property="rw_idx" />
+		<result column="ro_idx" property="ro_idx" />
+		<result column="lr_time" property="lr_time" />
+		<result column="lr_content" property="lr_content" />
+		<result column="l_idx" property="l_idx" />
+	</resultMap>
+	
+	<select id="letterList" resultMap="letterResult">
+		select * from letter where o_idx = #{o_Idx}
+	</select>
+	
+	<insert id="letterInsert">
+		insert into letter (w_idx, o_idx, l_content) values (#{w_idx}, #{o_idx}, #{l_content})
+	</insert>
+	
+	<update id="letterUpdate">
+		update letter set l_content = #{l_content}, l_time = now() where l_idx = #{l_idx}
+	</update>
+	
+	<delete id="letterDel">
+		delete from letter where l_idx = #{l_idx}
+	</delete>
+	
+	<select id="replyList" resultMap="letterReplyResult">
+		select * from l_reply where l_idx = #{l_idx}
+	</select>
+	
+	<insert id="ReplyInsert">
+		insert into l_reply (rw_idx, ro_idx, lr_content, l_idx) values (#{rw_idx}, #{ro_idx}, #{lr_content}, #{l_idx})
+	</insert>
+	
+	<update id="ReplyUpdate">
+		update r_reply set lr_content = #{lr_content}, lr_time = now() where lr_idx = #{lr_idx}
+	</update>
+	
+	<delete id="ReplyDel">
+		delete from l_reply where lr_idx = #{lr_idx}
+	</delete>
+
+</mapper>

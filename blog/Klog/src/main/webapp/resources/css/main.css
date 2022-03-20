@@ -300,3 +300,56 @@
 .FollowMent {
 	margin: 10px;
 }
+
+#l_content {
+	width: 90%;
+	height: 80px;
+}
+
+.letterBtn {
+	border: none;
+	background-color: white;
+	font-size: 20px;
+	font-weight: bold;
+	margin-top: 18px;
+}
+
+#letter_img img {
+	width: 70px;
+	height: 70px;
+	margin-right: 10px;
+	border-radius: 100%;
+}
+
+.letterDel {
+	border: none;
+	background-color: white;
+	font-weight: bold;
+	color: red;
+	float: right;
+	margin-right: 10px;
+}
+
+#letterEdit {
+	border: none;
+	background-color: white;
+	font-weight: bold;
+	color: blue;
+}
+
+#LetterContent {
+	border: none;
+	font-size: 30px;
+	width: 90%;
+}
+
+#LetterContentUpdate {
+	font-size: 30px;
+	width: 90%;
+}
+
+.LetterReply {
+	border: none;
+	background-color: white;
+	font-weight: bold;
+}
