@@ -14,7 +14,7 @@
 	</resultMap>
 	
 		<!-- 안부글 정보 -->
-	<resultMap id="letterReplyResult" type="com.klog.domain.LetterVO">
+	<resultMap id="letterReplyResult" type="com.klog.domain.LetterReplyVO">
 		<id column="lr_idx" property="lr_idx" />
 		<result column="rw_idx" property="rw_idx" />
 		<result column="ro_idx" property="ro_idx" />
@@ -48,7 +48,7 @@
 	</insert>
 	
 	<update id="ReplyUpdate">
-		update r_reply set lr_content = #{lr_content}, lr_time = now() where lr_idx = #{lr_idx}
+		update l_reply set lr_content = #{lr_content}, lr_time = now() where lr_idx = #{lr_idx}
 	</update>
 	
 	<delete id="ReplyDel">

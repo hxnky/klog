@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.klog.domain.LetterReplyVO;
 import com.klog.domain.LetterVO;
 import com.klog.domain.MemberVO;
 import com.klog.domain.NeighborVO;
@@ -250,5 +251,34 @@ public class MainRestController {
 		
 
 		return letterService.LetterDel(l_idx);
+	}
+	
+	@PostMapping("/user/LetterReplyInsert")
+	public int LetterReplyInsert(int l_idx, int rw_idx, int ro_idx, String lr_content) {
+		
+		LetterReplyVO reply = new LetterReplyVO();
+		
+		reply.setL_idx(l_idx);
+		reply.setRo_idx(ro_idx);
+		reply.setRw_idx(rw_idx);
+		reply.setLr_content(lr_content);
+		
+		System.out.println("입력한 안부 답글 :::::" + reply);
+
+		return letterService.LetterReplyInsert(reply);
+	}
+	
+	@PostMapping("/user/LetterReplyUpdate")
+	public int LetterReplyUpdate(int lr_idx, String lr_content) {
+		
+
+		return letterService.ReplyUpdate(lr_idx, lr_content);
+	}
+	
+	@PostMapping("/user/LetterReplyDelete")
+	public int LetterReplyDelete(int lr_idx) {
+		
+
+		return letterService.ReplyDel(lr_idx);
 	}
 }

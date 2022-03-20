@@ -20,7 +20,7 @@ public interface LetterService {
 	// 답글 작성
 	public int LetterReplyInsert(LetterReplyVO reply);
 	// 답글 리스트
-	public List<LetterReplyVO> replyList(int l_idx);
+	public List<LetterReplyVO> replyList(List<LetterVO> letterList);
 	// 답글 수정
 	public int ReplyUpdate(int lr_idx, String lr_content);
 	// 답글 삭제

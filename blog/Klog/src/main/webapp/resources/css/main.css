@@ -321,7 +321,7 @@
 	border-radius: 100%;
 }
 
-.letterDel {
+.letterDel, .letterReplyDel {
 	border: none;
 	background-color: white;
 	font-weight: bold;
@@ -330,7 +330,7 @@
 	margin-right: 10px;
 }
 
-#letterEdit {
+#letterEdit, #letterReplyEdit {
 	border: none;
 	background-color: white;
 	font-weight: bold;
@@ -339,7 +339,7 @@
 
 #LetterContent {
 	border: none;
-	font-size: 30px;
+	font-size: 20px;
 	width: 90%;
 }
 
@@ -348,8 +348,32 @@
 	width: 90%;
 }
 
-.LetterReply {
+.LetterReplyBtn {
 	border: none;
 	background-color: white;
 	font-weight: bold;
+}
+
+.letterReplyBox {
+	width: 80%;
+	margin-left: 100px;
+}
+
+.letterReplyBtn {
+	border: none;
+	background-color: white;
+	font-weight: bold;
+	margin-top: 5px;
+}
+
+#lr_content {
+	width: 90%;
+	height: 40px;
+}
+
+#letterReply_img img {
+	width: 60px;
+	height: 60px;
+	margin-right: 10px;
+	border-radius: 100%;
 }

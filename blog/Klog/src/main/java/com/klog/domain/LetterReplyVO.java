@@ -13,7 +13,6 @@ public class LetterReplyVO {
 	private String lr_content;
 	private Date lr_time;
 	private int l_idx;
-	
-	private MemberVO member;
+	private MemberVO memberInfo;
 
 }

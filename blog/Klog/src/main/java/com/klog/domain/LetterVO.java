@@ -13,5 +13,4 @@ public class LetterVO {
 	private Date l_time;
 	private String l_content;
 	private MemberVO member;	// w_idx의 정보를 가져와야한다.
-
 }

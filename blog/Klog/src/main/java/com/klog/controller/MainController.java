@@ -1,6 +1,5 @@
 package com.klog.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -85,14 +84,8 @@ public class MainController {
 		// 안부글 불러오기
 		List<LetterVO> letterList = letterService.LetterList(m_idx);
 		// 답글 불러오기
-		List<LetterReplyVO> letterReplyList = new ArrayList<>();
-		
-		for(int i=0; i<letterList.size(); i++) {
-			int l_idx = letterList.get(i).getL_idx();
-			
-			letterReplyList = letterService.replyList(l_idx);
-		}
-		
+		List<LetterReplyVO> letterReplyList = letterService.replyList(letterList);
+
 		session.setAttribute("userInfo", member);
 		session.setAttribute("social", social);
 		model.addAttribute("pageInfo", member);
@@ -108,6 +101,41 @@ public class MainController {
 	}
 	
 	//유저(다른사람) 페이지
+	@GetMapping("/userPage/{email}")
+	public String UserPage(@PathVariable(name = "email") String email, HttpSession session, Model model) {
+
+		String UserEmail = email + ".com";
+		MemberVO member = service.UserInfo(UserEmail);
+
+		int m_idx = member.getM_idx();
+		SnsVO social = service.UserSNS(m_idx);
+
+		// 글 작성 목록 불러오기
+		List<PostVO> post = postService.postLoad(m_idx);		
+		List<AttachVO> attach = postService.attachList(post);
+		
+		// 이웃 목록 불러오기
+		List<NeighborVO> neighbor = followService.neighborList(m_idx);
+		// 서로이웃 신청목록 불러오기
+		List<NeighborVO> followList = followService.neighborChk(m_idx);
+		
+		// 안부글 불러오기
+		List<LetterVO> letterList = letterService.LetterList(m_idx);
+		// 답글 불러오기
+		List<LetterReplyVO> letterReplyList = letterService.replyList(letterList);
+
+		model.addAttribute("pageSocial", social);
+		model.addAttribute("pageInfo", member);
+		model.addAttribute("post", post);
+		model.addAttribute("attach", attach);
+		model.addAttribute("neighbor", neighbor);
+		model.addAttribute("followList", followList);
+		model.addAttribute("letterList", letterList);
+		model.addAttribute("letterReplyList", letterReplyList);
+
+
+		return "member/user";
+	}
 	
 	@GetMapping("/user/logout")
 	public String Logout(HttpServletRequest request) {

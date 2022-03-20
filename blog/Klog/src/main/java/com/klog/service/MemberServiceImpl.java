@@ -225,6 +225,12 @@ public class MemberServiceImpl implements MemberService {
 		return 0;
 	}
 
+	@Override
+	public MemberVO memberInfoByIdx(int m_idx) {
+		
+		return mapper.userInfoByIdx(m_idx);
+	}
+
 
 	
 	

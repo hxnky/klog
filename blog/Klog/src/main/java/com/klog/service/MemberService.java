@@ -44,5 +44,8 @@ public interface MemberService {
 	// 유저 소셜 정보 변경
 	public int UserSocialChange(SnsVO sns);
 	
+	//22.03.21
+	// idx로 회원 정보 가져오기
+	public MemberVO memberInfoByIdx(int m_idx);
 	
 }

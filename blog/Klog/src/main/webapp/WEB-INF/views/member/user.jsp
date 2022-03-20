@@ -12,7 +12,7 @@
 	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <meta name="description" content="" />
 <meta name="author" content="" />
-<title>KLOG ${userInfo.title }</title>
+<title>KLOG ${pageInfo.title }</title>
 <link rel="icon" type="image/x-icon"
 	href="${pageContext.request.contextPath}/resources/assets/img/favicon.ico" />
 <!-- Font Awesome icons (free version)-->
@@ -46,10 +46,10 @@
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"
 		id="sideNav">
 		<a class="navbar-brand js-scroll-trigger" href="#page-top"> <span
-			class="d-block d-lg-none">${userInfo.m_name }</span> <span
+			class="d-block d-lg-none">${pageInfo.m_name }</span> <span
 			class="d-none d-lg-block"><img
 				class="img-fluid img-profile rounded-circle mx-auto mb-2"
-				src="/UserImage/${userInfo.m_pic}" alt="..." /></span>
+				src="/UserImage/${pageInfo.m_pic}" alt="..." /></span>
 		</a>
 		<div id="SearchDiv">
 			<input type="text" id="Search" placeholder="내 글 검색"><img
@@ -85,8 +85,8 @@
 						id="nav_setting">Setting</a></li>
 				</c:if>
 				<c:if test="${m_idx != pm_idx }">
-					<li class="nav-item"><a class="nav-link js-scroll-trigger"
-						href="/mainPage/${userInfo.email}" id="nav_setting">ToMyPage</a></li>
+					<li class="nav-item"><a href="/userPage/${userInfo.email}"
+						id="nav_setting">ToMyPage</a></li>
 				</c:if>
 				<li class="nav-item"><a class="nav-link js-scroll-trigger"
 					id="nav_logout" href="/user/logout">Logout</a></li>
@@ -104,18 +104,19 @@
 			<!-- About-->
 			<section class="resume-section" id="profile">
 				<div class="resume-section-content">
-					<h1 class="mb-0" id="custom_title">${userInfo.title }</h1>
+					<h1 class="mb-0" id="custom_title">${pageInfo.title }</h1>
 					<div class="subheading mb-5">
-						${userInfo.m_name} <a href="mailto:name@email.com">${userInfo.email }</a>
+						${pageInfo.m_name} <a href="mailto:name@email.com">${pageInfo.email }</a>
 					</div>
-					<p class="lead mb-5">${userInfo.bio }</p>
+					<p class="lead mb-5">${pageInfo.bio }</p>
 					<div class="social-icons">
-						<a class="social-icon" id="social_in" href="${social.insta}"><i
+						<a class="social-icon" id="social_in" href="${pageSocial.insta}"><i
 							class="fab fa-linkedin-in"></i></a> <a class="social-icon"
-							id="social_git" href="${social.git}"><i class="fab fa-github"></i></a>
-						<a class="social-icon" id="social_twi" href="${social.twitter}"><i
-							class="fab fa-twitter"></i></a> <a class="social-icon" id="social_fb"
-							href="${social.facebook}"><i class="fab fa-facebook-f"></i></a>
+							id="social_git" href="${pageSocial.git}"><i
+							class="fab fa-github"></i></a> <a class="social-icon" id="social_twi"
+							href="${pageSocial.twitter}"><i class="fab fa-twitter"></i></a> <a
+							class="social-icon" id="social_fb" href="${pageSocial.facebook}"><i
+							class="fab fa-facebook-f"></i></a>
 					</div>
 				</div>
 			</section>
@@ -354,7 +355,7 @@
 
 								<div class="flex-grow-1">
 									<h3 class="mb-0">
-										<a href="/userPage/${member.email}">${member.title}</a>
+										<a href="/mainPage/${member.email}">${member.title}</a>
 									</h3>
 									<div class="subheading mb-3">${member.m_name}</div>
 									<input type="hidden" id="followList_${follow.u_idx }"
@@ -393,7 +394,7 @@
 							<div class="${nei.eachother}" id="neiList_${mem.m_idx }">
 								<div class="flex-grow-1" id="neiInfo">
 									<h3 class="mb-0">
-										<a href="/userPage/${mem.email}">${mem.title}</a>
+										<a href="/mainPage/${mem.email}">${mem.title}</a>
 									</h3>
 									<div class="subheading mb-3">${mem.m_name}</div>
 									<input type="hidden" class="n_chk${mem.m_idx }"
@@ -766,7 +767,7 @@
 
 			$(".Postmodal-body")
 					.append(
-							'<form id="PostCreate"><input type="hidden" name="post_writer" id="post_writer" value="${userInfo.m_name}"><input type="hidden" name="m_idx" id="m_idx" value="${userInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" placeholder ="글 제목"><input type="file" name="file" multiple id="input_file" onchange="fileCheck(this)" style="width:100%;"><span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span><div class="data_file_txt" id="data_file_txt"><span>첨부 파일</span><div id="articlefileChange"></div></div></div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content" placeholder="글 내용을 입력하세요"></textarea></div>');
+							'<form id="PostCreate"><input type="hidden" name="post_writer" id="post_writer" value="${pageInfo.m_name}"><input type="hidden" name="m_idx" id="m_idx" value="${pageInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" placeholder ="글 제목"><input type="file" name="file" multiple id="input_file" onchange="fileCheck(this)" style="width:100%;"><span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span><div class="data_file_txt" id="data_file_txt"><span>첨부 파일</span><div id="articlefileChange"></div></div></div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content" placeholder="글 내용을 입력하세요"></textarea></div>');
 
 		}
 
@@ -870,7 +871,7 @@
 
 			$(".Postmodal-body")
 					.append(
-							'<form class="PostEdit"><input type="hidden" name="p_idx" id="p_idx" value="'+p_idx+'"><input type="hidden" name="m_idx" id="m_idx" value="${userInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" value ="'+title+'"><input type="file" name="file" multiple id="input_file" onchange="fileCheck(this)" style="width:100%;"><span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span>'
+							'<form class="PostEdit"><input type="hidden" name="p_idx" id="p_idx" value="'+p_idx+'"><input type="hidden" name="m_idx" id="m_idx" value="${pageInfo.m_idx}"><div class="PostHead">글 제목<input type="text" class="Postmodal_Head" name="post_title" id="post_title" value ="'+title+'"><input type="file" name="file" multiple id="input_file" onchange="fileCheck(this)" style="width:100%;"><span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span>'
 							+'<div class="data_file_txt" id="data_file_txt"><span>첨부 파일</span><div id="articlefileChange">'
 							+'</div><div class="PostContent"><textarea cols="50" rows="15" name="post_content" id="post_content">'+content+'</textarea></div>');
 
@@ -1591,19 +1592,19 @@
 							});
 
 							$('#sideNav').css("background-color",
-									"${userInfo.bgcolor}");
+									"${pageInfo.bgcolor}");
 
 							// 사용자 소셜 선택
-							if ("${social.insta}" != "N") {
+							if ("${pageSocial.insta}" != "N") {
 								$('#social_in').css("display", "inline-flex");
 							}
-							if ("${social.git}" != "N") {
+							if ("${pageSocial.git}" != "N") {
 								$('#social_git').css("display", "inline-flex");
 							}
-							if ("${social.twitter}" != "N") {
+							if ("${pageSocial.twitter}" != "N") {
 								$('#social_twi').css("display", "inline-flex");
 							}
-							if ("${social.facebook}" != "N") {
+							if ("${pageSocial.facebook}" != "N") {
 								$('#social_fb').css("display", "inline-flex");
 							}
 
