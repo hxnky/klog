@@ -155,27 +155,21 @@
 											<input type='text' class='postText'
 												id='content_${list.p_idx }'
 												value='<c:out value="${list.post_content}" />'>
-										<div class="AttachImg">
-											<c:forEach items="${attach}" var="Att_img">
-												<c:set var="listPidx" value="${list.p_idx }" />
-												<c:set var="AttachPidx" value="${Att_img.p_idx }" />
-												<c:if test="${ listPidx eq AttachPidx }">
-
-													<img src="/PostImage/${Att_img.a_name }">
-
-
-												</c:if>
-
-											</c:forEach>
-										</div>
+										<div
+											class="d-flex flex-column flex-md-row justify-content-between"
+											id="AttachImg"></div>
 										</p>
-
 
 									</div>
 									<div class="flex-shrink-0">
 										<span class="text-primary"><fmt:formatDate
 												value="${list.post_updatetime}" pattern="yyyy-MM-dd" /></span>
-										<c:if test="${'${usreInfo.m_idx }' != '${list.m_idx }'}">
+
+										<fmt:formatNumber value="${userInfo.m_idx}" type="number"
+											var="mIdx" />
+										<fmt:formatNumber value="${pageInfo.m_idx}" type="number"
+											var="pIdx" />
+										<c:if test="${m_idx == pIdx}">
 											<div id="postBtn">
 												<button type="button" id="PostEdit"
 													onclick="PostEdit(${list.p_idx });">수정</button>
@@ -214,7 +208,8 @@
 							<c:set var="member" value="${letter.member}" />
 
 							<div id="letter_img">
-								<img src="/UserImage/${member.m_pic }">
+								<a href="/userPage/${member.email }"><img
+									src="/UserImage/${member.m_pic }"></a>
 							</div>
 							<div class="flex-grow-1">
 								<h3 class="mb-0 letterContentBox"
@@ -241,11 +236,13 @@
 										pattern="yyy-MM-dd" value="${letter.l_time}" /></span>
 								<fmt:formatNumber value="${userInfo.m_idx}" type="number"
 									var="mIdx" />
+								<fmt:formatNumber value="${pageInfo.m_idx}" type="number"
+									var="pIdx" />
 								<fmt:formatNumber value="${letter.w_idx }" type="number"
 									var="wIdx" />
 								<fmt:formatNumber value="${letter.o_idx }" type="number"
 									var="oIdx" />
-								<c:if test="${mIdx == wIdx or wIdx == oIdx}">
+								<c:if test="${mIdx == wIdx}">
 									<button type="button" class="letterEdit${letter.l_idx }"
 										id="letterEdit" onclick="LetterUpdate(${letter.l_idx });">수정</button>
 									<button type="button" class="letterDel"
@@ -260,6 +257,11 @@
 						</div>
 
 						<c:forEach items="${letterReplyList}" var="letterReply">
+							<div
+								class="d-flex flex-md-row justify-content-between letterReplyBox">
+								<div class="letterReply" id="letterReply${letter.l_idx }"></div>
+							</div>
+
 							<c:set var="memberInfo" value="${letterReply.memberInfo}" />
 							<fmt:formatNumber value="${letter.l_idx }" type="number"
 								var="lIdx" />
@@ -268,9 +270,9 @@
 							<c:if test="${lIdx == lrIdx}">
 								<div
 									class="d-flex flex-md-row justify-content-between letterReplyBox">
-									<div class="letterReply" id="letterReply${letter.l_idx }"></div>
 									<div id="letterReply_img">
-										<img src="/UserImage/${memberInfo.m_pic }">
+										<a href="/userPage/${memberInfo.email }"><img
+											src="/UserImage/${memberInfo.m_pic }"></a>
 									</div>
 									<div class="flex-grow-1">
 										<!-- 답글자리	 -->
@@ -297,7 +299,7 @@
 											var="rwIdx" />
 										<fmt:formatNumber value="${letterReply.ro_idx }" type="number"
 											var="roIdx" />
-										<c:if test="${mIdx == rwIdx or rwIdx == roIdx}">
+										<c:if test="${mIdx == rwIdx}">
 											<button type="button"
 												class="letterReplyEdit${letterReply.lr_idx }"
 												id="letterReplyEdit"
@@ -311,11 +313,10 @@
 										</c:if>
 									</div>
 
-
+									<div class="letterReply" id="letterReply${letter.l_idx }"></div>
 								</div>
 							</c:if>
 						</c:forEach>
-
 					</c:forEach>
 					<form class="letterForm">
 						<div
@@ -494,9 +495,14 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- 알림 토스트 -->
+		<div id="msgStack"></div>
+
 	</div>
 
-
+	<script
+		src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 	<!-- Bootstrap core JS-->
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -521,6 +527,40 @@
 		var content_files = new Array();
 		// 기존 첨부파일 배열
 		var attach_files = new Array();
+		// 알림
+		var socket = null;
+		
+		// 알람 가져오기
+		function SocketConnect(){
+			
+			
+			sock = new SockJS("<c:url value="/echo"/>");
+			socket = sock;
+			
+			sock.onopen = function(){
+				console.log("info : connection opend");
+			}
+			
+			sock.onmessage = onMessage;
+			
+		}
+		
+		// 실시간 메세지 도착 시 토스트로 보여준다
+		function onMessage(evt){
+			var data = evt.data;
+			console.log("ReceiveMessage ::: " + data + "\n");
+			
+			var toast = "<div class='toast' role='alert' aria-live='assertive' aria-atomic='true'>";
+			toast += "<div class='toast-header'><i class='fas fa-bell mr-2'></i><strong class='mr-auto'>알림</strong>";
+		    toast += "<small class='text-muted'>just now</small><button type='button' class='ml-2 mb-1 close' data-dismiss='toast' aria-label='Close'>";
+		    toast += "<span aria-hidden='true'>&times;</span></button>";
+		    toast += "</div> <div class='toast-body'>" + data + "</div></div>"
+		    $("#msgStack").append(toast);
+		    $(".toast").toast({"animation":true, "autohide" : false});
+		    $(".toast").toast("show");
+			
+			
+		}
 
 		function checkExtension(fileName, fileSize) {
 
@@ -1049,7 +1089,7 @@
 						$(".container_none").hide();
 						$("#searchResult").remove();
 						$("#backImg").remove();
-						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div><section class='resume-section' id='searchResult'><div class='resume-section-content'><h2 class='mb-5'>검색결과</h2>"
+						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png' onclick='ResetPage();'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div><section class='resume-section' id='searchResult'><div class='resume-section-content'><h2 class='mb-5'>검색결과</h2>"
 								+"<div id='SearchList'></div></div></section>");
 						
 						if(result.length == 0){
@@ -1073,7 +1113,7 @@
 													);
 
 
-							if(m_idx == result[i].m_idx){
+							if(${userInfo.m_idx} == result[i].m_idx){
 								$("#postBtn_"+result[i].p_idx).append("<button type='button' id='PostEdit' onclick='PostEdit("+result[i].p_idx+");'>수정</button><button type='button' id='PostDel' onclick='PostDel("+result[i].p_idx+");'>삭제</button>");
 								}
 							
@@ -1115,7 +1155,7 @@
 						$("#searchResult").remove();
 						$("#backImg").remove();
 						$("#SearchUser").remove();
-						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div>"
+						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png' onclick='ResetPage();'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div>"
 								+"<section class='resume-section' id='searchResult'><div class='resume-section-content'><h4 class='mb-5'>유저 검색결과</h4>"
 								+"<div id='UserList'></div><hr><h4 class='mb-5'>글 검색결과</h4><div id='SearchList'></div></div></section>");
 						
@@ -1141,7 +1181,7 @@
 														);
 
 
-								if(m_idx == post[i].m_idx){
+								if(${userInfo.m_idx} == post[i].m_idx){
 									$("#postBtn_"+post[i].p_idx).append("<button type='button' id='PostEdit' onclick='PostEdit("+post[i].p_idx+");'>수정</button><button type='button' id='PostDel' onclick='PostDel("+post[i].p_idx+");'>삭제</button>");
 									}
 							
@@ -1162,7 +1202,7 @@
 							$("#UserList").append("<div class='no_Result'>검색 결과가 없습니다.</div>");
 						} else{
 							for(var i=0; i<member.length; i++){
-								$("#UserList").append("<div class='d-flex justify-content-between mb-5'><div><h3 class='mb-0' id='custom_title'>"+member[i].title+"</h3>"
+								$("#UserList").append("<div class='d-flex justify-content-between mb-5'><div><h3 class='mb-0' id='custom_title'><a href='/userPage/"+member[i].email+"'>"+member[i].title+"</a></h3>"
 														+"<div class='subheading'>"+member[i].m_name+"<a class='a_search' href='mailto:"+member[i].email+"'>"+member[i].email+"</a></div>"
 														+"<div class='SearchBio'></div></div><div class='flex-shrink-0' id='neiListIdx_"+member[i].m_idx+"'></div></div>"
 								);
@@ -1186,12 +1226,40 @@
 						
 
 						
+						
+						
 					}
 				});
 			}
 		}
 		
+		function ResetPage(){
+			$(".container_none").show();
+			$("#searchResult").remove();
+			$("#backImg").remove();
+		}
+		
 		function FollowOK(u_idx, y_idx){
+			
+			var m_name = "${userInfo.m_name}";
+			
+			$.ajax({
+				url : '/user/AlarmInsert',
+				data : {"ac_idx" : u_idx,
+						"ar_idx" : y_idx,
+						type : "follow"
+						},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					if(socket){
+						let socketMsg = "follow," + "이웃신청,"+ m_name;
+						console.log("msgmsg : " + socketMsg);
+						socket.send(socketMsg);
+					}
+				}
+			});
 			$.ajax({
 				url : '/user/FollowOk',
 				data : {u_idx : u_idx,
@@ -1204,6 +1272,8 @@
 					location.reload();
 				}
 			});
+			
+			
 		}
 		
 		function FollowNO(u_idx, y_idx){
@@ -1240,6 +1310,27 @@
 			console.log(y_idx);
 			
 			if(radioVal == "FollowStart"){
+				
+				var m_name = "${userInfo.m_name}";
+				
+				$.ajax({
+					url : '/user/AlarmInsert',
+					data : {"ac_idx" : u_idx,
+						"ar_idx" : y_idx,
+							type : "follow"
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						if(socket){
+							let socketMsg = "follow," + "이웃 신청,"+ m_name;
+							console.log("msgmsg : " + socketMsg);
+							socket.send(socketMsg);
+						}
+					}
+				});
+				
 				$.ajax({
 					url : '/user/FollowStart',
 					data : {u_idx : u_idx,
@@ -1252,6 +1343,8 @@
 						location.reload();	// 이게 아니라 다시 검색창으로
 					}
 				});
+				
+				
 				
 			} else if(radioVal == "EachFollowStart"){
 				$('#FollowModalBtn').attr("onclick", "EachFollowStart("+u_idx+", "+y_idx+");");
@@ -1313,6 +1406,26 @@
 					}
 				});
 			} else if(radioVal == "EachFollowChange"){
+				var m_name = "${userInfo.m_name}";
+				$.ajax({
+					url : '/user/AlarmInsert',
+					data : {"ac_idx" : u_idx,
+					"ar_idx" : y_idx,
+							type : "Eachfollow"
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						if(socket){
+							let socketMsg = "Eachfollow," + "서로이웃,"+ m_name;
+							console.log("msgmsg : " + socketMsg);
+							socket.send(socketMsg);
+						}
+					}
+				});
+				
+				
 				$.ajax({
 					url : '/user/FollowChange',
 					data : {u_idx : u_idx,
@@ -1325,6 +1438,9 @@
 						location.reload();
 					}
 				});
+				
+				
+
 			} else if(radioVal == "EachFollowDel"){
 				$.ajax({
 					url : '/user/EachFollowDel',
@@ -1355,6 +1471,25 @@
 				alert("이미 신청을 보냈습니다.");
 				modalHide();
 			} else{
+				var m_name = "${userInfo.m_name}";
+				$.ajax({
+					url : '/user/AlarmInsert',
+					data : {"ac_idx" : u_idx,
+						"ar_idx" : y_idx,
+							type : "Eachfollow"
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						if(socket){
+							let socketMsg = "Eachfollow," + "서로이웃,"+ m_name;
+							console.log("msgmsg : " + socketMsg);
+							socket.send(socketMsg);
+						}
+					}
+				});
+				
 				$.ajax({
 					url : '/user/FollowEach',
 					data : {u_idx : u_idx,
@@ -1368,6 +1503,8 @@
 						location.reload();
 					}
 				});
+				
+				
 			}
 			
 		}
@@ -1386,6 +1523,25 @@
 				alert("이미 신청을 보냈습니다.");
 				modalHide();
 			} else{
+				var m_name = "${userInfo.m_name}";
+				$.ajax({
+					url : '/user/AlarmInsert',
+					data : {"ac_idx" :u_idx,
+							"ar_idx" : y_idx,
+							type : "Eachfollow"
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						if(socket){
+							let socketMsg = "Eachfollow," + "서로이웃,"+ m_name;
+							console.log("msgmsg : " + socketMsg);
+							socket.send(socketMsg);
+						}
+					}
+				});
+				
 				$.ajax({
 					url : '/user/EachFollowStart',
 					data : {u_idx : u_idx,
@@ -1399,6 +1555,8 @@
 						location.reload();
 					}
 				});
+				
+				
 			}
 			
 		}
@@ -1420,20 +1578,44 @@
 		function LetterInsert(w_idx, o_idx){
 			
 			var l_content = $("#l_content").val();	
-			
+			var m_name = "${userInfo.m_name}";
 			$.ajax({
-				url : '/user/LetterInsert',
-				data : {w_idx : w_idx,
-						o_idx : o_idx,
-						l_content : l_content
-				},
+				url : '/user/AlarmInsert',
+				data : {"ac_idx" : w_idx,
+					"ar_idx" : o_idx,
+						type : "letter"
+						},
 				type : "POST",
 				dataType : "json",
 				async : false,
 				success : function(result) {
-					location.reload();
+					console.log(result);
+					if(socket){
+						let socketMsg = "letter," + l_content +","+ m_name;
+						console.log("msg : " + socketMsg);
+						socket.send(socketMsg);
+					}
 				}
 			});
+			
+// 			$.ajax({
+// 				url : '/user/LetterInsert',
+// 				data : {w_idx : w_idx,
+// 						o_idx : o_idx,
+// 						l_content : l_content
+// 				},
+// 				type : "POST",
+// 				dataType : "json",
+// 				async : false,
+// 				success : function(result) {
+// 					location.reload();
+// 				}
+// 			});
+			
+			
+			
+			
+			
 		}
 		
 		function LetterUpdate(l_idx){
@@ -1497,11 +1679,29 @@
 			
 		}
 		
-		function LetterReplyInsert(lr_idx){
+		function LetterReplyInsert(l_idx){
 			
 			var rw_idx = ${userInfo.m_idx};
 			var ro_idx = $("#ro_idx"+l_idx).val();
 			var lr_content = $("#lr_content"+l_idx).val();
+			var m_name = "${userInfo.m_name}";
+			$.ajax({
+				url : '/user/AlarmInsert',
+				data : {"ac_idx" : rw_idx,
+					"ar_idx" : ro_idx,
+						type : "reply"
+						},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					if(socket){
+						let socketMsg = "reply," + lr_content +","+ m_name;
+						console.log("msgmsg : " + socketMsg);
+						socket.send(socketMsg);
+					}
+				}
+			});
 			
 			$.ajax({
 				url : '/user/LetterReplyInsert',
@@ -1518,6 +1718,8 @@
 					location.reload();
 				}
 			});
+			
+			
 		}
 		
 	function LetterReplyUpdate(lr_idx){
@@ -1572,9 +1774,14 @@
 			
 		}
 		
+		
+		
+		
 		$(document)
 				.ready(
 						function() {
+							
+							SocketConnect();
 							
 							//버튼 클릭 시 왼쪽으로 스크롤
 							$(document).on("click", ".ScrollUp", function() {

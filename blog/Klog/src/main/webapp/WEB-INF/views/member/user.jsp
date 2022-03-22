@@ -85,8 +85,8 @@
 						id="nav_setting">Setting</a></li>
 				</c:if>
 				<c:if test="${m_idx != pm_idx }">
-					<li class="nav-item"><a href="/userPage/${userInfo.email}"
-						id="nav_setting">ToMyPage</a></li>
+					<li class="nav-item"><a class="nav-link js-scroll-trigger"
+						href="/mainPage/${userInfo.email}" id="nav_setting">ToMyPage</a></li>
 				</c:if>
 				<li class="nav-item"><a class="nav-link js-scroll-trigger"
 					id="nav_logout" href="/user/logout">Logout</a></li>
@@ -176,7 +176,11 @@
 									<div class="flex-shrink-0">
 										<span class="text-primary"><fmt:formatDate
 												value="${list.post_updatetime}" pattern="yyyy-MM-dd" /></span>
-										<c:if test="${'${usreInfo.m_idx }' != '${list.m_idx }'}">
+										<fmt:formatNumber value="${userInfo.m_idx}" type="number"
+											var="mIdx" />
+										<fmt:formatNumber value="${pageInfo.m_idx}" type="number"
+											var="pIdx" />
+										<c:if test="${m_idx == pIdx}">
 											<div id="postBtn">
 												<button type="button" id="PostEdit"
 													onclick="PostEdit(${list.p_idx });">수정</button>
@@ -184,7 +188,6 @@
 													onclick="PostDel(${list.p_idx});">삭제</button>
 											</div>
 										</c:if>
-
 									</div>
 									<input type="hidden" id="post_m_idx" value="${list.m_idx }">
 								</div>
@@ -215,7 +218,8 @@
 							<c:set var="member" value="${letter.member}" />
 
 							<div id="letter_img">
-								<img src="/UserImage/${member.m_pic }">
+								<a href="/userPage/${memberInfo.email }"><img
+									src="/UserImage/${member.m_pic }"></a>
 							</div>
 							<div class="flex-grow-1">
 								<h3 class="mb-0 letterContentBox"
@@ -242,11 +246,13 @@
 										pattern="yyy-MM-dd" value="${letter.l_time}" /></span>
 								<fmt:formatNumber value="${userInfo.m_idx}" type="number"
 									var="mIdx" />
+								<fmt:formatNumber value="${pageInfo.m_idx}" type="number"
+									var="pIdx" />
 								<fmt:formatNumber value="${letter.w_idx }" type="number"
 									var="wIdx" />
 								<fmt:formatNumber value="${letter.o_idx }" type="number"
 									var="oIdx" />
-								<c:if test="${mIdx == wIdx or wIdx == oIdx}">
+								<c:if test="${mIdx == wIdx}">
 									<button type="button" class="letterEdit${letter.l_idx }"
 										id="letterEdit" onclick="LetterUpdate(${letter.l_idx });">수정</button>
 									<button type="button" class="letterDel"
@@ -271,7 +277,8 @@
 									class="d-flex flex-md-row justify-content-between letterReplyBox">
 									<div class="letterReply" id="letterReply${letter.l_idx }"></div>
 									<div id="letterReply_img">
-										<img src="/UserImage/${memberInfo.m_pic }">
+										<a href="/userPage/${memberInfo.email }"><img
+											src="/UserImage/${memberInfo.m_pic }"></a>
 									</div>
 									<div class="flex-grow-1">
 										<!-- 답글자리	 -->
@@ -298,7 +305,7 @@
 											var="rwIdx" />
 										<fmt:formatNumber value="${letterReply.ro_idx }" type="number"
 											var="roIdx" />
-										<c:if test="${mIdx == rwIdx or rwIdx == roIdx}">
+										<c:if test="${mIdx == rwIdx}">
 											<button type="button"
 												class="letterReplyEdit${letterReply.lr_idx }"
 												id="letterReplyEdit"
@@ -306,7 +313,7 @@
 											<button type="button" class="letterReplyDel"
 												onclick="LetterReplyDelete(${letterReply.lr_idx });">삭제</button>
 										</c:if>
-										<c:if test="${mIdx == roIdx and rwIdx != roIdx }">
+										<c:if test="${mIdx == roIdx and rwIdx == roIdx }">
 											<button type="button" class="letterReplyDel"
 												onclick="LetterReplyDelete(${letterReply.lr_idx });">삭제</button>
 										</c:if>
@@ -355,7 +362,7 @@
 
 								<div class="flex-grow-1">
 									<h3 class="mb-0">
-										<a href="/mainPage/${member.email}">${member.title}</a>
+										<a href="/userPage/${member.email}">${member.title}</a>
 									</h3>
 									<div class="subheading mb-3">${member.m_name}</div>
 									<input type="hidden" id="followList_${follow.u_idx }"
@@ -394,7 +401,7 @@
 							<div class="${nei.eachother}" id="neiList_${mem.m_idx }">
 								<div class="flex-grow-1" id="neiInfo">
 									<h3 class="mb-0">
-										<a href="/mainPage/${mem.email}">${mem.title}</a>
+										<a href="/userPage/${mem.email}">${mem.title}</a>
 									</h3>
 									<div class="subheading mb-3">${mem.m_name}</div>
 									<input type="hidden" class="n_chk${mem.m_idx }"
@@ -496,7 +503,8 @@
 			</div>
 		</div>
 	</div>
-
+	<!-- 알림 토스트 -->
+	<div id="msgStack"></div>
 
 	<!-- Bootstrap core JS-->
 	<script
@@ -1074,7 +1082,7 @@
 													);
 
 
-							if(m_idx == result[i].m_idx){
+							if(${userInfo.m_idx} == result[i].m_idx){
 								$("#postBtn_"+result[i].p_idx).append("<button type='button' id='PostEdit' onclick='PostEdit("+result[i].p_idx+");'>수정</button><button type='button' id='PostDel' onclick='PostDel("+result[i].p_idx+");'>삭제</button>");
 								}
 							
@@ -1142,7 +1150,7 @@
 														);
 
 
-								if(m_idx == post[i].m_idx){
+								if(${userInfo.m_idx} == post[i].m_idx){
 									$("#postBtn_"+post[i].p_idx).append("<button type='button' id='PostEdit' onclick='PostEdit("+post[i].p_idx+");'>수정</button><button type='button' id='PostDel' onclick='PostDel("+post[i].p_idx+");'>삭제</button>");
 									}
 							
@@ -1163,7 +1171,7 @@
 							$("#UserList").append("<div class='no_Result'>검색 결과가 없습니다.</div>");
 						} else{
 							for(var i=0; i<member.length; i++){
-								$("#UserList").append("<div class='d-flex justify-content-between mb-5'><div><h3 class='mb-0' id='custom_title'>"+member[i].title+"</h3>"
+								$("#UserList").append("<div class='d-flex justify-content-between mb-5'><div><h3 class='mb-0' id='custom_title' <a href='/userPage/"+member[i].email+"'>>"+member[i].title+"</a></h3>"
 														+"<div class='subheading'>"+member[i].m_name+"<a class='a_search' href='mailto:"+member[i].email+"'>"+member[i].email+"</a></div>"
 														+"<div class='SearchBio'></div></div><div class='flex-shrink-0' id='neiListIdx_"+member[i].m_idx+"'></div></div>"
 								);
@@ -1191,6 +1199,15 @@
 				});
 			}
 		}
+		
+		function ResetPage(){
+			$(".container_none").show();
+			$("#searchResult").remove();
+			$("#backImg").remove();
+			$("#SearchUser").remove();
+		}
+		
+		
 		
 		function FollowOK(u_idx, y_idx){
 			$.ajax({

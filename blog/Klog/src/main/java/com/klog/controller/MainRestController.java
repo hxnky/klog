@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.klog.domain.AlarmVO;
 import com.klog.domain.LetterReplyVO;
 import com.klog.domain.LetterVO;
 import com.klog.domain.MemberVO;
@@ -16,6 +17,7 @@ import com.klog.domain.NeighborVO;
 import com.klog.domain.PostVO;
 import com.klog.domain.SearchVO;
 import com.klog.domain.SnsVO;
+import com.klog.service.AlarmServiceImpl;
 import com.klog.service.LetterServiceImpl;
 import com.klog.service.MemberServiceImpl;
 import com.klog.service.NeighborServiceImpl;
@@ -42,6 +44,9 @@ public class MainRestController {
 
 	@Autowired
 	private LetterServiceImpl letterService;
+	
+	@Autowired
+	private AlarmServiceImpl AlarmService;
 
 	@PostMapping("/user/reg")
 	public int memberReg(MemberVO member) {
@@ -280,5 +285,18 @@ public class MainRestController {
 		
 
 		return letterService.ReplyDel(lr_idx);
+	}
+	
+	@PostMapping("/user/AlarmInsert")
+	public int AlarmInsert(int ac_idx, int ar_idx, String type) {
+		
+		AlarmVO alarm = new AlarmVO();
+		alarm.setAc_idx(ac_idx);
+		alarm.setAr_idx(ar_idx);
+		alarm.setType(type);
+
+		System.out.println("알람 발생 :::::" + alarm);
+		
+		return AlarmService.AlarmInsert(alarm);
 	}
 }

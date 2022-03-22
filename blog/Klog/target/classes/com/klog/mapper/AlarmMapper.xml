@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.klog.mapper.AlarmMapper">
+
+	<!-- 안부글 답글 정보 -->
+	<resultMap id="AlarmResult" type="com.klog.domain.LetterVO">
+		<id column="a_idx" property="a_idx" />
+		<result column="a_date" property="a_date" />
+		<result column="type" property="type" />
+		<result column="ac_idx" property="ac_idx" />
+		<result column="ar_idx" property="ar_idx" />
+	</resultMap>
+	
+	<select id="CountAlarmByIdx" resultMap="AlarmResult">
+		select count(*) from alarm where ar_idx = #{ar_idx}
+	</select>
+	
+	<insert id="AlarmInsert">
+		insert into alarm (type, ac_idx, ar_idx) value (#{type},#{ac_idx}, #{ar_idx})
+	</insert>
+
+</mapper>
