@@ -285,11 +285,11 @@
 									class="d-flex flex-md-row justify-content-between letterReplyBox">
 									<div id="letterReply_img">
 										<a href="/userPage/${memberInfo.email }"><c:set
-												var="loginType" value="${member.loginType }"></c:set> <c:if
+												var="loginType" value="${memberInfo.loginType }"></c:set> <c:if
 												test="${loginType eq 'email'}">
-												<img src="/UserImage/${member.m_pic }">
+												<img src="/UserImage/${memberInfo.m_pic }">
 											</c:if> <c:if test="${loginType eq 'google'}">
-												<img src="${member.m_pic }">
+												<img src="${memberInfo.m_pic }">
 											</c:if></a>
 									</div>
 									<div class="flex-grow-1">
@@ -1663,10 +1663,13 @@
 			
 			var l_content = $(".l_content" + l_idx).val();
 			
-			$(".l_content" + l_idx).remove();
-			$(".letterReplyContentBox").empty();
+			$("#LetterContentUpdate").attr("type", "hidden");
+			$('#LetterContent').attr("disabled", "disabled");
+			$('.letterEdit'+l_idx).attr("onclick", "LetterUpdate("+l_idx+");");
+			$(".l_content" + l_idx).attr("type", "hidden");
+			//$(".letterContentBox"+l_idx).empty();
 			
-			$("#letterReplyContentBox"+l_idx).append("<input type='text' class='l_content"+l_idx+"' id='LetterContentUpdate' value='"+l_content+"'>");
+			$(".letterContentBox"+l_idx).append("<input type='text' class='l_content"+l_idx+"' id='LetterContentUpdate' value='"+l_content+"'>");
 			$('.letterEdit'+l_idx).attr("onclick", "LetterUpdateBtn("+l_idx+");");
 																																	
 		}
@@ -1768,8 +1771,11 @@
 			
 			var lr_content = $(".lr_content" + lr_idx).val();
 			
-			$(".lr_content" + lr_idx).remove();
-			$(".letterContentBox").empty();
+			$("#LetterReplyContentUpdate").attr("type", "hidden");
+			$('#LetterContent').attr("disabled", "disabled");
+			$('#LetterContent').attr("onclick", "LetterReplyUpdate("+lr_idx+");");
+			$(".lr_content" + lr_idx).attr("type", "hidden");
+			//$(".letterReplyContentBox"+lr_idx).empty();
 
 			$("#letterReplyContent"+lr_idx).append("<input type='text' class='lr_content"+lr_idx+"' id='LetterReplyContentUpdate' value='"+lr_content+"'>");
 			$('.letterReplyEdit'+lr_idx).attr("onclick", "LetterReplyUpdateBtn("+lr_idx+");");
@@ -1916,7 +1922,7 @@
 												// 프로필 설정 관련 창 보여주기
 												// 사진, 닉네임, 바이오, 타이틀, 비밀번호 변경, sns 연결, nav 혹은 블로그 색 --> 이건 나중에
 												// userInfo와 비교해서 수정된 내용 있는데 con_on 누를 경우 경고창
-												if(${userInfo.loginType} == "email"){
+												if("${userInfo.loginType}" == "email"){
 													$(".container-fluid")
 													.append(
 															"<div class='container-setting'><section class='resume-section'><div class='resume-section-content'><form id='User_setting' accept-charset='utf-8'><input type='hidden' name='m_idx' id='m_idx' value='${userInfo.m_idx}'><input type='hidden' name='bgcolor' id='bgcolor' value='${userInfo.bgcolor}'><div class='container_pic'><label for='chooseFile' id='picInfo'>"
