@@ -6,19 +6,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.klog.domain.MemberVO;
+import com.klog.mapper.MemberMapper;
 
 @Controller
 public class GoogleController {
@@ -37,6 +41,9 @@ public class GoogleController {
 	@Value("#{config['google.secret']}")
 	private String googleClientSecret;
 
+	@Autowired
+	private MemberMapper mapper;
+
 	// 구글 로그인창 호출
 	@RequestMapping(value = "/login/getGoogleAuthUrl")
 	public @ResponseBody String getGoogleAuthUrl(HttpServletRequest request) throws Exception {
@@ -49,7 +56,7 @@ public class GoogleController {
 
 	// 구글 연동정보 조회
 	@RequestMapping(value = "/auth/google/callback")
-	public String oauth_google(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String oauth_google(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		System.out.println("들어옴");
 		String code = request.getParameter("code");
 		HttpHeaders headers = new HttpHeaders();
@@ -77,26 +84,56 @@ public class GoogleController {
 		// id_token은 jwt 형식
 
 		// String jwtToken = bodys.getString("id_token");
-		String requestUrl = UriComponentsBuilder.fromHttpUrl(googleAuthUrl + "/tokeninfo").queryParam("id_token", jwtToken).toUriString();
+		String requestUrl = UriComponentsBuilder.fromHttpUrl("https://oauth2.googleapis.com/tokeninfo")
+				.queryParam("id_token", jwtToken).toUriString();
 		System.out.println(requestUrl);
 		JSONObject resultJson = restTemplate.getForObject(requestUrl, JSONObject.class);
-
+		System.out.println(resultJson);
 		// 구글 정보조회 성공
+		String email = "";
+		String m_pic = "";
+		String m_name = "";
 		if (resultJson != null) {
 
-			// 회원 고유 식별자
-			// String googleUniqueNo = resultJson.getString("sub");
-			System.out.println(resultJson);
-			/**
-			 * 
-			 * TO DO : 리턴받은 googleUniqueNo 해당하는 회원정보 조회 후 로그인 처리 후 메인으로 이동
-			 * 
-			 */
+			// 구글 회원 이메일
+			email = resultJson.get("email").toString();
+			m_pic = resultJson.get("picture").toString();
+			m_name = resultJson.get("given_name").toString();
+
+			MemberVO member = new MemberVO();
+
+			member.setEmail(email);
+			member.setM_pic(m_pic);
+			member.setM_name(m_name);
+			member.setLoginType("google");
+			member.setVerify("Y");
+
+			if (mapper.EmailCheck(email) == 1) {
+
+				MemberVO check = new MemberVO();
+
+				check = mapper.userInfo(email);
+
+				if (check.getLoginType() == "email") {
+					model.addAttribute("socialResult", "1");
+				} else {
+					model.addAttribute("socialResult", "2");
+					model.addAttribute("email", email);
+				}
+
+			} else {
+				mapper.SocialRegister(member);
+				member = mapper.userInfo(email);
+				mapper.regSns(member.getM_idx());
+				model.addAttribute("socialResult", "0");
+				model.addAttribute("email", email);
+			}
 
 			// 구글 정보조회 실패
 		} else {
-			// throw new ErrorMessage("구글 정보조회에 실패했습니다.");
+			throw new Exception("구글 정보조회에 실패했습니다.");
 		}
-		return "";
+
+		return "/member/social";
 	}
 }

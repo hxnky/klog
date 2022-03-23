@@ -1,11 +1,8 @@
 package com.klog.mapper;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 import com.klog.domain.MemberVO;
-import com.klog.domain.NeighborVO;
 import com.klog.domain.SnsVO;
 
 public interface MemberMapper {
@@ -48,7 +45,9 @@ public interface MemberMapper {
 	// 유저 소셜 정보 변경
 	public void UserSocialChange(SnsVO sns);
 	
-	
+	// 22.03.23
+	// 소셜 회원가입
+	public void SocialRegister(MemberVO member);
 	
 	
 }

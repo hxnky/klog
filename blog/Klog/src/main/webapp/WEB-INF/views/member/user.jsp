@@ -47,9 +47,15 @@
 		id="sideNav">
 		<a class="navbar-brand js-scroll-trigger" href="#page-top"> <span
 			class="d-block d-lg-none">${pageInfo.m_name }</span> <span
-			class="d-none d-lg-block"><img
-				class="img-fluid img-profile rounded-circle mx-auto mb-2"
-				src="/UserImage/${pageInfo.m_pic}" alt="..." /></span>
+			class="d-none d-lg-block"><c:set var="loginType"
+					value="${pageInfo.loginType }"></c:set> <c:if
+					test="${loginType eq 'email'}">
+					<img class="img-fluid img-profile rounded-circle mx-auto mb-2"
+						src="/UserImage/${pageInfo.m_pic}" alt="..." />
+				</c:if> <c:if test="${loginType eq 'google'}">
+					<img class="img-fluid img-profile rounded-circle mx-auto mb-2"
+						src="${pageInfo.m_pic}" alt="..." />
+				</c:if></span>
 		</a>
 		<div id="SearchDiv">
 			<input type="text" id="Search" placeholder="내 글 검색"><img
@@ -112,10 +118,11 @@
 					<div class="social-icons">
 						<a class="social-icon" id="social_in" href="${pageSocial.insta}"><i
 							class="fab fa-linkedin-in"></i></a> <a class="social-icon"
-							id="social_git" href="${pageSocial.git}"><i class="fab fa-github"></i></a>
-						<a class="social-icon" id="social_twi" href="${pageSocial.twitter}"><i
-							class="fab fa-twitter"></i></a> <a class="social-icon" id="social_fb"
-							href="${pageSocial.facebook}"><i class="fab fa-facebook-f"></i></a>
+							id="social_git" href="${pageSocial.git}"><i
+							class="fab fa-github"></i></a> <a class="social-icon" id="social_twi"
+							href="${pageSocial.twitter}"><i class="fab fa-twitter"></i></a> <a
+							class="social-icon" id="social_fb" href="${pageSocial.facebook}"><i
+							class="fab fa-facebook-f"></i></a>
 					</div>
 				</div>
 			</section>
@@ -208,8 +215,14 @@
 							<c:set var="member" value="${letter.member}" />
 
 							<div id="letter_img">
-								<a href="/userPage/${member.email }"><img
-									src="/UserImage/${member.m_pic }"></a>
+								<a href="/userPage/${member.email }"> <c:set var="loginType"
+										value="${member.loginType }"></c:set> <c:if
+										test="${loginType eq 'email'}">
+										<img src="/UserImage/${member.m_pic }">
+									</c:if> <c:if test="${loginType eq 'google'}">
+										<img src="${member.m_pic }">
+									</c:if>
+								</a>
 							</div>
 							<div class="flex-grow-1">
 								<h3 class="mb-0 letterContentBox"
@@ -271,8 +284,13 @@
 								<div
 									class="d-flex flex-md-row justify-content-between letterReplyBox">
 									<div id="letterReply_img">
-										<a href="/userPage/${memberInfo.email }"><img
-											src="/UserImage/${memberInfo.m_pic }"></a>
+										<a href="/userPage/${memberInfo.email }"><c:set
+												var="loginType" value="${member.loginType }"></c:set> <c:if
+												test="${loginType eq 'email'}">
+												<img src="/UserImage/${member.m_pic }">
+											</c:if> <c:if test="${loginType eq 'google'}">
+												<img src="${member.m_pic }">
+											</c:if></a>
 									</div>
 									<div class="flex-grow-1">
 										<!-- 답글자리	 -->
@@ -1895,11 +1913,22 @@
 												// 프로필 설정 관련 창 보여주기
 												// 사진, 닉네임, 바이오, 타이틀, 비밀번호 변경, sns 연결, nav 혹은 블로그 색 --> 이건 나중에
 												// userInfo와 비교해서 수정된 내용 있는데 con_on 누를 경우 경고창
-												$(".container-fluid")
-														.append(
-																"<div class='container-setting'><section class='resume-section'><div class='resume-section-content'><form id='User_setting' accept-charset='utf-8'><input type='hidden' name='m_idx' id='m_idx' value='${userInfo.m_idx}'><input type='hidden' name='bgcolor' id='bgcolor' value='${userInfo.bgcolor}'><div class='container_pic'><label for='chooseFile' id='picInfo'><img class='propic' src='/UserImage/${userInfo.m_pic}'></label><input type='file' class='filebox' id='chooseFile' name='chooseFile' accept='image/*' onchange='picUpdate(this)'><input type='hidden' name='m_picOrigin' id='m_picOrigin' value='${userInfo.m_pic}'><span class='UserVerify'>미인증 회원입니다. 인증 후 설정 가능합니다.</span></div><div class='container-user'><div>닉네임 <input type='text' class='user_pro' name='m_name' id='m_name' value='${userInfo.m_name}'></div><div> 바이오 <input type='text' class='user_pro' name='bio' id='bio' value='${userInfo.bio}'></div><div>타이틀<input type='text' class='user_pro' name='title' id='title' value='${userInfo.title}'></div><div>SNS 연결<div class='user_sns'><input type='hidden' name='insta' id='insta' value='${social.insta}'><input type='hidden' name='git' id='git' value='${social.git}'><input type='hidden' name='twitter' id='twitter' value='${social.twitter}'><input type='hidden' name='facebook' id='facebook' value='${social.facebook}'><i class='fab fa-linkedin-in' id='icon_in' onclick='modalShow(this);'></i><i class='fab fa-github' id='icon_git' onclick='modalShow(this);'></i><i class='fab fa-twitter' id='icon_twi' onclick='modalShow(this);'></i><i class='fab fa-facebook-f' id='icon_fb' onclick='modalShow(this);'></i></div></div></div>"
-																		+ "<div class='container-color'>색상 변경<div id='palletBox' class='pallet'></div><button type='button' class='profile_update' onclick='profileUpdate();'>수정하기</button><button type='button' class='profile_delete'>탈퇴하기</button></form></div></section></div>");
-
+												if(${userInfo.loginType} == "email"){
+													$(".container-fluid")
+													.append(
+															"<div class='container-setting'><section class='resume-section'><div class='resume-section-content'><form id='User_setting' accept-charset='utf-8'><input type='hidden' name='m_idx' id='m_idx' value='${userInfo.m_idx}'><input type='hidden' name='bgcolor' id='bgcolor' value='${userInfo.bgcolor}'><div class='container_pic'><label for='chooseFile' id='picInfo'>"
+															+"<img class='propic' src='/UserImage/${userInfo.m_pic}'></label><input type='file' class='filebox' id='chooseFile' name='chooseFile' accept='image/*' onchange='picUpdate(this)'><input type='hidden' name='m_picOrigin' id='m_picOrigin' value='${userInfo.m_pic}'><span class='UserVerify'>미인증 회원입니다. 인증 후 설정 가능합니다.</span></div><div class='container-user'><div>닉네임 <input type='text' class='user_pro' name='m_name' id='m_name' value='${userInfo.m_name}'></div><div> 바이오 <input type='text' class='user_pro' name='bio' id='bio' value='${userInfo.bio}'></div><div>타이틀<input type='text' class='user_pro' name='title' id='title' value='${userInfo.title}'></div><div>SNS 연결<div class='user_sns'><input type='hidden' name='insta' id='insta' value='${social.insta}'><input type='hidden' name='git' id='git' value='${social.git}'><input type='hidden' name='twitter' id='twitter' value='${social.twitter}'><input type='hidden' name='facebook' id='facebook' value='${social.facebook}'><i class='fab fa-linkedin-in' id='icon_in' onclick='modalShow(this);'></i><i class='fab fa-github' id='icon_git' onclick='modalShow(this);'></i><i class='fab fa-twitter' id='icon_twi' onclick='modalShow(this);'></i><i class='fab fa-facebook-f' id='icon_fb' onclick='modalShow(this);'></i></div></div></div>"
+																	+ "<div class='container-color'>색상 변경<div id='palletBox' class='pallet'></div><button type='button' class='profile_update' onclick='profileUpdate();'>수정하기</button><button type='button' class='profile_delete'>탈퇴하기</button></form></div></section></div>");
+												} else{
+													$(".container-fluid")
+													.append(
+															"<div class='container-setting'><section class='resume-section'><div class='resume-section-content'><form id='User_setting' accept-charset='utf-8'><input type='hidden' name='m_idx' id='m_idx' value='${userInfo.m_idx}'><input type='hidden' name='bgcolor' id='bgcolor' value='${userInfo.bgcolor}'><div class='container_pic'><label for='chooseFile' id='picInfo'>"
+															+"<img class='propic' src='${userInfo.m_pic}'><input type='hidden' name='m_picOrigin' id='m_picOrigin' value='${userInfo.m_pic}'></label></div><div class='container-user'><div>닉네임 <input type='text' class='user_pro' name='m_name' id='m_name' value='${userInfo.m_name}'></div><div> 바이오 <input type='text' class='user_pro' name='bio' id='bio' value='${userInfo.bio}'></div><div>타이틀<input type='text' class='user_pro' name='title' id='title' value='${userInfo.title}'></div><div>SNS 연결<div class='user_sns'><input type='hidden' name='insta' id='insta' value='${social.insta}'><input type='hidden' name='git' id='git' value='${social.git}'><input type='hidden' name='twitter' id='twitter' value='${social.twitter}'><input type='hidden' name='facebook' id='facebook' value='${social.facebook}'><i class='fab fa-linkedin-in' id='icon_in' onclick='modalShow(this);'></i><i class='fab fa-github' id='icon_git' onclick='modalShow(this);'></i><i class='fab fa-twitter' id='icon_twi' onclick='modalShow(this);'></i><i class='fab fa-facebook-f' id='icon_fb' onclick='modalShow(this);'></i></div></div></div>"
+																	+ "<div class='container-color'>색상 변경<div id='palletBox' class='pallet'></div><button type='button' class='profile_update' onclick='profileUpdate();'>수정하기</button><button type='button' class='profile_delete'>탈퇴하기</button></form></div></section></div>");
+												}
+												
+												
+												
 												if ("${userInfo.verify}" == "N") {
 													$('.UserVerify').css(
 															"display",

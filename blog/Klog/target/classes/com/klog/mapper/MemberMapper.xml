@@ -24,7 +24,7 @@
 		<result column="facebook" property="facebook" />
 	</resultMap>
 
-	
+
 
 	<!-- 2022.03.08 회원가입 -->
 	<insert id="register">
@@ -66,9 +66,10 @@
 		select * from member where email
 		= #{email}
 	</select>
-	
+
 	<select id="userInfoByIdx" resultMap="memberResult">
-		select * from member where m_idx
+		select * from member where
+		m_idx
 		= #{m_idx}
 	</select>
 
@@ -94,5 +95,9 @@
 		twitter=#{twitter}, facebook=#{facebook} where m_idx = #{m_idx}
 	</update>
 
+	<insert id="SocialRegister">
+		insert into member (email, m_name, m_pic, loginType, verify) values
+		(#{email}, #{m_name}, #{m_pic}, #{loginType}, #{verify})
+	</insert>
 
 </mapper>

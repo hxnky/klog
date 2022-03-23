@@ -38,7 +38,7 @@
 							</div>
 							<div class="sel_btn" id="e_reg">
 								<button>이메일로 회원가입하기</button>
-							</div>	
+							</div>
 						</div>
 					</div>
 					<div class="sel_login">
@@ -56,20 +56,22 @@
 		</div>
 
 	</div>
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<script src="resources/js/login.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script src="resources/js/login.js"></script>
 
-<script type="text/javascript">
-//구글 로그인 버튼 클릭
-function loginWithGoogle() {
-    $.ajax({
-        url: '/login/getGoogleAuthUrl',
-        type: 'get',
-    }).done(function (res) {
-        location.href = res;
-    });
-}
-</script>
+	<script type="text/javascript">
+		//구글 로그인 버튼 클릭
+		function loginWithGoogle() {
+			$.ajax({
+				url : '/login/getGoogleAuthUrl',
+				type : 'get',
+			}).done(function(res) {
+				location.href = res;
+			});
+		}
+
+		
+	</script>
 
 </body>
 
