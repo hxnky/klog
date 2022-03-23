@@ -377,3 +377,23 @@
 	margin-right: 10px;
 	border-radius: 100%;
 }
+
+.AlarmListBox {
+	overflow: auto;
+	height: 500px;
+	padding: 20px;
+}
+
+.AlarmListBox::-webkit-scrollbar {
+	display: none;
+}
+
+.AlarmModal-header {
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem 1rem;
+	border-bottom: 2px solid #dee2e6;
+	border-top-left-radius: calc(0.3rem - 1px);
+	border-top-right-radius: calc(0.3rem - 1px);
+}

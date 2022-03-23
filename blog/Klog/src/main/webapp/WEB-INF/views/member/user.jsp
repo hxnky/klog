@@ -12,7 +12,7 @@
 	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <meta name="description" content="" />
 <meta name="author" content="" />
-<title>KLOG ${pageInfo.title }</title>
+<title>KLOG ${userInfo.title }</title>
 <link rel="icon" type="image/x-icon"
 	href="${pageContext.request.contextPath}/resources/assets/img/favicon.ico" />
 <!-- Font Awesome icons (free version)-->
@@ -74,7 +74,7 @@
 						href="#neighbor">neighbor</a></li>
 				</div>
 				<li class="nav-item"><a class="nav-link js-scroll-trigger"
-					id="nav_notice">Notice</a></li>
+					id="nav_notice" onclick="NoticeModal(${userInfo.m_idx});">Notice</a></li>
 				<!-- 내 페이지면 setting 아니면 내 페이지로 가는 링크 -->
 				<fmt:formatNumber value="${userInfo.m_idx }" type="number"
 					var="m_idx" />
@@ -112,11 +112,10 @@
 					<div class="social-icons">
 						<a class="social-icon" id="social_in" href="${pageSocial.insta}"><i
 							class="fab fa-linkedin-in"></i></a> <a class="social-icon"
-							id="social_git" href="${pageSocial.git}"><i
-							class="fab fa-github"></i></a> <a class="social-icon" id="social_twi"
-							href="${pageSocial.twitter}"><i class="fab fa-twitter"></i></a> <a
-							class="social-icon" id="social_fb" href="${pageSocial.facebook}"><i
-							class="fab fa-facebook-f"></i></a>
+							id="social_git" href="${pageSocial.git}"><i class="fab fa-github"></i></a>
+						<a class="social-icon" id="social_twi" href="${pageSocial.twitter}"><i
+							class="fab fa-twitter"></i></a> <a class="social-icon" id="social_fb"
+							href="${pageSocial.facebook}"><i class="fab fa-facebook-f"></i></a>
 					</div>
 				</div>
 			</section>
@@ -156,26 +155,16 @@
 											<input type='text' class='postText'
 												id='content_${list.p_idx }'
 												value='<c:out value="${list.post_content}" />'>
-										<div class="AttachImg">
-											<c:forEach items="${attach}" var="Att_img">
-												<c:set var="listPidx" value="${list.p_idx }" />
-												<c:set var="AttachPidx" value="${Att_img.p_idx }" />
-												<c:if test="${ listPidx eq AttachPidx }">
-
-													<img src="/PostImage/${Att_img.a_name }">
-
-
-												</c:if>
-
-											</c:forEach>
-										</div>
+										<div
+											class="d-flex flex-column flex-md-row justify-content-between"
+											id="AttachImg"></div>
 										</p>
-
 
 									</div>
 									<div class="flex-shrink-0">
 										<span class="text-primary"><fmt:formatDate
 												value="${list.post_updatetime}" pattern="yyyy-MM-dd" /></span>
+
 										<fmt:formatNumber value="${userInfo.m_idx}" type="number"
 											var="mIdx" />
 										<fmt:formatNumber value="${pageInfo.m_idx}" type="number"
@@ -188,6 +177,7 @@
 													onclick="PostDel(${list.p_idx});">삭제</button>
 											</div>
 										</c:if>
+
 									</div>
 									<input type="hidden" id="post_m_idx" value="${list.m_idx }">
 								</div>
@@ -218,7 +208,7 @@
 							<c:set var="member" value="${letter.member}" />
 
 							<div id="letter_img">
-								<a href="/userPage/${memberInfo.email }"><img
+								<a href="/userPage/${member.email }"><img
 									src="/UserImage/${member.m_pic }"></a>
 							</div>
 							<div class="flex-grow-1">
@@ -267,6 +257,11 @@
 						</div>
 
 						<c:forEach items="${letterReplyList}" var="letterReply">
+							<div
+								class="d-flex flex-md-row justify-content-between letterReplyBox">
+								<div class="letterReply" id="letterReply${letter.l_idx }"></div>
+							</div>
+
 							<c:set var="memberInfo" value="${letterReply.memberInfo}" />
 							<fmt:formatNumber value="${letter.l_idx }" type="number"
 								var="lIdx" />
@@ -275,7 +270,6 @@
 							<c:if test="${lIdx == lrIdx}">
 								<div
 									class="d-flex flex-md-row justify-content-between letterReplyBox">
-									<div class="letterReply" id="letterReply${letter.l_idx }"></div>
 									<div id="letterReply_img">
 										<a href="/userPage/${memberInfo.email }"><img
 											src="/UserImage/${memberInfo.m_pic }"></a>
@@ -313,17 +307,16 @@
 											<button type="button" class="letterReplyDel"
 												onclick="LetterReplyDelete(${letterReply.lr_idx });">삭제</button>
 										</c:if>
-										<c:if test="${mIdx == roIdx and rwIdx == roIdx }">
+										<c:if test="${mIdx == roIdx and rwIdx != roIdx }">
 											<button type="button" class="letterReplyDel"
 												onclick="LetterReplyDelete(${letterReply.lr_idx });">삭제</button>
 										</c:if>
 									</div>
 
-
+									<div class="letterReply" id="letterReply${letter.l_idx }"></div>
 								</div>
 							</c:if>
 						</c:forEach>
-
 					</c:forEach>
 					<form class="letterForm">
 						<div
@@ -502,10 +495,35 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<!-- 알림 토스트 -->
-	<div id="msgStack"></div>
 
+		<!-- 알림 모달 -->
+		<div class="modal fade" id="myAlarmModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="AlarmModal-header">
+						<div>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close" onclick="modalHide();">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<h4 class="modal-title" id="myAlarmModalLabel">Notice</h4>
+					</div>
+					<div class="Alarmmodal-body"></div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- 알림 토스트 -->
+		<div id="msgStack"></div>
+
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 	<!-- Bootstrap core JS-->
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -530,6 +548,40 @@
 		var content_files = new Array();
 		// 기존 첨부파일 배열
 		var attach_files = new Array();
+		// 알림
+		var socket = null;
+		
+		// 알람 가져오기
+		function SocketConnect(){
+			
+			
+			sock = new SockJS("<c:url value="/echo"/>");
+			socket = sock;
+			
+			sock.onopen = function(){
+				console.log("info : connection opend");
+			}
+			
+			sock.onmessage = onMessage;
+			
+		}
+		
+		// 실시간 메세지 도착 시 토스트로 보여준다
+		function onMessage(evt){
+			var data = evt.data;
+			console.log("ReceiveMessage ::: " + data + "\n");
+			
+			var toast = '<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">';
+			toast += '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">';
+			toast += '<div class="toast-header"><strong class="me-auto">Notice</strong>';
+		    toast += '<small>just now</small><button type="button" class="btn-close" data-dismiss="toast" aria-label="Close"></button>';
+		    toast += "</div> <div class='toast-body'>" + data + "</div></div></div>";
+		    $("#msgStack").append(toast);
+		    //$(".toast").toast({"animation":true, "autohide" : false});
+		    $(".toast").toast("show");
+			
+			
+		}
 
 		function checkExtension(fileName, fileSize) {
 
@@ -820,6 +872,7 @@
 			$('#myModal').modal('hide');
 			$("#myPostModal").modal("hide");
 			$("#myFollowModal").modal("hide");
+			$("#myAlarmModal").modal("hide");
 		}
 
 		function modalCheck() {
@@ -1058,7 +1111,7 @@
 						$(".container_none").hide();
 						$("#searchResult").remove();
 						$("#backImg").remove();
-						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div><section class='resume-section' id='searchResult'><div class='resume-section-content'><h2 class='mb-5'>검색결과</h2>"
+						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png' onclick='ResetPage();'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div><section class='resume-section' id='searchResult'><div class='resume-section-content'><h2 class='mb-5'>검색결과</h2>"
 								+"<div id='SearchList'></div></div></section>");
 						
 						if(result.length == 0){
@@ -1124,7 +1177,7 @@
 						$("#searchResult").remove();
 						$("#backImg").remove();
 						$("#SearchUser").remove();
-						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div>"
+						$(".container-fluid").append("<img id='backImg' src='/resources/assets/img/left.png' onclick='ResetPage();'><div id='SearchUser'><input type='text' id='UserSearch' placeholder='유저검색'><img src='/resources/assets/img/Search.png'onclick='SearchUser();''></div>"
 								+"<section class='resume-section' id='searchResult'><div class='resume-section-content'><h4 class='mb-5'>유저 검색결과</h4>"
 								+"<div id='UserList'></div><hr><h4 class='mb-5'>글 검색결과</h4><div id='SearchList'></div></div></section>");
 						
@@ -1171,7 +1224,7 @@
 							$("#UserList").append("<div class='no_Result'>검색 결과가 없습니다.</div>");
 						} else{
 							for(var i=0; i<member.length; i++){
-								$("#UserList").append("<div class='d-flex justify-content-between mb-5'><div><h3 class='mb-0' id='custom_title' <a href='/userPage/"+member[i].email+"'>>"+member[i].title+"</a></h3>"
+								$("#UserList").append("<div class='d-flex justify-content-between mb-5'><div><h3 class='mb-0' id='custom_title'><a href='/userPage/"+member[i].email+"'>"+member[i].title+"</a></h3>"
 														+"<div class='subheading'>"+member[i].m_name+"<a class='a_search' href='mailto:"+member[i].email+"'>"+member[i].email+"</a></div>"
 														+"<div class='SearchBio'></div></div><div class='flex-shrink-0' id='neiListIdx_"+member[i].m_idx+"'></div></div>"
 								);
@@ -1195,6 +1248,8 @@
 						
 
 						
+						
+						
 					}
 				});
 			}
@@ -1204,12 +1259,29 @@
 			$(".container_none").show();
 			$("#searchResult").remove();
 			$("#backImg").remove();
-			$("#SearchUser").remove();
 		}
 		
-		
-		
 		function FollowOK(u_idx, y_idx){
+			
+			var m_name = "${userInfo.m_name}";
+			
+			$.ajax({
+				url : '/user/AlarmInsert',
+				data : {"ac_idx" : u_idx,
+						"ar_idx" : y_idx,
+						type : "follow"
+						},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					if(socket){
+						let socketMsg = "follow," + "이웃신청,"+ m_name;
+						console.log("msgmsg : " + socketMsg);
+						socket.send(socketMsg);
+					}
+				}
+			});
 			$.ajax({
 				url : '/user/FollowOk',
 				data : {u_idx : u_idx,
@@ -1222,6 +1294,8 @@
 					location.reload();
 				}
 			});
+			
+			
 		}
 		
 		function FollowNO(u_idx, y_idx){
@@ -1258,6 +1332,27 @@
 			console.log(y_idx);
 			
 			if(radioVal == "FollowStart"){
+				
+				var m_name = "${userInfo.m_name}";
+				
+				$.ajax({
+					url : '/user/AlarmInsert',
+					data : {"ac_idx" : u_idx,
+						"ar_idx" : y_idx,
+							type : "follow"
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						if(socket){
+							let socketMsg = "follow," + "이웃 신청,"+ m_name;
+							console.log("msgmsg : " + socketMsg);
+							socket.send(socketMsg);
+						}
+					}
+				});
+				
 				$.ajax({
 					url : '/user/FollowStart',
 					data : {u_idx : u_idx,
@@ -1270,6 +1365,8 @@
 						location.reload();	// 이게 아니라 다시 검색창으로
 					}
 				});
+				
+				
 				
 			} else if(radioVal == "EachFollowStart"){
 				$('#FollowModalBtn').attr("onclick", "EachFollowStart("+u_idx+", "+y_idx+");");
@@ -1331,6 +1428,26 @@
 					}
 				});
 			} else if(radioVal == "EachFollowChange"){
+				var m_name = "${userInfo.m_name}";
+				$.ajax({
+					url : '/user/AlarmInsert',
+					data : {"ac_idx" : u_idx,
+					"ar_idx" : y_idx,
+							type : "Eachfollow"
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						if(socket){
+							let socketMsg = "Eachfollow," + "서로이웃,"+ m_name;
+							console.log("msgmsg : " + socketMsg);
+							socket.send(socketMsg);
+						}
+					}
+				});
+				
+				
 				$.ajax({
 					url : '/user/FollowChange',
 					data : {u_idx : u_idx,
@@ -1343,6 +1460,9 @@
 						location.reload();
 					}
 				});
+				
+				
+
 			} else if(radioVal == "EachFollowDel"){
 				$.ajax({
 					url : '/user/EachFollowDel',
@@ -1373,6 +1493,25 @@
 				alert("이미 신청을 보냈습니다.");
 				modalHide();
 			} else{
+				var m_name = "${userInfo.m_name}";
+				$.ajax({
+					url : '/user/AlarmInsert',
+					data : {"ac_idx" : u_idx,
+						"ar_idx" : y_idx,
+							type : "Eachfollow"
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						if(socket){
+							let socketMsg = "Eachfollow," + "서로이웃,"+ m_name;
+							console.log("msgmsg : " + socketMsg);
+							socket.send(socketMsg);
+						}
+					}
+				});
+				
 				$.ajax({
 					url : '/user/FollowEach',
 					data : {u_idx : u_idx,
@@ -1386,6 +1525,8 @@
 						location.reload();
 					}
 				});
+				
+				
 			}
 			
 		}
@@ -1404,6 +1545,25 @@
 				alert("이미 신청을 보냈습니다.");
 				modalHide();
 			} else{
+				var m_name = "${userInfo.m_name}";
+				$.ajax({
+					url : '/user/AlarmInsert',
+					data : {"ac_idx" :u_idx,
+							"ar_idx" : y_idx,
+							type : "Eachfollow"
+							},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						if(socket){
+							let socketMsg = "Eachfollow," + "서로이웃,"+ m_name;
+							console.log("msgmsg : " + socketMsg);
+							socket.send(socketMsg);
+						}
+					}
+				});
+				
 				$.ajax({
 					url : '/user/EachFollowStart',
 					data : {u_idx : u_idx,
@@ -1417,6 +1577,8 @@
 						location.reload();
 					}
 				});
+				
+				
 			}
 			
 		}
@@ -1438,6 +1600,26 @@
 		function LetterInsert(w_idx, o_idx){
 			
 			var l_content = $("#l_content").val();	
+			var m_name = "${userInfo.m_name}";
+			$.ajax({
+				url : '/user/AlarmInsert',
+				data : {"ac_idx" : w_idx,
+						"ar_idx" : o_idx,
+						"type" : "letter",
+						"content" : l_content
+						},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					console.log(result);
+					if(socket){
+						let socketMsg = "letter," + l_content +","+ m_name;
+						console.log("msg : " + socketMsg);
+						socket.send(socketMsg);
+					}
+				}
+			});
 			
 			$.ajax({
 				url : '/user/LetterInsert',
@@ -1452,6 +1634,11 @@
 					location.reload();
 				}
 			});
+			
+			
+			
+			
+			
 		}
 		
 		function LetterUpdate(l_idx){
@@ -1515,11 +1702,30 @@
 			
 		}
 		
-		function LetterReplyInsert(lr_idx){
+		function LetterReplyInsert(l_idx){
 			
 			var rw_idx = ${userInfo.m_idx};
 			var ro_idx = $("#ro_idx"+l_idx).val();
 			var lr_content = $("#lr_content"+l_idx).val();
+			var m_name = "${userInfo.m_name}";
+			$.ajax({
+				url : '/user/AlarmInsert',
+				data : {"ac_idx" : rw_idx,
+					"ar_idx" : ro_idx,
+						"type" : "reply",
+						"content" : lr_content
+						},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					if(socket){
+						let socketMsg = "reply," + lr_content +","+ m_name;
+						console.log("msgmsg : " + socketMsg);
+						socket.send(socketMsg);
+					}
+				}
+			});
 			
 			$.ajax({
 				url : '/user/LetterReplyInsert',
@@ -1536,6 +1742,8 @@
 					location.reload();
 				}
 			});
+			
+			
 		}
 		
 	function LetterReplyUpdate(lr_idx){
@@ -1590,9 +1798,56 @@
 			
 		}
 		
+		function NoticeModal(ar_idx){
+			var email = "${userInfo.email}";
+			// 알림 버튼 누를 시 알림 리스트를 계속 받아와야함
+			$.ajax({
+				url : '/user/AlarmList',
+				data : {ar_idx : ar_idx,
+				},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					console.log(result);
+					$("#myAlarmModal").modal("show");
+					$("#myAlarmModalLabel").append("<div class='AlarmListBox'></div>");
+					if(result.length == 0){
+						$(".AlarmListBox").append("<div class='noAlarm'>알림이 없습니다.</div>");
+					}
+					for(var i=0; i<result.length; i++){
+						console.log(result[i].a_date);
+						var member = result[i].member;
+						if(result[i].type == "letter"){
+							$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#"+result[i].type+"'>"
+									+ member.m_name + "님이 안부글을 남겼습니다." + "</a><br><p>"+result[i].content+"</p>"
+									+"<span></span>");
+						} else if(result[i].type == "reply"){
+							$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#"+result[i].type+"'>"
+									+ member.m_name + "님이 답글을 남겼습니다." + "</a><br><p>"+result[i].content+"</p>"
+									+"<span></span>");
+						} else if(result[i].type == "follow"){
+							$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#neighbor'>"
+									+ member.m_name + "님이 이웃 신청을 하셨습니다." + "</a>"
+									+"<span></span>");
+						} else if(result[i].type == "Eachfollow"){
+							$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#neighbor'>"
+									+ member.m_name + "님이 서로이웃 신청을 하셨습니다." + "</a>"
+									+"<span></span>");
+						}
+						
+					}
+				}
+			});
+		}
+		
+		
 		$(document)
 				.ready(
 						function() {
+							
+							
+							SocketConnect();
 							
 							//버튼 클릭 시 왼쪽으로 스크롤
 							$(document).on("click", ".ScrollUp", function() {

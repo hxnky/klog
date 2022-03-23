@@ -74,7 +74,7 @@
 						href="#neighbor">neighbor</a></li>
 				</div>
 				<li class="nav-item"><a class="nav-link js-scroll-trigger"
-					id="nav_notice">Notice</a></li>
+					id="nav_notice" onclick="NoticeModal(${userInfo.m_idx});">Notice</a></li>
 				<!-- 내 페이지면 setting 아니면 내 페이지로 가는 링크 -->
 				<fmt:formatNumber value="${userInfo.m_idx }" type="number"
 					var="m_idx" />
@@ -496,6 +496,27 @@
 			</div>
 		</div>
 
+		<!-- 알림 모달 -->
+		<div class="modal fade" id="myAlarmModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="AlarmModal-header">
+						<div>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close" onclick="modalHide();">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<h4 class="modal-title" id="myAlarmModalLabel">Notice</h4>
+					</div>
+					<div class="Alarmmodal-body"></div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</div>
+
+
 		<!-- 알림 토스트 -->
 		<div id="msgStack"></div>
 
@@ -550,13 +571,13 @@
 			var data = evt.data;
 			console.log("ReceiveMessage ::: " + data + "\n");
 			
-			var toast = "<div class='toast' role='alert' aria-live='assertive' aria-atomic='true'>";
-			toast += "<div class='toast-header'><i class='fas fa-bell mr-2'></i><strong class='mr-auto'>알림</strong>";
-		    toast += "<small class='text-muted'>just now</small><button type='button' class='ml-2 mb-1 close' data-dismiss='toast' aria-label='Close'>";
-		    toast += "<span aria-hidden='true'>&times;</span></button>";
-		    toast += "</div> <div class='toast-body'>" + data + "</div></div>"
+			var toast = '<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">';
+			toast += '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">';
+			toast += '<div class="toast-header"><strong class="me-auto">Notice</strong>';
+		    toast += '<small>just now</small><button type="button" class="btn-close" data-dismiss="toast" aria-label="Close"></button>';
+		    toast += "</div> <div class='toast-body'>" + data + "</div></div></div>";
 		    $("#msgStack").append(toast);
-		    $(".toast").toast({"animation":true, "autohide" : false});
+		    //$(".toast").toast({"animation":true, "autohide" : false});
 		    $(".toast").toast("show");
 			
 			
@@ -851,6 +872,7 @@
 			$('#myModal').modal('hide');
 			$("#myPostModal").modal("hide");
 			$("#myFollowModal").modal("hide");
+			$("#myAlarmModal").modal("hide");
 		}
 
 		function modalCheck() {
@@ -1582,8 +1604,9 @@
 			$.ajax({
 				url : '/user/AlarmInsert',
 				data : {"ac_idx" : w_idx,
-					"ar_idx" : o_idx,
-						type : "letter"
+						"ar_idx" : o_idx,
+						"type" : "letter",
+						"content" : l_content
 						},
 				type : "POST",
 				dataType : "json",
@@ -1598,19 +1621,19 @@
 				}
 			});
 			
-// 			$.ajax({
-// 				url : '/user/LetterInsert',
-// 				data : {w_idx : w_idx,
-// 						o_idx : o_idx,
-// 						l_content : l_content
-// 				},
-// 				type : "POST",
-// 				dataType : "json",
-// 				async : false,
-// 				success : function(result) {
-// 					location.reload();
-// 				}
-// 			});
+			$.ajax({
+				url : '/user/LetterInsert',
+				data : {w_idx : w_idx,
+						o_idx : o_idx,
+						l_content : l_content
+				},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					location.reload();
+				}
+			});
 			
 			
 			
@@ -1689,7 +1712,8 @@
 				url : '/user/AlarmInsert',
 				data : {"ac_idx" : rw_idx,
 					"ar_idx" : ro_idx,
-						type : "reply"
+						"type" : "reply",
+						"content" : lr_content
 						},
 				type : "POST",
 				dataType : "json",
@@ -1774,7 +1798,53 @@
 			
 		}
 		
-		
+		function NoticeModal(ar_idx){
+			var email = "${userInfo.email}";
+			// 알림 버튼 누를 시 알림 리스트를 계속 받아와야함
+			$.ajax({
+				url : '/user/AlarmList',
+				data : {ar_idx : ar_idx,
+				},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					console.log(result);
+					$("#myAlarmModal").modal("show");
+					$("#myAlarmModalLabel").append("<div class='AlarmListBox'></div>");
+					if(result.length == 0){
+						$(".AlarmListBox").append("<div class='noAlarm'>알림이 없습니다.</div>");
+					}
+					for(var i=0; i<result.length; i++){
+
+						var member = result[i].member;
+						
+						if(result[i].ac_idx != result[i].ar_idx){
+							if(result[i].type == "letter"){
+								$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#"+result[i].type+"'>"
+										+ member.m_name + "님이 안부글을 남겼습니다." + "</a><br><p>"+result[i].content+"</p>"
+										+"<span></span>");
+							} else if(result[i].type == "reply"){
+								$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#"+result[i].type+"'>"
+										+ member.m_name + "님이 답글을 남겼습니다." + "</a><br><p>"+result[i].content+"</p>"
+										+"<span></span>");
+							} else if(result[i].type == "follow"){
+								$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#neighbor'>"
+										+ member.m_name + "님이 이웃 신청을 하셨습니다." + "</a>"
+										+"<span></span>");
+							} else if(result[i].type == "Eachfollow"){
+								$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#neighbor'>"
+										+ member.m_name + "님이 서로이웃 신청을 하셨습니다." + "</a>"
+										+"<span></span>");
+							}
+						}
+						
+						
+						
+					}
+				}
+			});
+		}
 		
 		
 		$(document)

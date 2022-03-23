@@ -5,7 +5,7 @@
 <mapper namespace="com.klog.mapper.AlarmMapper">
 
 	<!-- 안부글 답글 정보 -->
-	<resultMap id="AlarmResult" type="com.klog.domain.LetterVO">
+	<resultMap id="AlarmResult" type="com.klog.domain.AlarmVO">
 		<id column="a_idx" property="a_idx" />
 		<result column="a_date" property="a_date" />
 		<result column="type" property="type" />
@@ -14,11 +14,15 @@
 	</resultMap>
 	
 	<select id="CountAlarmByIdx" resultMap="AlarmResult">
-		select count(*) from alarm where ar_idx = #{ar_idx}
+		select * from alarm where ar_idx = #{ar_idx}
 	</select>
 	
 	<insert id="AlarmInsert">
 		insert into alarm (type, ac_idx, ar_idx) value (#{type},#{ac_idx}, #{ar_idx})
+	</insert>
+	
+	<insert id="AlarmContentInsert">
+		insert into alarm (type, ac_idx, ar_idx, content) value (#{type},#{ac_idx}, #{ar_idx}, #{content})
 	</insert>
 
 </mapper>

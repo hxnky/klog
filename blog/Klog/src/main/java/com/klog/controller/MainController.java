@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
+@Configuration
 public class MainController {
 
 	@Autowired
@@ -90,8 +92,6 @@ public class MainController {
 		List<LetterVO> letterList = letterService.LetterList(m_idx);
 		// 답글 불러오기
 		List<LetterReplyVO> letterReplyList = letterService.replyList(letterList);
-		// 알람 불러오기
-		List<AlarmVO> AlarmList = alarmService.AlarmList(m_idx);
 
 		session.setAttribute("userInfo", member);
 		session.setAttribute("social", social);
@@ -102,7 +102,6 @@ public class MainController {
 		model.addAttribute("followList", followList);
 		model.addAttribute("letterList", letterList);
 		model.addAttribute("letterReplyList", letterReplyList);
-		model.addAttribute("AlarmList", AlarmList);
 
 		return "member/main";
 	}
@@ -110,6 +109,8 @@ public class MainController {
 	// 유저(다른사람) 페이지
 	@GetMapping("/userPage/{email}")
 	public String UserPage(@PathVariable(name = "email") String email, HttpSession session, Model model) {
+
+		System.out.println("세션" + session.getAttribute("userInfo"));
 
 		String UserEmail = email + ".com";
 		MemberVO member = service.UserInfo(UserEmail);
@@ -159,4 +160,5 @@ public class MainController {
 
 	}
 
+	
 }

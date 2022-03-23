@@ -12,5 +12,7 @@ public class AlarmVO {
 	private String type;
 	private int ac_idx;
 	private int ar_idx;
+	private String content;
 	
+	private MemberVO member;
 }

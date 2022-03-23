@@ -299,4 +299,24 @@ public class MainRestController {
 		
 		return AlarmService.AlarmInsert(alarm);
 	}
+	
+	@PostMapping("/user/AlarmContentInsert")
+	public int AlarmContentInsert(int ac_idx, int ar_idx, String type, String content) {
+		
+		AlarmVO alarm = new AlarmVO();
+		alarm.setAc_idx(ac_idx);
+		alarm.setAr_idx(ar_idx);
+		alarm.setType(type);
+		alarm.setContent(content);
+
+		System.out.println("알람 발생 :::::" + alarm);
+		
+		return AlarmService.AlarmContentInsert(alarm);
+	}
+	
+	@PostMapping("/user/AlarmList")
+	public List<AlarmVO> AlarmList(int ar_idx) {
+		
+		return AlarmService.AlarmList(ar_idx);
+	}
 }

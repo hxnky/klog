@@ -47,7 +47,7 @@
 								<img src="resources/assets/img/google_logo.png">
 							</div>
 							<div class="sel_btn" id="s_login">
-								<button>소셜로그인하기</button>
+								<button onclick="loginWithGoogle();">소셜로그인하기</button>
 							</div>
 						</div>
 					</div>
@@ -60,7 +60,15 @@
 <script src="resources/js/login.js"></script>
 
 <script type="text/javascript">
-	
+//구글 로그인 버튼 클릭
+function loginWithGoogle() {
+    $.ajax({
+        url: '/login/getGoogleAuthUrl',
+        type: 'get',
+    }).done(function (res) {
+        location.href = res;
+    });
+}
 </script>
 
 </body>

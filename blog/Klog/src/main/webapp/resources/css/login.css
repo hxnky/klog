@@ -4,6 +4,10 @@ body {
 	background-color: floralwhite;
 }
 
+button{
+	cursor: pointer;
+}
+
 /*2022.03.05 로그인 화면 배경색을 위해 추가*/
 .login_box {
 	background-color: #bd5d38;

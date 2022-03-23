@@ -11,5 +11,7 @@ public interface AlarmMapper {
 	
 	// 알람 입력
 	public void AlarmInsert(AlarmVO alarm);
+	// 안부글/답글입력
+	public void AlarmContentInsert(AlarmVO alarm);
 
 }

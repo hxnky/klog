@@ -11,5 +11,6 @@ public interface AlarmService {
 	public List<AlarmVO> AlarmList(int ar_idx);
 	// 알람 인서트
 	public int AlarmInsert(AlarmVO alarm);
+	public int AlarmContentInsert(AlarmVO alarm);
 	
 }
