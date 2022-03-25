@@ -143,6 +143,7 @@
 #postList {
 	height: 500px;
 	overflow: auto;
+	width: min-content;
 }
 
 #postList::-webkit-scrollbar {
@@ -190,9 +191,10 @@
 	pointer-events: none;
 }
 
-.AttachImg img {
+#AttachImg img {
 	width: 200px;
 	height: 200px;
+	margin-right: 10px;
 }
 
 #SearchDiv {

@@ -84,5 +84,9 @@
 	<delete id="ScrapDelete">
 		delete from post where p_idx = #{p_idx} and scrap_idx = #{scrap_idx}
 	</delete>
+	
+	<select id="FindA_name" resultType="String">
+		select a_name from attach where a_Origin = #{a_Origin}
+	</select>
 
 </mapper>

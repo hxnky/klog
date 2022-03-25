@@ -36,7 +36,7 @@ public interface MemberService {
 	// 오늘 날짜 경로 문자열로 생성
 	public String getFolder();
 	// 사진 DB에 업로드
-	public String uploadImage(MultipartFile uploadFile, String OriginFile);
+	//public String uploadImage(MultipartFile uploadFile, String OriginFile);
 	// 유저 정보 변경
 	public int UserInfoChange(MemberVO member);
 	

@@ -40,4 +40,6 @@ public interface PostMapper {
 	public void ScrapInsert(PostVO post);
 	// 스크랩 삭제
 	public void ScrapDelete(@Param("p_idx") int p_idx,@Param("scrap_idx") int scrap_idx);
+	// 첨부파일 목록 가져오기
+	public String FindA_name(String a_Origin);
 }

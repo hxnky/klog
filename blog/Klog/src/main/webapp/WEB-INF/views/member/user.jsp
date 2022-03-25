@@ -51,7 +51,8 @@
 					value="${pageInfo.loginType }"></c:set> <c:if
 					test="${loginType eq 'email'}">
 					<img class="img-fluid img-profile rounded-circle mx-auto mb-2"
-						src="/UserImage/${pageInfo.m_pic}" alt="..." />
+						src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${pageInfo.m_pic}"
+						alt="..." />
 				</c:if> <c:if test="${loginType eq 'google'}">
 					<img class="img-fluid img-profile rounded-circle mx-auto mb-2"
 						src="${pageInfo.m_pic}" alt="..." />
@@ -166,8 +167,19 @@
 												id='content_${list.p_idx }'
 												value='<c:out value="${list.post_content}" />'>
 										<div
-											class="d-flex flex-column flex-md-row justify-content-between"
-											id="AttachImg"></div>
+											class="d-flex flex-column flex-md-row"
+											id="AttachImg">
+											<c:forEach items="${attach}" var="attachList">
+												<c:set var="post_idx" value="${list.p_idx }" />
+												<c:set var="attach_idx" value="${attachList.p_idx }" />
+												<c:choose>
+													<c:when test="${post_idx == attach_idx }">
+														<img
+															src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/PostImage/${list.p_idx }${attachList.a_name }">
+													</c:when>
+												</c:choose>
+											</c:forEach>
+										</div>
 										</p>
 
 									</div>
@@ -225,7 +237,8 @@
 										<a href="/mainPage/${member.email }"> <c:set
 												var="loginType" value="${member.loginType }"></c:set> <c:if
 												test="${loginType eq 'email'}">
-												<img src="/UserImage/${member.m_pic }">
+												<img
+													src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${member.m_pic }">
 											</c:if> <c:if test="${loginType eq 'google'}">
 												<img src="${member.m_pic }">
 											</c:if>
@@ -236,7 +249,8 @@
 										<a href="/userPage/${member.email }"> <c:set
 												var="loginType" value="${member.loginType }"></c:set> <c:if
 												test="${loginType eq 'email'}">
-												<img src="/UserImage/${member.m_pic }">
+												<img
+													src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${member.m_pic }">
 											</c:if> <c:if test="${loginType eq 'google'}">
 												<img src="${member.m_pic }">
 											</c:if>
@@ -310,22 +324,24 @@
 										<c:choose>
 											<c:when test="${ mainEmail eq letterEmail}">
 												<a href="/mainPage/${memberInfo.email }"> <c:set
-													var="loginType" value="${memberInfo.loginType }"></c:set> <c:if
-													test="${loginType eq 'email'}">
-													<img src="/UserImage/${memberInfo.m_pic }">
-												</c:if> <c:if test="${loginType eq 'google'}">
-													<img src="${memberInfo.m_pic }">
-												</c:if>
-											</a>
+														var="loginType" value="${memberInfo.loginType }"></c:set>
+													<c:if test="${loginType eq 'email'}">
+														<img
+															src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${memberInfo.m_pic }">
+													</c:if> <c:if test="${loginType eq 'google'}">
+														<img src="${memberInfo.m_pic }">
+													</c:if>
+												</a>
 											</c:when>
 											<c:when test="${ mainEmail ne letterEmail}">
 												<a href="/userPage/${memberInfo.email }"><c:set
-												var="loginType" value="${memberInfo.loginType }"></c:set> <c:if
-												test="${loginType eq 'email'}">
-												<img src="/UserImage/${memberInfo.m_pic }">
-											</c:if> <c:if test="${loginType eq 'google'}">
-												<img src="${memberInfo.m_pic }">
-											</c:if></a>
+														var="loginType" value="${memberInfo.loginType }"></c:set>
+													<c:if test="${loginType eq 'email'}">
+														<img
+															src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${memberInfo.m_pic }">
+													</c:if> <c:if test="${loginType eq 'google'}">
+														<img src="${memberInfo.m_pic }">
+													</c:if></a>
 											</c:when>
 										</c:choose>
 									</div>
@@ -1055,7 +1071,7 @@
 								console.log(attach[j].p_idx);
 							
 								if(result[i].p_idx == attach[j].p_idx){
-									$(".AttachImg_"+result[i].p_idx).append("<img src='/PostImage/"+attach[j].a_name+"'>");
+									$(".AttachImg_"+result[i].p_idx).append("<img src='https://klogpicture.s3.ap-northeast-2.amazonaws.com/PostImage"+result[i].p_idx+"/"+attach[j].a_name+"'>");
 								}
 							}
 							
@@ -1123,7 +1139,7 @@
 									console.log(attach[j].p_idx);
 								
 									if(post[i].p_idx == attach[j].p_idx){
-										$(".AttachImg_"+post[i].p_idx).append("<img src='/PostImage/"+attach[j].a_name+"'>");
+										$(".AttachImg_"+post[i].p_idx).append("<img src='https://klogpicture.s3.ap-northeast-2.amazonaws.com/PostImage"+result[i].p_idx+"/"+attach[j].a_name+"'>");
 									}
 								}
 								

@@ -51,7 +51,7 @@
 					value="${userInfo.loginType }"></c:set> <c:if
 					test="${loginType eq 'email'}">
 					<img class="img-fluid img-profile rounded-circle mx-auto mb-2"
-						src="/UserImage/${userInfo.m_pic}" alt="..." />
+						src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${userInfo.m_pic}" alt="..." />
 				</c:if> <c:if test="${loginType eq 'google'}">
 					<img class="img-fluid img-profile rounded-circle mx-auto mb-2"
 						src="${userInfo.m_pic}" alt="..." />
@@ -178,8 +178,18 @@
 												id='content_${list.p_idx }'
 												value='<c:out value="${list.post_content}" />'>
 										<div
-											class="d-flex flex-column flex-md-row justify-content-between"
-											id="AttachImg"></div>
+											class="d-flex flex-column flex-md-row"
+											id="AttachImg">
+											<c:forEach items="${attach}" var="attachList">
+												<c:set var="post_idx" value="${list.p_idx }" />
+												<c:set var="attach_idx" value="${attachList.p_idx }" />
+												<c:choose>
+													<c:when test="${post_idx == attach_idx }">
+														<img src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/PostImage/${list.p_idx }${attachList.a_name }">
+													</c:when>
+												</c:choose>
+											</c:forEach>
+											</div>
 										</p>
 
 									</div>
@@ -241,7 +251,7 @@
 										<a href="/mainPage/${member.email }"> <c:set
 												var="loginType" value="${member.loginType }"></c:set> <c:if
 												test="${loginType eq 'email'}">
-												<img src="/UserImage/${member.m_pic }">
+												<img src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${member.m_pic }">
 											</c:if> <c:if test="${loginType eq 'google'}">
 												<img src="${member.m_pic }">
 											</c:if>
@@ -252,7 +262,7 @@
 										<a href="/userPage/${member.email }"> <c:set
 												var="loginType" value="${member.loginType }"></c:set> <c:if
 												test="${loginType eq 'email'}">
-												<img src="/UserImage/${member.m_pic }">
+												<img src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${member.m_pic }">
 											</c:if> <c:if test="${loginType eq 'google'}">
 												<img src="${member.m_pic }">
 											</c:if>
@@ -327,7 +337,7 @@
 												<a href="/mainPage/${memberInfo.email }"> <c:set
 														var="loginType" value="${memberInfo.loginType }"></c:set>
 													<c:if test="${loginType eq 'email'}">
-														<img src="/UserImage/${memberInfo.m_pic }">
+														<img src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${memberInfo.m_pic }">
 													</c:if> <c:if test="${loginType eq 'google'}">
 														<img src="${memberInfo.m_pic }">
 													</c:if>
@@ -337,7 +347,7 @@
 												<a href="/userPage/${memberInfo.email }"><c:set
 														var="loginType" value="${memberInfo.loginType }"></c:set>
 													<c:if test="${loginType eq 'email'}">
-														<img src="/UserImage/${memberInfo.m_pic }">
+														<img src="https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${memberInfo.m_pic }">
 													</c:if> <c:if test="${loginType eq 'google'}">
 														<img src="${memberInfo.m_pic }">
 													</c:if></a>
@@ -1087,8 +1097,6 @@
 		}
 		
 		
-		
-		
 		// 글 다중 첨부파일
 		function fileCheck(input) {
 			
@@ -1215,7 +1223,7 @@
 								console.log(attach[j].p_idx);
 							
 								if(result[i].p_idx == attach[j].p_idx){
-									$(".AttachImg_"+result[i].p_idx).append("<img src='/PostImage/"+attach[j].a_name+"'>");
+									$(".AttachImg_"+result[i].p_idx).append("<img src='https://klogpicture.s3.ap-northeast-2.amazonaws.com/PostImage/"+result[i].p_idx+attach[j].a_name+"'>");
 								}
 							}
 							
@@ -1283,7 +1291,7 @@
 									console.log(attach[j].p_idx);
 								
 									if(post[i].p_idx == attach[j].p_idx){
-										$(".AttachImg_"+post[i].p_idx).append("<img src='/PostImage/"+attach[j].a_name+"'>");
+										$(".AttachImg_"+post[i].p_idx).append("<img src='https://klogpicture.s3.ap-northeast-2.amazonaws.com/PostImage/"+result[i].p_idx+attach[j].a_name+"'>");
 									}
 								}
 								
@@ -2003,7 +2011,7 @@
 													$(".container-fluid")
 													.append(
 															"<div class='container-setting'><section class='resume-section'><div class='resume-section-content'><form id='User_setting' accept-charset='utf-8'><input type='hidden' name='m_idx' id='m_idx' value='${userInfo.m_idx}'><input type='hidden' name='bgcolor' id='bgcolor' value='${userInfo.bgcolor}'><div class='container_pic'><label for='chooseFile' id='picInfo'>"
-															+"<img class='propic' src='/UserImage/${userInfo.m_pic}'></label><input type='file' class='filebox' id='chooseFile' name='chooseFile' accept='image/*' onchange='picUpdate(this)'><input type='hidden' name='m_picOrigin' id='m_picOrigin' value='${userInfo.m_pic}'><span class='UserVerify'>미인증 회원입니다. 인증 후 설정 가능합니다.</span></div><div class='container-user'><div>닉네임 <input type='text' class='user_pro' name='m_name' id='m_name' value='${userInfo.m_name}'></div><div> 바이오 <input type='text' class='user_pro' name='bio' id='bio' value='${userInfo.bio}'></div><div>타이틀<input type='text' class='user_pro' name='title' id='title' value='${userInfo.title}'></div><div>SNS 연결<div class='user_sns'><input type='hidden' name='insta' id='insta' value='${social.insta}'><input type='hidden' name='git' id='git' value='${social.git}'><input type='hidden' name='twitter' id='twitter' value='${social.twitter}'><input type='hidden' name='facebook' id='facebook' value='${social.facebook}'><i class='fab fa-linkedin-in' id='icon_in' onclick='modalShow(this);'></i><i class='fab fa-github' id='icon_git' onclick='modalShow(this);'></i><i class='fab fa-twitter' id='icon_twi' onclick='modalShow(this);'></i><i class='fab fa-facebook-f' id='icon_fb' onclick='modalShow(this);'></i></div></div></div>"
+															+"<img class='propic' src='https://klogpicture.s3.ap-northeast-2.amazonaws.com/UserImage${userInfo.m_pic}'></label><input type='file' class='filebox' id='chooseFile' name='chooseFile' accept='image/*' onchange='picUpdate(this)'><input type='hidden' name='m_picOrigin' id='m_picOrigin' value='${userInfo.m_pic}'><span class='UserVerify'>미인증 회원입니다. 인증 후 설정 가능합니다.</span></div><div class='container-user'><div>닉네임 <input type='text' class='user_pro' name='m_name' id='m_name' value='${userInfo.m_name}'></div><div> 바이오 <input type='text' class='user_pro' name='bio' id='bio' value='${userInfo.bio}'></div><div>타이틀<input type='text' class='user_pro' name='title' id='title' value='${userInfo.title}'></div><div>SNS 연결<div class='user_sns'><input type='hidden' name='insta' id='insta' value='${social.insta}'><input type='hidden' name='git' id='git' value='${social.git}'><input type='hidden' name='twitter' id='twitter' value='${social.twitter}'><input type='hidden' name='facebook' id='facebook' value='${social.facebook}'><i class='fab fa-linkedin-in' id='icon_in' onclick='modalShow(this);'></i><i class='fab fa-github' id='icon_git' onclick='modalShow(this);'></i><i class='fab fa-twitter' id='icon_twi' onclick='modalShow(this);'></i><i class='fab fa-facebook-f' id='icon_fb' onclick='modalShow(this);'></i></div></div></div>"
 																	+ "<div class='container-color'>색상 변경<div id='palletBox' class='pallet'></div><button type='button' class='profile_update' onclick='profileUpdate();'>수정하기</button><button type='button' class='profile_delete'>탈퇴하기</button></form></div></section></div>");
 												} else{
 													$(".container-fluid")

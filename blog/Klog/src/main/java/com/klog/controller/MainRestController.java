@@ -92,46 +92,9 @@ public class MainRestController {
 		return service.UserPassword(email, password);
 	}
 
-	@PostMapping(value = "/user/InfoChange", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public int uploadAjaxPots(MultipartFile uploadFile, MemberVO member, SnsVO sns) {
+	
 
-		System.out.println("컨트롤러에서 받은 내용 ::::" + sns);
-
-		// 사진 저장
-		if (uploadFile != null) {
-			String m_pic = service.uploadImage(uploadFile, member.getM_picOrigin());
-			member.setM_pic(m_pic);
-		}
-
-		service.UserSocialChange(sns);
-
-		return service.UserInfoChange(member);
-	}
-
-	@PostMapping("/user/postCreate")
-	public int CreatePost(PostVO post, List<MultipartFile> article_file) {
-
-		System.out.println("첨부파일 목록 :::: " + article_file);
-		System.out.println("글 내용 ::::" + post);
-
-		return postService.PostCreate(post, article_file);
-	}
-
-	@PostMapping("/user/postEdit")
-	public int EditPost(PostVO post, List<MultipartFile> article_file) {
-		System.out.println("글 내용 수정 :::::" + post);
-		System.out.println("글 내용 첨부파일 :::::" + article_file);
-
-		return postService.PostEdit(post, article_file);
-	}
-
-	@PostMapping("/user/postDel")
-	public int DelPost(int p_idx) {
-
-		System.out.println("포스트 번호 ::::::::;;" + p_idx);
-
-		return postService.PostDel(p_idx);
-	}
+	
 
 	@PostMapping("/user/SearchMyPost")
 	public List<PostVO> SearchPost(String word, int m_idx) {

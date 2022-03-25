@@ -1,9 +1,7 @@
 package com.klog.service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,25 +11,23 @@ import com.klog.domain.AttachVO;
 import com.klog.domain.PostVO;
 import com.klog.mapper.PostMapper;
 
-import lombok.extern.log4j.Log4j;
-
 @Service
-@Log4j
 public class PostServiceImpl implements PostService {
 
 	@Autowired
 	private PostMapper mapper;
 
 	@Override
-	public int PostCreate(PostVO post, List<MultipartFile> article_file) {
-
-		int result = 0;
-
+	public int PostCreate(PostVO post) {
 		mapper.CreatePost(post);
-		System.out.println(mapper.ListPostIdx());
-		uploadImage(article_file, mapper.ListPostIdx());
 
-		return result;
+		return mapper.ListPostIdx();
+	}
+
+	@Override
+	public void AttachInsert(AttachVO attach) {
+		mapper.CreateAttach(attach);
+
 	}
 
 	@Override
@@ -58,166 +54,61 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public int PostEdit(PostVO post, List<MultipartFile> article_file) {
+	public List<AttachVO> attachLists3(int p_idx) {
 
-		int result = 0;
-
-		List<AttachVO> attach = mapper.LoadAttach(post.getP_idx());
-		List<String> attachOrigin = post.getAttachOrigin(); // 수정 후
-		List<String> attachFile = new ArrayList<>(); // 수정 전
-
-		for (int j = 0; j < attach.size(); j++) {
-			attachFile.add(attach.get(j).getA_Origin());
-		}
-
-		System.out.println("DB에 있는 파일 :::: " + attachFile);
-		System.out.println("수정 후 파일 ::::" + attachOrigin);
-
-		// 원래 첨부파일 비교
-		for (int i = 0; i < attachFile.size(); i++) {
-
-			for (int j = 0; j < attachOrigin.size(); j++) {
-
-				if (attachFile.get(i).equals(attachOrigin.get(j))) {
-					attachFile.remove(i);
-				}
-
-			}
-		}
-		System.out.println("삭제해야하는 파일 :::::" + attachFile);
-
-		for (int i = 0; i < attachFile.size(); i++) {
-			mapper.DeleteAttach(attachFile.get(i));
-		}
-
-		// 새로 추가한 이미지 저장
-		uploadImage(article_file, post.getP_idx());
-		mapper.EditPost(post);
-
-		return result;
+		return mapper.LoadAttach(p_idx);
 	}
 
 	@Override
-	public int PostDel(int p_idx) {
+	public void attachDelete(String attach) {
 
-		int result = 0;
+		mapper.DeleteAttach(attach);
+	}
 
+	@Override
+	public void PostEdit(PostVO post, List<MultipartFile> article_file) {
+		mapper.EditPost(post);
+
+	}
+
+	@Override
+	public void PostDel(int p_idx) {
 		mapper.DelPost(p_idx);
 
-		return result;
 	}
 
-	public String uploadImage(List<MultipartFile> attach_file, int p_idx) {
 
-		System.out.println(attach_file);
 
-		AttachVO attach = new AttachVO();
-
-		log.info("update ajax post ............ ");
-		String uploadFolder = "C:\\PostImage";
-		String uploadFileName = "";
-
-		// String uploadFolderPath = getFolder();
-		// make Filder
-		File uploadPath = new File(uploadFolder);
-		log.info("uploadPath : " + uploadPath);
-
-		// 해당 경로가 있는지 확인하고 없으면 생성
-		if (uploadPath.exists() == false) {
-			uploadPath.mkdirs();
-		}
-
-		// AttachFileDTO attachDTO = new AttachFileDTO();
-		// MemberVO member = new MemberVO();
-
-		for (int i = 0; i < attach_file.size(); i++) {
-			log.info("==========================");
-			log.info("Upload File Name : " + attach_file.get(i).getOriginalFilename());
-			log.info("Upload FIle Size : " + attach_file.get(i).getSize());
-
-			uploadFileName = attach_file.get(i).getOriginalFilename();
-
-			// IE has file path
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
-			log.info("only file name : " + uploadFileName);
-			// attachDTO.setFileName(uploadFileName);
-
-			// 중복 방지를 위한 UUID 적용
-			UUID uuid = UUID.randomUUID();
-			log.info("uuid : " + uuid);
-
-			// 생성된 UUID_원래 이름
-			uploadFileName = uuid.toString() + "_" + uploadFileName;
-			log.info("UUID 추가된 이름" + uploadFileName);
-
-			attach.setA_name(uploadFileName);
-			attach.setA_size(attach_file.get(i).getSize());
-			attach.setA_Origin(attach_file.get(i).getOriginalFilename());
-			attach.setP_idx(p_idx);
-
-			// File saveFile = new File(uploadFolder, uploadFileName);
-
-			try {
-				File saveFile = new File(uploadPath, uploadFileName);
-				attach_file.get(i).transferTo(saveFile);
-
-				mapper.CreateAttach(attach);
-
-				// attachDTO.setUuid(uuid.toString());
-				// attachDTO.setUploadPath(uploadFolderPath);
-
-				// log.info("member 사진 이름 : " + member.getM_pic());
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		return uploadFileName;
-	}
-
-	public void DeleteImage(String a_name) {
-
-		String uploadFolder = "C:\\PostImage";
-		File uploadPath = new File(uploadFolder);
-
-		mapper.DeleteAttach(a_name);
-
-		File deletefile = new File(uploadPath, a_name);
-
-		deletefile.delete();
-
+	@Override
+	public String FindnameByOrigin(String a_Origin) {
+		
+		return mapper.FindA_name(a_Origin);
 	}
 
 	@Override
 	public int ScrapInsert(int p_idx, int m_idx) {
-		
+
 		int result = 0;
-		
+
 		System.out.println(p_idx);
 		System.out.println(m_idx);
-		
+
 		PostVO post = mapper.PostLoadByPidx(p_idx);
-		
+
 		post.setScrap_idx(m_idx);
 		System.out.println(post);
 		mapper.ScrapInsert(post);
-		
+
 		return result;
 	}
 
 	@Override
 	public int ScrapDel(int p_idx, int scrap_idx) {
 		int result = 0;
-		
+
 		mapper.ScrapDelete(p_idx, scrap_idx);
-		
+
 		return result;
 	}
-	
-	
-	
-	
-	
 
 }
