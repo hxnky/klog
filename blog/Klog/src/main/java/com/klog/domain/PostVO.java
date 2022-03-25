@@ -18,5 +18,7 @@ public class PostVO {
 	private List<String> AttachOrigin;
 	
 	private List<AttachVO> attach;
+	
+	private int scrap_idx;
 
 }

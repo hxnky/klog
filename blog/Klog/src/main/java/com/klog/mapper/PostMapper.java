@@ -2,6 +2,8 @@ package com.klog.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.klog.domain.AttachVO;
 import com.klog.domain.PostVO;
 
@@ -30,4 +32,12 @@ public interface PostMapper {
 	public void DeleteAttach(String a_Origin);
 	// 글 삭제 시 첨부파일 삭제
 	public void DeletePostAttach(int p_idx);
+	
+	//22.03.25
+	// 글 정보 불러오기
+	public PostVO PostLoadByPidx(int p_idx);
+	// 스크랩 인서트
+	public void ScrapInsert(PostVO post);
+	// 스크랩 삭제
+	public void ScrapDelete(@Param("p_idx") int p_idx,@Param("scrap_idx") int scrap_idx);
 }

@@ -11,6 +11,7 @@
 		<result column="post_updatetime" property="post_updatetime" />
 		<result column="post_writer" property="post_writer" />
 		<result column="m_idx" property="m_idx" />
+		<result column="scrap_idx" property="scrap_idx" />
 	</resultMap>
 
 	<resultMap id="memberAttach" type="com.klog.domain.AttachVO">
@@ -29,7 +30,8 @@
 
 	<select id="LoadPost" resultMap="memberPost">
 		select * from post where m_idx =
-		#{m_idx}
+		#{m_idx} or scrap_idx =
+		#{scrap_idx} order by p_idx desc
 	</select>
 
 	<update id="EditPost">
@@ -44,7 +46,8 @@
 	</delete>
 
 	<insert id="CreateAttach">
-		insert into attach (p_idx, a_name, a_size, a_Origin) values
+		insert into attach (p_idx, a_name, a_size, a_Origin)
+		values
 		(#{p_idx}, #{a_name}, #{a_size}, #{a_Origin});
 	</insert>
 
@@ -66,5 +69,20 @@
 		delete from attach where p_idx = #{p_idx}
 	</delete>
 
+	<select id="PostLoadByPidx" resultMap="memberPost">
+		select * from post where
+		p_idx =
+		#{p_idx}
+	</select>
+
+	<insert id="ScrapInsert">
+		insert into post (post_title, post_content,
+		post_writer, m_idx, scrap_idx) values (#{post_title}, #{post_content},
+		#{post_writer}, #{m_idx}, #{scrap_idx});
+	</insert>
+	
+	<delete id="ScrapDelete">
+		delete from post where p_idx = #{p_idx} and scrap_idx = #{scrap_idx}
+	</delete>
 
 </mapper>

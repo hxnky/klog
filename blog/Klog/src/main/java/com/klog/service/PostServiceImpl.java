@@ -2,7 +2,6 @@ package com.klog.service;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -189,5 +188,36 @@ public class PostServiceImpl implements PostService {
 		deletefile.delete();
 
 	}
+
+	@Override
+	public int ScrapInsert(int p_idx, int m_idx) {
+		
+		int result = 0;
+		
+		System.out.println(p_idx);
+		System.out.println(m_idx);
+		
+		PostVO post = mapper.PostLoadByPidx(p_idx);
+		
+		post.setScrap_idx(m_idx);
+		System.out.println(post);
+		mapper.ScrapInsert(post);
+		
+		return result;
+	}
+
+	@Override
+	public int ScrapDel(int p_idx, int scrap_idx) {
+		int result = 0;
+		
+		mapper.ScrapDelete(p_idx, scrap_idx);
+		
+		return result;
+	}
+	
+	
+	
+	
+	
 
 }

@@ -25,4 +25,10 @@ public interface PostService {
 	// 글 첨부파일
 	public List<AttachVO> attachList(List<PostVO> post);
 	
+	// 22.03.25
+	// 스크랩
+	public int ScrapInsert(int p_idx, int m_idx);
+	// 스크랩 삭제
+	public int ScrapDel(int p_idx, int scrap_idx);
+	
 }

@@ -140,6 +140,9 @@
 							<img src="/resources/assets/img/triangle_up.png">
 						</button>
 						<div id="postList" class="animate slideOutUp">
+							<c:if test="${ fn:length(post) == 0}">
+								<div>작성된 글이 없습니다.</div>
+							</c:if>
 							<c:forEach items="${post}" var="list">
 								<div
 									class="d-flex flex-column flex-md-row justify-content-between mb-5">
@@ -149,9 +152,21 @@
 											data-bs-target="#collapse_${list.p_idx }"
 											aria-controls="collapse_${list.p_idx }" aria-expanded="false">
 											<h3 class="mb-0" data-toggle="collapse">
-												<input type='text' class='postText'
-													id='title_${list.p_idx }'
-													value='<c:out value="${list.post_title}" />'>
+												<c:set var="m_idx" value="${userInfo.m_idx }" />
+												<c:set var="Scrap_idx" value="${list.scrap_idx }" />
+												<c:choose>
+													<c:when test="${m_idx == Scrap_idx}">
+														<input type='text' class='postText'
+															id='title_${list.p_idx }'
+															value='<c:out value="[스크랩]   ${list.post_title}" />'>
+													</c:when>
+													<c:otherwise>
+														<input type='text' class='postText'
+															id='title_${list.p_idx }'
+															value='<c:out value="${list.post_title}" />'>
+													</c:otherwise>
+												</c:choose>
+
 											</h3>
 										</button>
 
@@ -172,19 +187,23 @@
 										<span class="text-primary"><fmt:formatDate
 												value="${list.post_updatetime}" pattern="yyyy-MM-dd" /></span>
 
-										<fmt:formatNumber value="${userInfo.m_idx}" type="number"
-											var="mIdx" />
-										<fmt:formatNumber value="${pageInfo.m_idx}" type="number"
-											var="pIdx" />
-										<c:if test="${m_idx == pIdx}">
-											<div id="postBtn">
-												<button type="button" id="PostEdit"
-													onclick="PostEdit(${list.p_idx });">수정</button>
-												<button type="button" id="PostDel"
-													onclick="PostDel(${list.p_idx});">삭제</button>
-											</div>
-										</c:if>
 
+										<c:choose>
+											<c:when test="${m_idx != Scrap_idx}">
+												<div id="postBtn">
+													<button type="button" id="PostEdit"
+														onclick="PostEdit(${list.p_idx });">수정</button>
+													<button type="button" id="PostDel"
+														onclick="PostDel(${list.p_idx});">삭제</button>
+												</div>
+											</c:when>
+											<c:when test="${m_idx == Scrap_idx}">
+												<div id="postBtn">
+													<button type="button" id="PostDel"
+														onclick="ScrapDel(${list.p_idx});">삭제</button>
+												</div>
+											</c:when>
+										</c:choose>
 									</div>
 									<input type="hidden" id="post_m_idx" value="${list.m_idx }">
 								</div>
@@ -215,14 +234,31 @@
 							<c:set var="member" value="${letter.member}" />
 
 							<div id="letter_img">
-								<a href="/userPage/${member.email }"> <c:set var="loginType"
-										value="${member.loginType }"></c:set> <c:if
-										test="${loginType eq 'email'}">
-										<img src="/UserImage/${member.m_pic }">
-									</c:if> <c:if test="${loginType eq 'google'}">
-										<img src="${member.m_pic }">
-									</c:if>
-								</a>
+								<c:set var="mainEmail" value="${userInfo.email }" />
+								<c:set var="letterEmail" value="${member.email }" />
+								<c:choose>
+									<c:when test="${ mainEmail eq letterEmail}">
+										<a href="/mainPage/${member.email }"> <c:set
+												var="loginType" value="${member.loginType }"></c:set> <c:if
+												test="${loginType eq 'email'}">
+												<img src="/UserImage/${member.m_pic }">
+											</c:if> <c:if test="${loginType eq 'google'}">
+												<img src="${member.m_pic }">
+											</c:if>
+										</a>
+									</c:when>
+									<c:when test="${ mainEmail ne letterEmail}">
+
+										<a href="/userPage/${member.email }"> <c:set
+												var="loginType" value="${member.loginType }"></c:set> <c:if
+												test="${loginType eq 'email'}">
+												<img src="/UserImage/${member.m_pic }">
+											</c:if> <c:if test="${loginType eq 'google'}">
+												<img src="${member.m_pic }">
+											</c:if>
+										</a>
+									</c:when>
+								</c:choose>
 							</div>
 							<div class="flex-grow-1">
 								<h3 class="mb-0 letterContentBox"
@@ -284,13 +320,29 @@
 								<div
 									class="d-flex flex-md-row justify-content-between letterReplyBox">
 									<div id="letterReply_img">
-										<a href="/userPage/${memberInfo.email }"><c:set
-												var="loginType" value="${memberInfo.loginType }"></c:set> <c:if
-												test="${loginType eq 'email'}">
-												<img src="/UserImage/${memberInfo.m_pic }">
-											</c:if> <c:if test="${loginType eq 'google'}">
-												<img src="${memberInfo.m_pic }">
-											</c:if></a>
+										<c:set var="mainEmail" value="${userInfo.email }" />
+										<c:set var="letterEmail" value="${memberInfo.email }" />
+										<c:choose>
+											<c:when test="${ mainEmail eq letterEmail}">
+												<a href="/mainPage/${memberInfo.email }"> <c:set
+														var="loginType" value="${memberInfo.loginType }"></c:set>
+													<c:if test="${loginType eq 'email'}">
+														<img src="/UserImage/${memberInfo.m_pic }">
+													</c:if> <c:if test="${loginType eq 'google'}">
+														<img src="${memberInfo.m_pic }">
+													</c:if>
+												</a>
+											</c:when>
+											<c:when test="${ mainEmail ne letterEmail}">
+												<a href="/userPage/${memberInfo.email }"><c:set
+														var="loginType" value="${memberInfo.loginType }"></c:set>
+													<c:if test="${loginType eq 'email'}">
+														<img src="/UserImage/${memberInfo.m_pic }">
+													</c:if> <c:if test="${loginType eq 'google'}">
+														<img src="${memberInfo.m_pic }">
+													</c:if></a>
+											</c:when>
+										</c:choose>
 									</div>
 									<div class="flex-grow-1">
 										<!-- 답글자리	 -->
@@ -1838,36 +1890,61 @@
 					$("#myAlarmModalLabel").append("<div class='AlarmListBox'></div>");
 					if(result.length == 0){
 						$(".AlarmListBox").append("<div class='noAlarm'>알림이 없습니다.</div>");
-					}
-					for(var i=0; i<result.length; i++){
+					}else{
+						console.log("알림 있음");
+						for(var i=0; i<result.length; i++){
 
-						var member = result[i].member;
-						
-						if(result[i].ac_idx != result[i].ar_idx){
-							if(result[i].type == "letter"){
-								$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#"+result[i].type+"'>"
-										+ member.m_name + "님이 안부글을 남겼습니다." + "</a><br><p>"+result[i].content+"</p>"
-										+"<span></span>");
-							} else if(result[i].type == "reply"){
-								$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#"+result[i].type+"'>"
-										+ member.m_name + "님이 답글을 남겼습니다." + "</a><br><p>"+result[i].content+"</p>"
-										+"<span></span>");
-							} else if(result[i].type == "follow"){
-								$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#neighbor'>"
-										+ member.m_name + "님이 이웃 신청을 하셨습니다." + "</a>"
-										+"<span></span>");
-							} else if(result[i].type == "Eachfollow"){
-								$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#neighbor'>"
-										+ member.m_name + "님이 서로이웃 신청을 하셨습니다." + "</a>"
-										+"<span></span>");
+							var member = result[i].member;
+							
+							if(result[i].ac_idx != result[i].ar_idx){
+								if(result[i].type == "letter"){
+									$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#"+result[i].type+"'>"
+											+ member.m_name + "님이 안부글을 남겼습니다." + "</a><br><p>"+result[i].content+"</p>"
+											+"<span></span>");
+								} else if(result[i].type == "reply"){
+									$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#"+result[i].type+"'>"
+											+ member.m_name + "님이 답글을 남겼습니다." + "</a><br><p>"+result[i].content+"</p>"
+											+"<span></span>");
+								} else if(result[i].type == "follow"){
+									$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#neighbor'>"
+											+ member.m_name + "님이 이웃 신청을 하셨습니다." + "</a>"
+											+"<span></span>");
+								} else if(result[i].type == "Eachfollow"){
+									$(".AlarmListBox").append("<a type='external' href='/mainPage/" + email + "#neighbor'>"
+											+ member.m_name + "님이 서로이웃 신청을 하셨습니다." + "</a>"
+											+"<span></span>");
+								}
 							}
+							
+							
+							
 						}
-						
-						
-						
 					}
+					
 				}
 			});
+		}
+		
+		function ScrapDel(p_idx){
+			var m_idx = ${userInfo.m_idx};
+			if (confirm("글을 삭제하시겠습니까?") == true) {
+				$.ajax({
+					url : '/user/ScrapDelete',
+					data : {p_idx : p_idx,
+							m_idx : m_idx
+					},
+					type : "POST",
+					dataType : "json",
+					async : false,
+					success : function(result) {
+						alert("삭제되었습니다.");
+						location.reload();
+					}
+				});
+			}else{
+				return false;
+			}
+			
 		}
 		
 		

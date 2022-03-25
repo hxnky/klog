@@ -140,6 +140,9 @@
 							<img src="/resources/assets/img/triangle_up.png">
 						</button>
 						<div id="postList" class="animate slideOutUp">
+							<c:if test="${ fn:length(post) == 0}">
+								<div>작성된 글이 없습니다.</div>
+							</c:if>
 							<c:forEach items="${post}" var="list">
 								<div
 									class="d-flex flex-column flex-md-row justify-content-between mb-5">
@@ -176,14 +179,14 @@
 											var="mIdx" />
 										<fmt:formatNumber value="${pageInfo.m_idx}" type="number"
 											var="pIdx" />
-										<c:if test="${m_idx == pIdx}">
-											<div id="postBtn">
-												<button type="button" id="PostEdit"
-													onclick="PostEdit(${list.p_idx });">수정</button>
-												<button type="button" id="PostDel"
-													onclick="PostDel(${list.p_idx});">삭제</button>
-											</div>
-										</c:if>
+										<c:choose>
+											<c:when test="${m_idx != pIdx}">
+												<div id="postBtn">
+													<button type="button" id="ScrapBtn"
+														onclick="PostScrap(${list.p_idx });">스크랩</button>
+												</div>
+											</c:when>
+										</c:choose>
 
 									</div>
 									<input type="hidden" id="post_m_idx" value="${list.m_idx }">
@@ -215,14 +218,32 @@
 							<c:set var="member" value="${letter.member}" />
 
 							<div id="letter_img">
-								<a href="/userPage/${member.email }"> <c:set var="loginType"
-										value="${member.loginType }"></c:set> <c:if
-										test="${loginType eq 'email'}">
-										<img src="/UserImage/${member.m_pic }">
-									</c:if> <c:if test="${loginType eq 'google'}">
-										<img src="${member.m_pic }">
-									</c:if>
-								</a>
+								<c:set var="mainEmail" value="${userInfo.email }" />
+								<c:set var="letterEmail" value="${member.email }" />
+								<c:choose>
+									<c:when test="${ mainEmail eq letterEmail}">
+										<a href="/mainPage/${member.email }"> <c:set
+												var="loginType" value="${member.loginType }"></c:set> <c:if
+												test="${loginType eq 'email'}">
+												<img src="/UserImage/${member.m_pic }">
+											</c:if> <c:if test="${loginType eq 'google'}">
+												<img src="${member.m_pic }">
+											</c:if>
+										</a>
+									</c:when>
+									<c:when test="${ mainEmail ne letterEmail}">
+
+										<a href="/userPage/${member.email }"> <c:set
+												var="loginType" value="${member.loginType }"></c:set> <c:if
+												test="${loginType eq 'email'}">
+												<img src="/UserImage/${member.m_pic }">
+											</c:if> <c:if test="${loginType eq 'google'}">
+												<img src="${member.m_pic }">
+											</c:if>
+										</a>
+									</c:when>
+								</c:choose>
+
 							</div>
 							<div class="flex-grow-1">
 								<h3 class="mb-0 letterContentBox"
@@ -284,13 +305,29 @@
 								<div
 									class="d-flex flex-md-row justify-content-between letterReplyBox">
 									<div id="letterReply_img">
-										<a href="/userPage/${memberInfo.email }"><c:set
+										<c:set var="mainEmail" value="${userInfo.email }" />
+										<c:set var="letterEmail" value="${memberInfo.email }" />
+										<c:choose>
+											<c:when test="${ mainEmail eq letterEmail}">
+												<a href="/mainPage/${memberInfo.email }"> <c:set
+													var="loginType" value="${memberInfo.loginType }"></c:set> <c:if
+													test="${loginType eq 'email'}">
+													<img src="/UserImage/${memberInfo.m_pic }">
+												</c:if> <c:if test="${loginType eq 'google'}">
+													<img src="${memberInfo.m_pic }">
+												</c:if>
+											</a>
+											</c:when>
+											<c:when test="${ mainEmail ne letterEmail}">
+												<a href="/userPage/${memberInfo.email }"><c:set
 												var="loginType" value="${memberInfo.loginType }"></c:set> <c:if
 												test="${loginType eq 'email'}">
 												<img src="/UserImage/${memberInfo.m_pic }">
 											</c:if> <c:if test="${loginType eq 'google'}">
 												<img src="${memberInfo.m_pic }">
 											</c:if></a>
+											</c:when>
+										</c:choose>
 									</div>
 									<div class="flex-grow-1">
 										<!-- 답글자리	 -->
@@ -412,7 +449,16 @@
 							<div class="${nei.eachother}" id="neiList_${mem.m_idx }">
 								<div class="flex-grow-1" id="neiInfo">
 									<h3 class="mb-0">
-										<a href="/userPage/${mem.email}">${mem.title}</a>
+										<c:set var="neiEmail" value="${mem.email}" />
+										<c:set var="userEmail" value="${userInfo.email}" />
+										<c:choose>
+											<c:when test="${neiEmail eq userEmail }">
+												<a href="/mainPage/${mem.email}">${mem.title}</a>
+											</c:when>
+											<c:when test="${neiEmail ne userEmail }">
+												<a href="/userPage/${mem.email}">${mem.title}</a>
+											</c:when>
+										</c:choose>
 									</h3>
 									<div class="subheading mb-3">${mem.m_name}</div>
 									<input type="hidden" class="n_chk${mem.m_idx }"
@@ -619,165 +665,11 @@
 			return true;
 		}
 
-		function picUpdate(input) {
-			var formData = new FormData();
+		
 
-			var file = input.files[0];
+	
 
-			//add filedate to formdata
-
-			if (!checkExtension(file.name, file.size)) {
-				return false;
-			}
-
-			formData.append("uploadFile", file);
-
-			// 사진 바꾸기
-			var reader = new FileReader();
-			reader.onload = function(e) {
-				$(".propic").attr("src", e.target.result);
-			}
-
-			reader.readAsDataURL(file);
-
-		}
-
-		var beforeColor; //이전에 선택된 컬러 저장 할 변수
-
-		function init() {
-			//2차원 배열 파레트 데이터
-			var pallet = [
-					[ "#FF0000", "#FF5E00", "#FFBB00", "#FFE400", "#ABF200",
-							"#1DDB16", "#00D8FF", "#0054FF", "#0100FF",
-							"#5F00FF", "#FF00DD", "#FF007F", "#000000",
-							"#FFFFFF" ],
-					[ "#FFD8D8", "#FAE0D4", "#FAECC5", "#FAF4C0", "#E4F7BA",
-							"#CEFBC9", "#D4F4FA", "#D9E5FF", "#DAD9FF",
-							"#E8D9FF", "#FFD9FA", "#FFD9EC", "#F6F6F6",
-							"#EAEAEA" ],
-					[ "#FFA7A7", "#FFC19E", "#FFE08C", "#FAED7D", "#CEF279",
-							"#B7F0B1", "#B2EBF4", "#B2CCFF", "#B5B2FF",
-							"#D1B2FF", "#FFB2F5", "#FFB2D9", "#D5D5D5",
-							"#BDBDBD" ],
-					[ "#F15F5F", "#F29661", "#F2CB61", "#E5D85C", "#BCE55C",
-							"#86E57F", "#5CD1E5", "#6799FF", "#6B66FF",
-							"#A566FF", "#F361DC", "#F361A6", "#A6A6A6",
-							"#8C8C8C" ],
-					[ "#CC3D3D", "#CC723D", "#CCA63D", "#C4B73B", "#9FC93C",
-							"#47C83E", "#3DB7CC", "#4374D9", "#4641D9",
-							"#8041D9", "#D941C5", "#D9418C", "#747474",
-							"#5D5D5D" ],
-					[ "#980000", "#993800", "#997000", "#998A00", "#6B9900",
-							"#2F9D27", "#008299", "#003399", "#050099",
-							"#3F0099", "#990085", "#99004C", "#4C4C4C",
-							"#353535" ],
-					[ "#670000", "#662500", "#664B00", "#665C00", "#476600",
-							"#22741C", "#005766", "#002266", "#030066",
-							"#2A0066", "#660058", "#660033", "#212121",
-							"#191919" ] ];
-			var tag = "";
-			for (i = 0; i < pallet.length; i++) {
-				for (j = 0; j < pallet[i].length; j++) {
-					tag += "<div id="
-							+ pallet[i][j]
-							+ " class='colorBox' onclick='colorSet(this)'></div>";
-				}
-			}
-
-			//파레트 파싱
-			document.getElementById("palletBox").innerHTML = tag;
-
-			//색상 입히기
-			var colorBox = document.getElementsByClassName("colorBox");
-			for (i = 0; i < colorBox.length; i++) {
-				colorBox[i].style.background = colorBox[i].id;
-			}
-		}
-
-		// onclick event
-		function colorSet(target) {
-			document.querySelector("nav").style.background = target.id;
-
-			if (beforeColor != undefined && beforeColor != null) {
-				document.getElementById(beforeColor).className = document
-						.getElementById(beforeColor).className.replace(
-						" active", "");
-			}
-			document.getElementById(target.id).className += " active";
-			beforeColor = target.id;
-
-			//$("#bgcolor").remove();
-			//$("#User_setting").prepend("<input type='hidden' name='bgcolor' id='bgcolor' value='${userInfo.bgcolor}'>");
-			$("#bgcolor").val(beforeColor);
-
-		}
-
-		// 중간에 나갈 경우
-		function EndUpdate() {
-
-			var formData = $("#m_pic").val();
-			var picOrigin = $("#m_picOrigin").val();
-			var bgcolor = $("#bgcolor").val();
-			var bgcolorOrigin = "${userInfo.bgcolor}";
-			var m_name = $("#m_name").val();
-			var m_nameOrigin = "${userInfo.m_name}";
-			var bio = $("#bio").val();
-			var bioOrigin = "${userInfo.bio}";
-			var title = $("#title").val();
-			var titleOrigin = "${userInfo.title}";
-
-			if (bgcolor != bgcolorOrigin || m_name != m_nameOrigin
-					|| bio != bioOrigin || title != titleOrigin) {
-				if (confirm("나가시면 변경 사항을 잃게됩니다. 정말 나가시겠습니까?") == true) {
-					$(".container-setting").remove();
-					$(".container_none").show();
-				} else {
-					return false;
-				}
-			}
-		}
-
-		// 프로필 수정
-		function profileUpdate() {
-
-			if ($("#m_name").val() == "") {
-				alert("닉네임을 입력해주세요");
-			} else if ($("#bio").val() == "") {
-				alert("바이오를 입력해주세요");
-			} else if ($("#title").val() == "") {
-				alert("타이틀을 입력해주세요");
-			} else {
-				var m_pic = $('input[name="chooseFile"]').get(0).files[0];
-				var params = $('#User_setting').serialize();
-
-				var formData = new FormData($("#User_setting")[0]);
-
-				if (m_pic != undefined) {
-					console.log("사진 변경");
-					formData.append("uploadFile", $("#chooseFile")[0].files[0]);
-				} else {
-					console.log("사진 노 변경");
-					formData.append("m_pic", $("#m_picOrigin").val());
-				}
-
-				//console.log(m_pic);
-				console.log(params);
-				$.ajax({
-					url : '/user/InfoChange',
-					processData : false, // 이 둘은 무조건 false로 해야 전송이 된다.
-					contentType : false,
-					data : formData,
-					type : "POST",
-					dataType : "json",
-					success : function(result) {
-						console.log(result);
-						location.reload();
-					}
-				});
-			}
-
-		}
-
+		
 		// 모달 관련 함수
 		function modalShow(target) {
 			$('#myModal').modal('show');
@@ -1859,6 +1751,34 @@
 			});
 		}
 		
+		function PostScrap(p_idx){
+			
+			var email = "${userInfo.email}";
+			var m_idx = ${userInfo.m_idx};
+			
+			$.ajax({
+				url : '/user/PostScrap',
+				data : {p_idx : p_idx,
+						m_idx : m_idx
+				},
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(result) {
+					alert("스크랩되었습니다.");
+
+					if(result == 0){
+						if (confirm("블로그로 이동하시겠습니까?") == true) {
+							location.href="${pageContext.request.contextPath}/mainPage/"+email+"#education";
+						}else{
+							return false;
+						}
+					}
+					
+				}
+			});
+		}
+		
 		
 		$(document)
 				.ready(
@@ -1898,61 +1818,6 @@
 								$('#social_fb').css("display", "inline-flex");
 							}
 
-							// 설정 버튼 클릭
-							$("#nav_setting")
-									.on(
-											"click",
-											function(e) {
-												// 원래 있던 버튼 숨기기
-												$(".container_none").hide();
-
-												// 비밀번호 일치해야 설정창으로 들어갈 수 있도록 하기
-
-												$(".container-setting")
-														.remove();
-												// 프로필 설정 관련 창 보여주기
-												// 사진, 닉네임, 바이오, 타이틀, 비밀번호 변경, sns 연결, nav 혹은 블로그 색 --> 이건 나중에
-												// userInfo와 비교해서 수정된 내용 있는데 con_on 누를 경우 경고창
-												if("${userInfo.loginType}" == "email"){
-													$(".container-fluid")
-													.append(
-															"<div class='container-setting'><section class='resume-section'><div class='resume-section-content'><form id='User_setting' accept-charset='utf-8'><input type='hidden' name='m_idx' id='m_idx' value='${userInfo.m_idx}'><input type='hidden' name='bgcolor' id='bgcolor' value='${userInfo.bgcolor}'><div class='container_pic'><label for='chooseFile' id='picInfo'>"
-															+"<img class='propic' src='/UserImage/${userInfo.m_pic}'></label><input type='file' class='filebox' id='chooseFile' name='chooseFile' accept='image/*' onchange='picUpdate(this)'><input type='hidden' name='m_picOrigin' id='m_picOrigin' value='${userInfo.m_pic}'><span class='UserVerify'>미인증 회원입니다. 인증 후 설정 가능합니다.</span></div><div class='container-user'><div>닉네임 <input type='text' class='user_pro' name='m_name' id='m_name' value='${userInfo.m_name}'></div><div> 바이오 <input type='text' class='user_pro' name='bio' id='bio' value='${userInfo.bio}'></div><div>타이틀<input type='text' class='user_pro' name='title' id='title' value='${userInfo.title}'></div><div>SNS 연결<div class='user_sns'><input type='hidden' name='insta' id='insta' value='${social.insta}'><input type='hidden' name='git' id='git' value='${social.git}'><input type='hidden' name='twitter' id='twitter' value='${social.twitter}'><input type='hidden' name='facebook' id='facebook' value='${social.facebook}'><i class='fab fa-linkedin-in' id='icon_in' onclick='modalShow(this);'></i><i class='fab fa-github' id='icon_git' onclick='modalShow(this);'></i><i class='fab fa-twitter' id='icon_twi' onclick='modalShow(this);'></i><i class='fab fa-facebook-f' id='icon_fb' onclick='modalShow(this);'></i></div></div></div>"
-																	+ "<div class='container-color'>색상 변경<div id='palletBox' class='pallet'></div><button type='button' class='profile_update' onclick='profileUpdate();'>수정하기</button><button type='button' class='profile_delete'>탈퇴하기</button></form></div></section></div>");
-												} else{
-													$(".container-fluid")
-													.append(
-															"<div class='container-setting'><section class='resume-section'><div class='resume-section-content'><form id='User_setting' accept-charset='utf-8'><input type='hidden' name='m_idx' id='m_idx' value='${userInfo.m_idx}'><input type='hidden' name='bgcolor' id='bgcolor' value='${userInfo.bgcolor}'><div class='container_pic'><label for='chooseFile' id='picInfo'>"
-															+"<img class='propic' src='${userInfo.m_pic}'><input type='hidden' name='m_picOrigin' id='m_picOrigin' value='${userInfo.m_pic}'></label></div><div class='container-user'><div>닉네임 <input type='text' class='user_pro' name='m_name' id='m_name' value='${userInfo.m_name}'></div><div> 바이오 <input type='text' class='user_pro' name='bio' id='bio' value='${userInfo.bio}'></div><div>타이틀<input type='text' class='user_pro' name='title' id='title' value='${userInfo.title}'></div><div>SNS 연결<div class='user_sns'><input type='hidden' name='insta' id='insta' value='${social.insta}'><input type='hidden' name='git' id='git' value='${social.git}'><input type='hidden' name='twitter' id='twitter' value='${social.twitter}'><input type='hidden' name='facebook' id='facebook' value='${social.facebook}'><i class='fab fa-linkedin-in' id='icon_in' onclick='modalShow(this);'></i><i class='fab fa-github' id='icon_git' onclick='modalShow(this);'></i><i class='fab fa-twitter' id='icon_twi' onclick='modalShow(this);'></i><i class='fab fa-facebook-f' id='icon_fb' onclick='modalShow(this);'></i></div></div></div>"
-																	+ "<div class='container-color'>색상 변경<div id='palletBox' class='pallet'></div><button type='button' class='profile_update' onclick='profileUpdate();'>수정하기</button><button type='button' class='profile_delete'>탈퇴하기</button></form></div></section></div>");
-												}
-												
-												
-												
-												if ("${userInfo.verify}" == "N") {
-													$('.UserVerify').css(
-															"display",
-															"inline-block");
-
-													var input = document
-															.getElementsByClassName("user_pro");
-													$('.user_pro').attr(
-															"readonly",
-															"readonly");
-
-												}
-
-												// 팔레트 추가
-												init();
-
-											});
-
-						$(".con_on").on("click", function(e) {
-								$(".container-setting").remove();
-								$(".container_none").show();
-
-							});
-						
 							if(follow == ""){
 								$("#followChkList").append("<div class='noFollowChk'>이웃 신청 목록이 없습니다.</div>");
 							}

@@ -44,7 +44,7 @@ public class MainRestController {
 
 	@Autowired
 	private LetterServiceImpl letterService;
-	
+
 	@Autowired
 	private AlarmServiceImpl AlarmService;
 
@@ -230,9 +230,9 @@ public class MainRestController {
 
 	@PostMapping("/user/LetterInsert")
 	public int LetterInsert(int w_idx, int o_idx, String l_content) {
-		
+
 		LetterVO letter = new LetterVO();
-		
+
 		letter.setL_content(l_content);
 		letter.setW_idx(w_idx);
 		letter.setO_idx(o_idx);
@@ -241,68 +241,65 @@ public class MainRestController {
 
 		return letterService.LetterInsert(letter);
 	}
-	
+
 	@PostMapping("/user/LetterUpdate")
 	public int LetterUpdate(int l_idx, String l_content) {
-		
+
 		System.out.println("l_idx" + l_idx);
 		System.out.println("l_content" + l_content);
 
 		return letterService.LetterUpdate(l_idx, l_content);
 	}
-	
+
 	@PostMapping("/user/LetterDelete")
 	public int LetterDelete(int l_idx) {
-		
 
 		return letterService.LetterDel(l_idx);
 	}
-	
+
 	@PostMapping("/user/LetterReplyInsert")
 	public int LetterReplyInsert(int l_idx, int rw_idx, int ro_idx, String lr_content) {
-		
+
 		LetterReplyVO reply = new LetterReplyVO();
-		
+
 		reply.setL_idx(l_idx);
 		reply.setRo_idx(ro_idx);
 		reply.setRw_idx(rw_idx);
 		reply.setLr_content(lr_content);
-		
+
 		System.out.println("입력한 안부 답글 :::::" + reply);
 
 		return letterService.LetterReplyInsert(reply);
 	}
-	
+
 	@PostMapping("/user/LetterReplyUpdate")
 	public int LetterReplyUpdate(int lr_idx, String lr_content) {
-		
 
 		return letterService.ReplyUpdate(lr_idx, lr_content);
 	}
-	
+
 	@PostMapping("/user/LetterReplyDelete")
 	public int LetterReplyDelete(int lr_idx) {
-		
 
 		return letterService.ReplyDel(lr_idx);
 	}
-	
+
 	@PostMapping("/user/AlarmInsert")
 	public int AlarmInsert(int ac_idx, int ar_idx, String type) {
-		
+
 		AlarmVO alarm = new AlarmVO();
 		alarm.setAc_idx(ac_idx);
 		alarm.setAr_idx(ar_idx);
 		alarm.setType(type);
 
 		System.out.println("알람 발생 :::::" + alarm);
-		
+
 		return AlarmService.AlarmInsert(alarm);
 	}
-	
+
 	@PostMapping("/user/AlarmContentInsert")
 	public int AlarmContentInsert(int ac_idx, int ar_idx, String type, String content) {
-		
+
 		AlarmVO alarm = new AlarmVO();
 		alarm.setAc_idx(ac_idx);
 		alarm.setAr_idx(ar_idx);
@@ -310,13 +307,26 @@ public class MainRestController {
 		alarm.setContent(content);
 
 		System.out.println("알람 발생 :::::" + alarm);
-		
+
 		return AlarmService.AlarmContentInsert(alarm);
 	}
-	
+
 	@PostMapping("/user/AlarmList")
 	public List<AlarmVO> AlarmList(int ar_idx) {
-		
+
 		return AlarmService.AlarmList(ar_idx);
 	}
+
+	@PostMapping("/user/PostScrap")
+	public int PostScrap(int p_idx, int m_idx) {
+
+		return postService.ScrapInsert(p_idx, m_idx);
+	}
+
+	@PostMapping("/user/ScrapDelete")
+	public int ScrapDelete(int p_idx, int m_idx) {
+
+		return postService.ScrapDel(p_idx, m_idx);
+	}
+
 }
