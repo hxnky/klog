@@ -1,3 +1,4 @@
+# KLOG
 
 # 1. 소개
  - 네이버 블로그를 벤치마킹하여 만든 블로그식 SNS
@@ -35,4 +36,11 @@
     - GITHUB
 
 # 3. 주요 기능
-  - https://www.notion.so/hxnkys-page/8d1bf03814274e3e8bc056e0e9b5bcb3
+  - https://hxnkys-page.notion.site/8d1bf03814274e3e8bc056e0e9b5bcb3
+
+
+
+------------
+
+# 개인 공부
+ - https://hxnkys-page.notion.site/a3745de617944298ab6739996c64845f?v=aca9a481cbf5483cbfe3f9f926fb8e80
