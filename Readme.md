@@ -8,6 +8,7 @@
 ##  개발 환경
 >[KLOG 정리](https://hxnkys-page.notion.site/8d1bf03814274e3e8bc056e0e9b5bcb3)
 >프로젝트를 설계하고 UI 및 간략한 코드를 정리하였습니다.
+
   - 웹 표준 및 프론트엔드
     - HTML5
     - CSS3
