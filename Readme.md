@@ -107,12 +107,15 @@
 > 전체 유저 대상으로 검색합니다.
 
 > 글 검색 결과 스크랩한 글과 자신의 글, 타 유저의 글에 따라 다른 버튼이 출력됩니다.
+
 ![11-1 postSearchList](https://user-images.githubusercontent.com/71997918/161511884-c1af89e3-2e91-4249-acb6-674e13a480f0.png)
 
 > 유저 검색 결과 없는 경우
+
 ![11-2 userListnoResult](https://user-images.githubusercontent.com/71997918/161511891-8616bcc9-7e61-42ec-a66c-7f177ab7ca9c.png)
 
 > 유저 검색 결과가 있는경우
+
 ![11-3 userListResult](https://user-images.githubusercontent.com/71997918/161511897-93ff5262-f710-4d8e-a285-b20e9c9c453f.png)
 ---
 ###  5. 알람
