@@ -42,8 +42,7 @@
 ### 1. 로그인
 ------
 > 이메일/구글로 로그인을 할 수 있습니다.
-
-https://user-images.githubusercontent.com/71997918/161511806-d6150b24-2ea2-41ce-841f-d89cbef2ed0c.png
+![1 login](https://user-images.githubusercontent.com/71997918/161511806-d6150b24-2ea2-41ce-841f-d89cbef2ed0c.png)
 
 ### 2. 사용자 정보 변경
 ----
