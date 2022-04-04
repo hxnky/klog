@@ -45,6 +45,10 @@
 
 ![1 login](https://user-images.githubusercontent.com/71997918/161511806-d6150b24-2ea2-41ce-841f-d89cbef2ed0c.png)
 
+> 회원가입 시 이메일을 통해 인증을 받습니다.
+
+![1-1 EmailVerify](https://user-images.githubusercontent.com/71997918/161516941-15f4737b-0464-408d-96fd-bf16f9265cc5.png)
+
 ### 2. 사용자 정보 변경
 ----
 > 로그인 후 사용자 정보를 변경할 수 있습니다.
