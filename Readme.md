@@ -142,6 +142,6 @@
 	* mapper : mySQL 쿼리 관리
 
 ## OAuth2.0 + JWT (Google Login)
-> oauth provider를 사용해 불필요한 회원가입 프로세스를 제거하였습니다. 또한 JWT token을 사용해 Authorization Header 기반 인증 시스템을 구현다.
+> oauth provider를 사용해 불필요한 회원가입 프로세스를 제거하였습니다. 또한 JWT token을 사용해 Authorization Header 기반 인증 시스템을 구현한다.
 
 ![OAuth+JWT](https://user-images.githubusercontent.com/71997918/161519541-943bd3d7-d13a-430f-bfea-819ecbacb1df.PNG)
